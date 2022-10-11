@@ -1,0 +1,17 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: moge
+
+  datasource:
+    url: jdbc:mysql://wanidb.c3zusc8ogjbk.ap-northeast-2.rds.amazonaws.com/MogeDB?autoReconnect=true
+    username: admin
+    password: rc1946325ths!!
+    driver-class-name: com.mysql.cj.jdbc.Driver # mysql 8??
+
+  sql:
+    init:
+      platform: mysql
+
