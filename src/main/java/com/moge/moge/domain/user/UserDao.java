@@ -71,4 +71,15 @@ public class UserDao {
                 getPwdParams
         );
     }
+
+    public int insertCertifiedCode(String email, String code) {
+        String checkQuery = "select exists(select * from Certification where email =?)";
+        String insertQuery = "insert into Certification(email, code) values (?,?)";
+        String updateQuery = "update Certification set code =? where email =?";
+
+        if (this.jdbcTemplate.queryForObject(checkQuery, int.class, email) == 0) {
+            return this.jdbcTemplate.update(insertQuery, email, code);
+        }
+        return this.jdbcTemplate.update(updateQuery, code, email);
+    }
 }

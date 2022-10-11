@@ -44,6 +44,7 @@ public enum BaseResponseStatus {
     DUPLICATED_EMAIL(false, 3010, "중복된 이메일입니다."),
     DUPLICATED_NICKNAME(false, 3011, "중복된 닉네임입니다."),
     FAILED_TO_LOGIN(false, 3012, "없는 아이디거나 비밀번호가 틀렸습니다."),
+    FAILED_TO_SEND_MAIL(false, 3013, "인증 이메일 발송에 실패하였습니다."),
 
 
     /**

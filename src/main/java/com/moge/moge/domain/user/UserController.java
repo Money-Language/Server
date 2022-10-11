@@ -4,6 +4,8 @@ import com.moge.moge.domain.user.model.req.PostLoginReq;
 import com.moge.moge.domain.user.model.req.PostUserReq;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
+import com.moge.moge.domain.user.service.MailService;
+import com.moge.moge.domain.user.service.UserService;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
@@ -12,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 import static com.moge.moge.global.util.ValidationRegex.isRegexEmail;
@@ -26,10 +31,12 @@ public class UserController {
     @Autowired private final UserProvider userProvider;
     @Autowired private final UserService userService;
     @Autowired private final JwtService jwtService;
+    @Autowired private final MailService mailService;
 
-    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService){
+    public UserController(UserProvider userProvider, UserService userService, MailService mailService, JwtService jwtService){
         this.userProvider = userProvider;
         this.userService = userService;
+        this.mailService = mailService;
         this.jwtService = jwtService;
     }
 
@@ -92,4 +99,30 @@ public class UserController {
             return new BaseResponse<>(exception.getStatus());
         }
     }
+
+    /* 이메일 인증 메일 발송 */
+    @ResponseBody
+    @PostMapping("/send-email")
+    public BaseResponse<String> sendEmail(@RequestParam("email") String email) {
+        if (email != null) {
+            if (!isRegexEmail(email)) {
+                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+            }
+        }
+
+        try {
+            String code = mailService.sendCertifiedMail(email);
+            mailService.insertCertifiedCode(email, code);
+            return new BaseResponse<>(code);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /* 이메일 중복 확인 */
+    //@ResponseBody
+    //@PostMapping("/login/check-email")
+
 }

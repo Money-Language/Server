@@ -1,7 +1,10 @@
-package com.moge.moge.domain.user;
+package com.moge.moge.domain.user.service;
 
+import com.moge.moge.domain.user.UserDao;
+import com.moge.moge.domain.user.UserProvider;
 import com.moge.moge.domain.user.model.req.PostUserReq;
 import com.moge.moge.domain.user.model.res.PostUserRes;
+import com.moge.moge.global.config.secret.Secret;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;
@@ -9,6 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
