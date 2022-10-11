@@ -1,6 +1,8 @@
 package com.moge.moge.domain.user;
 
-import com.moge.moge.domain.user.model.PostUserReq;
+import com.moge.moge.domain.user.model.User;
+import com.moge.moge.domain.user.model.req.PostLoginReq;
+import com.moge.moge.domain.user.model.req.PostUserReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -54,5 +56,19 @@ public class UserDao {
                 checkNicknameParams);
     }
 
+    public User getPwd(PostLoginReq postLoginReq){
+        String getPwdQuery = "select userIdx, email, nickname, password, profileImage from User where email = ?";
+        String getPwdParams = postLoginReq.getEmail();
 
+        return this.jdbcTemplate.queryForObject(getPwdQuery,
+                (rs,rowNum)-> new User(
+                        rs.getInt("userIdx"),
+                        rs.getString("email"),
+                        rs.getString("nickname"),
+                        rs.getString("password"),
+                        rs.getString("profileImage")
+                ),
+                getPwdParams
+        );
+    }
 }

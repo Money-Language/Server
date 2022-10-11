@@ -22,7 +22,6 @@ public enum BaseResponseStatus {
     INVALID_JWT(false, 2002, "유효하지 않은 JWT입니다."),
     INVALID_USER_JWT(false,2003,"권한이 없는 유저의 접근입니다."),
 
-
     POST_USERS_EMPTY_EMAIL(false, 2010, "이메일을 입력해주세요."),
     POST_USERS_EMPTY_NICKNAME(false, 2011, "닉네임을 입력해주세요."),
     POST_USERS_EMPTY_PASSWORD(false, 2012, "비밀번호를 입력해주세요."),
@@ -31,9 +30,6 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_EMAIL(false, 2015, "이메일 형식을 확인해주세요."),
     POST_USERS_INVALID_PASSWORD(false, 2016, "비밀번호 형식을 확인해주세요."),
     POST_USERS_INVALID_REPASSWORD(false, 2017, "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
-    POST_USERS_EXISTS_EMAIL(false, 2018, "중복된 이메일입니다."),
-    POST_USERS_EXISTS_NICKNAME(false, 2019, "중복된 닉네임입니다."),
-
 
 
 
@@ -43,8 +39,12 @@ public enum BaseResponseStatus {
      */
     // Common
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패하였습니다."),
-    // [POST] /users
-    DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
+
+    // User
+    DUPLICATED_EMAIL(false, 3010, "중복된 이메일입니다."),
+    DUPLICATED_NICKNAME(false, 3011, "중복된 닉네임입니다."),
+    FAILED_TO_LOGIN(false, 3012, "없는 아이디거나 비밀번호가 틀렸습니다."),
+
 
     /**
      * 4000 : Database, Server 오류

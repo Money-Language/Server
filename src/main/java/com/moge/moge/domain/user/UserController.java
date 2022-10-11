@@ -1,7 +1,9 @@
 package com.moge.moge.domain.user;
 
-import com.moge.moge.domain.user.model.PostUserReq;
-import com.moge.moge.domain.user.model.PostUserRes;
+import com.moge.moge.domain.user.model.req.PostLoginReq;
+import com.moge.moge.domain.user.model.req.PostUserReq;
+import com.moge.moge.domain.user.model.res.PostLoginRes;
+import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
@@ -70,8 +72,24 @@ public class UserController {
     }
 
     /* 로그인 */
-    //@ResponseBody
-    //@PostMapping("/login")
-    //public BaseReponse<>
+    @ResponseBody
+    @PostMapping("/login")
+    public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
+        if (postLoginReq.getEmail() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        }
+        if (postLoginReq.getPassword() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
+        }
+        if (!isRegexEmail(postLoginReq.getEmail())) {
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
 
+        try {
+            PostLoginRes postLoginRes = userProvider.login(postLoginReq);
+            return new BaseResponse<>(postLoginRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }

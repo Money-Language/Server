@@ -1,7 +1,7 @@
 package com.moge.moge.domain.user;
 
-import com.moge.moge.domain.user.model.PostUserReq;
-import com.moge.moge.domain.user.model.PostUserRes;
+import com.moge.moge.domain.user.model.req.PostUserReq;
+import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;
@@ -30,10 +30,10 @@ public class UserService {
 
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
         if (userProvider.checkEmail(postUserReq.getEmail()) == 1) {
-            throw new BaseException(POST_USERS_EXISTS_EMAIL);
+            throw new BaseException(DUPLICATED_EMAIL);
         }
         if (userProvider.checkNickname(postUserReq.getNickname()) == 1) {
-            throw new BaseException(POST_USERS_EXISTS_NICKNAME);
+            throw new BaseException(DUPLICATED_NICKNAME);
         }
 
         String pwd;
