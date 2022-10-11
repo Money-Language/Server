@@ -15,4 +15,5 @@ public class PostUserReq {
     private Integer contract1; // 약관
     private Integer contract2;
     private Integer contract3;
+    private Integer contract4;
 }

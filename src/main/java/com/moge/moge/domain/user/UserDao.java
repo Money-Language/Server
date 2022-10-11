@@ -28,11 +28,12 @@ public class UserDao {
 
         String lastInsertIdQuery = "select last_insert_id()";
 
-        String createUserTermsQuery = "insert into Terms(contract1, contract2, contract3, userIdx) values(?,?,?,?)";
+        String createUserTermsQuery = "insert into Terms(contract1, contract2, contract3, contract4, userIdx) values(?,?,?,?,?)";
         Object[] createUserTermsParams = new Object[] {
                 postUserReq.getContract1(),
                 postUserReq.getContract2(),
                 postUserReq.getContract3(),
+                postUserReq.getContract4(),
                 this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class)
         };
         return this.jdbcTemplate.update(createUserTermsQuery, createUserTermsParams);

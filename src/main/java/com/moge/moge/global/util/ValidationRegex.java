@@ -13,7 +13,7 @@ public class ValidationRegex {
     }
 
     public static boolean isRegexPassword(String target) {
-        String regex = "";
+        String regex = "^{5,}";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(target);
         return matcher.find();
