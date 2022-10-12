@@ -1,8 +1,10 @@
 package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.User;
+import com.moge.moge.domain.user.model.req.PatchUserPasswordReq;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
 import com.moge.moge.domain.user.model.req.PostUserReq;
+import com.moge.moge.domain.user.model.res.GetUserRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -72,6 +74,23 @@ public class UserDao {
         );
     }
 
+    public GetUserRes getUser(int userIdx) {
+        String getUserQuery = "select userIdx, email, password, nickname, profileImage, status, createdAt from User where userIdx =?";
+        int getUserParam = userIdx;
+        return this.jdbcTemplate.queryForObject(getUserQuery,
+                (rs, rowNum) -> new GetUserRes(
+                        rs.getInt("userIdx"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage"),
+                        rs.getString("status"),
+                        rs.getString("createdAt")
+                ),
+                getUserParam);
+    }
+
+
     public int insertCertifiedCode(String email, String code) {
         String checkQuery = "select exists(select * from Certification where email =?)";
         String insertQuery = "insert into Certification(email, code) values (?,?)";
@@ -100,5 +119,14 @@ public class UserDao {
         } else {
             return true;
         }
+    }
+
+    public int updatePassword(int userIdx, PatchUserPasswordReq patchUserPasswordReq) {
+        String updatePasswordQuery = "update User set password = ? where userIdx =? and status = 'ACTIVE'";
+        Object[] updatePasswordParams = new Object[]{
+                patchUserPasswordReq.getModPassword(),
+                userIdx
+        };
+        return this.jdbcTemplate.update(updatePasswordQuery, updatePasswordParams);
     }
 }

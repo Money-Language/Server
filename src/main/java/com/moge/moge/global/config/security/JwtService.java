@@ -60,8 +60,9 @@ public class JwtService {
         // 2. JWT parsing
         Jws<Claims> claims;
         try{
-            claims = Jwts.parser()
-                    .setSigningKey(Secret.JWT_SECRET_KEY)
+            claims = Jwts.parserBuilder()
+                    .setSigningKey(Secret.getSigninKey(Secret.JWT_SECRET_KEY))
+                    .build()
                     .parseClaimsJws(accessToken);
         } catch (Exception ignored) {
             throw new BaseException(INVALID_JWT);

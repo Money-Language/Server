@@ -13,6 +13,7 @@ public enum BaseResponseStatus {
      */
     SUCCESS(true, 1000, "요청에 성공하였습니다."),
     SUCCESS_CHECK_CERTIFY_EMAIL(true, 1001, "인증번호 확인에 성공하였습니다"),
+    SUCCESS_UPDATE_PASSWORD(true, 1001, "유저의 패스워드 변경에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류
@@ -32,7 +33,7 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_INVALID_PASSWORD(false, 2017, "비밀번호 형식을 확인해주세요."),
     POST_USERS_INVALID_REPASSWORD(false, 2018, "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
-
+    POST_USERS_NEW_PASSWORD_NOT_CORRECT(false, 3016, "변경하고자 하는 비밀번호가 일치하지 않습니다."),
 
 
 
@@ -49,6 +50,8 @@ public enum BaseResponseStatus {
     FAILED_TO_SEND_MAIL(false, 3013, "인증 이메일 발송에 실패하였습니다."),
     FAILED_TO_CERTIFY_TIME(false, 3014, "인증 코드의 유효시간이 지났습니다."),
     FAILED_TO_CERTIFY_CODE(false, 3015, "인증 코드가 일치하지 않습니다."),
+    USER_CURRENT_PASSWORD_NOT_CORRECT(false, 3016, "현재 비밀번호가 일치하지 않습니다."),
+    FAILED_TO_UPDATE_USERS_PASSWORD(false, 3017, "비밀번호 수저에 실패하였습니다."),
 
 
     /**
