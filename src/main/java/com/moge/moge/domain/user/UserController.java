@@ -1,5 +1,6 @@
 package com.moge.moge.domain.user;
 
+import com.moge.moge.domain.user.model.req.PostEmailCheckReq;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
 import com.moge.moge.domain.user.model.req.PostUserReq;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
@@ -122,7 +123,32 @@ public class UserController {
     }
 
     /* 이메일 중복 확인 */
-    //@ResponseBody
-    //@PostMapping("/login/check-email")
+    @ResponseBody
+    @PostMapping("/login/check-email")
+    public BaseResponse<String> checkEmail(@RequestBody PostEmailCheckReq postEmailCheckReq) throws BaseException {
+        if (postEmailCheckReq.getEmail() != null) {
+            if (!isRegexEmail(postEmailCheckReq.getEmail())) {
+                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+            }
+        }
+
+        // 이메일 확인
+        if (userProvider.checkCertifiedEmail(postEmailCheckReq.getEmail()) == 0) {
+            return new BaseResponse<>(POST_USERS_EMPTY_CERTIFIED_EMAIL);
+        }
+
+        // 인증코드 유효시간 확인
+        int timeDiff = userProvider.checkCertifiedTime(postEmailCheckReq.getEmail());
+        if (timeDiff >= 1000) {
+            return new BaseResponse<>(FAILED_TO_CERTIFY_TIME);
+        }
+
+        // 인증코드 확인
+        if (!(userProvider.checkCertifiedCode(postEmailCheckReq.getEmail(), postEmailCheckReq.getCode()))) {
+            return new BaseResponse<>(FAILED_TO_CERTIFY_CODE);
+        }
+
+        return new BaseResponse<>(SUCCESS_CHECK_CERTIFY_EMAIL);
+    }
 
 }

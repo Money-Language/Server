@@ -82,4 +82,23 @@ public class UserDao {
         }
         return this.jdbcTemplate.update(updateQuery, code, email);
     }
+
+    public int checkCertifiedEmail(String email) {
+        String checkQuery = "select exists(select * from Certification where email = ?)";
+        return this.jdbcTemplate.queryForObject(checkQuery, int.class, email);
+    }
+
+    public int checkCertifiedTime(String email) {
+        String checkQuery = "select TIMESTAMPDIFF(second, updatedAt, CURRENT_TIMESTAMP()) from Certification where email =?";
+        return this.jdbcTemplate.queryForObject(checkQuery, int.class, email);
+    }
+
+    public boolean checkCertifiedCode(String email, String code) {
+        String checkQuery = "select exists(select * from Certification where email =? and code =?)";
+        if (this.jdbcTemplate.queryForObject(checkQuery, int.class, email, code) == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

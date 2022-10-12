@@ -12,6 +12,7 @@ public enum BaseResponseStatus {
      * 1000 : 요청 성공
      */
     SUCCESS(true, 1000, "요청에 성공하였습니다."),
+    SUCCESS_CHECK_CERTIFY_EMAIL(true, 1001, "인증번호 확인에 성공하였습니다"),
 
     /**
      * 2000 : Request 오류
@@ -27,9 +28,10 @@ public enum BaseResponseStatus {
     POST_USERS_EMPTY_PASSWORD(false, 2012, "비밀번호를 입력해주세요."),
     POST_USERS_EMPTY_TERMS(false, 2013, "필수 약관에 동의해주세요."),
     POST_USERS_EMPTY_REPASSWORD(false, 2014, "확인 비밀번호를 입력해주세요"),
-    POST_USERS_INVALID_EMAIL(false, 2015, "이메일 형식을 확인해주세요."),
-    POST_USERS_INVALID_PASSWORD(false, 2016, "비밀번호 형식을 확인해주세요."),
-    POST_USERS_INVALID_REPASSWORD(false, 2017, "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
+    POST_USERS_EMPTY_CERTIFIED_EMAIL(false, 2015, "인증 이메일을 입력해주세요"),
+    POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
+    POST_USERS_INVALID_PASSWORD(false, 2017, "비밀번호 형식을 확인해주세요."),
+    POST_USERS_INVALID_REPASSWORD(false, 2018, "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
 
 
 
@@ -45,6 +47,8 @@ public enum BaseResponseStatus {
     DUPLICATED_NICKNAME(false, 3011, "중복된 닉네임입니다."),
     FAILED_TO_LOGIN(false, 3012, "없는 아이디거나 비밀번호가 틀렸습니다."),
     FAILED_TO_SEND_MAIL(false, 3013, "인증 이메일 발송에 실패하였습니다."),
+    FAILED_TO_CERTIFY_TIME(false, 3014, "인증 코드의 유효시간이 지났습니다."),
+    FAILED_TO_CERTIFY_CODE(false, 3015, "인증 코드가 일치하지 않습니다."),
 
 
     /**
