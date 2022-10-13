@@ -102,27 +102,6 @@ public class UserController {
         }
     }
 
-    /* 이메일 인증 메일 발송 */
-    @ResponseBody
-    @PostMapping("/send-email")
-    public BaseResponse<String> sendEmail(@RequestParam("email") String email) {
-        if (email != null) {
-            if (!isRegexEmail(email)) {
-                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-            }
-        }
-
-        try {
-            String code = mailService.sendCertifiedMail(email);
-            mailService.insertCertifiedCode(email, code);
-            return new BaseResponse<>(code);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     /* 패스워드 변경 */
     @ResponseBody
     @PatchMapping("/{userIdx}/password")
@@ -148,6 +127,26 @@ public class UserController {
         }
     }
 
+    /* 이메일 인증 메일 발송 */
+    @ResponseBody
+    @PostMapping("/send-email")
+    public BaseResponse<String> sendEmail(@RequestParam("email") String email) {
+        if (email != null) {
+            if (!isRegexEmail(email)) {
+                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+            }
+        }
+
+        try {
+            String code = mailService.sendCertifiedMail(email);
+            mailService.insertCertifiedCode(email, code);
+            return new BaseResponse<>(code);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /* 이메일 중복 확인 */
     @ResponseBody
@@ -173,6 +172,24 @@ public class UserController {
         }
 
         return new BaseResponse<>(SUCCESS_CHECK_CERTIFY_EMAIL);
+    }
+
+    /* 유저 탈퇴 */
+    @ResponseBody
+    @DeleteMapping("/{userIdx}")
+    public BaseResponse<String> deleteUser(@PathVariable("userIdx") int userIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+
+            userService.deleteUser(userIdx);
+            return new BaseResponse<>(SUCCESS_DELETE_USER);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
     }
 
 }

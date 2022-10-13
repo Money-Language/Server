@@ -129,4 +129,9 @@ public class UserDao {
         };
         return this.jdbcTemplate.update(updatePasswordQuery, updatePasswordParams);
     }
+
+    public int deleteUser(int userIdx) {
+        String deleteUserQuery = "update User set status = 'DELETE' where userIdx=?";
+        return this.jdbcTemplate.update(deleteUserQuery, userIdx);
+    }
 }

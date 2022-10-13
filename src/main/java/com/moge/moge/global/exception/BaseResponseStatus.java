@@ -13,7 +13,9 @@ public enum BaseResponseStatus {
      */
     SUCCESS(true, 1000, "요청에 성공하였습니다."),
     SUCCESS_CHECK_CERTIFY_EMAIL(true, 1001, "인증번호 확인에 성공하였습니다"),
-    SUCCESS_UPDATE_PASSWORD(true, 1001, "유저의 패스워드 변경에 성공하였습니다."),
+    SUCCESS_UPDATE_PASSWORD(true, 1002, "유저의 패스워드 변경에 성공하였습니다."),
+    SUCCESS_LOGOUT(true , 1003, "로그아웃에 성공하였습니다."),
+    SUCCESS_DELETE_USER(true, 1004, "유저 탈퇴에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류
@@ -51,7 +53,8 @@ public enum BaseResponseStatus {
     FAILED_TO_CERTIFY_TIME(false, 3014, "인증 코드의 유효시간이 지났습니다."),
     FAILED_TO_CERTIFY_CODE(false, 3015, "인증 코드가 일치하지 않습니다."),
     USER_CURRENT_PASSWORD_NOT_CORRECT(false, 3016, "현재 비밀번호가 일치하지 않습니다."),
-    FAILED_TO_UPDATE_USERS_PASSWORD(false, 3017, "비밀번호 수저에 실패하였습니다."),
+    FAILED_TO_UPDATE_USERS_PASSWORD(false, 3017, "비밀번호 수정에 실패하였습니다."),
+    FAILED_TO_DELETE_USER(false, 3018, "유저 탈퇴에 실패하였습니다."),
 
 
     /**
