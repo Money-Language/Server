@@ -1,10 +1,8 @@
 package com.moge.moge.domain.user;
 
-import com.moge.moge.domain.user.model.req.PatchUserPasswordReq;
-import com.moge.moge.domain.user.model.req.PostEmailCheckReq;
-import com.moge.moge.domain.user.model.req.PostLoginReq;
-import com.moge.moge.domain.user.model.req.PostUserReq;
+import com.moge.moge.domain.user.model.req.*;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
+import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.domain.user.service.MailService;
 import com.moge.moge.domain.user.service.UserService;
@@ -174,6 +172,27 @@ public class UserController {
         return new BaseResponse<>(SUCCESS_CHECK_CERTIFY_EMAIL);
     }
 
+    /* 관심 키워드 설정 (5개중 3개) */
+    @ResponseBody
+    @PostMapping("/{userIdx}/keyword")
+    public BaseResponse<String> createUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PostUserKeywordReq postUserKeywordReq) {
+        try {
+            // jwt 토큰 확인
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            // 3개를 선택하지 않았다면 예외 처리
+            if (postUserKeywordReq.getCategoryIdx().size() != 3) {
+                return new BaseResponse<>(POST_USERS_CATEGORY_NUM);
+            }
+            userService.createUserKeyword(userIdx, postUserKeywordReq);
+            return new BaseResponse<>(SUCCESS_CREATE_KEYWORD);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
     /* 유저 탈퇴 */
     @ResponseBody
     @DeleteMapping("/{userIdx}")
@@ -183,7 +202,6 @@ public class UserController {
             if (userIdxByJwt != userIdx) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-
             userService.deleteUser(userIdx);
             return new BaseResponse<>(SUCCESS_DELETE_USER);
 

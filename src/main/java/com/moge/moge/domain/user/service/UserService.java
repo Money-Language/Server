@@ -3,7 +3,9 @@ package com.moge.moge.domain.user.service;
 import com.moge.moge.domain.user.UserDao;
 import com.moge.moge.domain.user.UserProvider;
 import com.moge.moge.domain.user.model.req.PatchUserPasswordReq;
+import com.moge.moge.domain.user.model.req.PostUserKeywordReq;
 import com.moge.moge.domain.user.model.req.PostUserReq;
+import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.secret.Secret;
@@ -90,6 +92,26 @@ public class UserService {
             if (result == 0) {
                 throw new BaseException(FAILED_TO_DELETE_USER);
             }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostUserKeywordRes createUserKeyword(int userIdx, PostUserKeywordReq postUserKeywordReq) throws BaseException {
+        try {
+            // 해당 카테고리가 DB에 있는지 확인
+            for (int categoryIdx : postUserKeywordReq.getCategoryIdx()) {
+                if (userDao.checkCategoryExists(categoryIdx) == 0) {
+                    throw new BaseException(USER_CATEGORY_NOT_EXISTS);
+                }
+            }
+            // 이미 설정 되어있으면 불가능, 수정 api로만 가능하도록
+            if (userDao.checkUserCategoryExists(userIdx) == 1) {
+                throw new BaseException(USER_CATEGORY_ALREADY_EXISTS);
+            }
+
+            PostUserKeywordRes result = userDao.createUserKeyword(userIdx, postUserKeywordReq);
+            return result;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

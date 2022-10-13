@@ -3,8 +3,10 @@ package com.moge.moge.domain.user;
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.PatchUserPasswordReq;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
+import com.moge.moge.domain.user.model.req.PostUserKeywordReq;
 import com.moge.moge.domain.user.model.req.PostUserReq;
 import com.moge.moge.domain.user.model.res.GetUserRes;
+import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -38,11 +40,23 @@ public class UserDao {
                 postUserReq.getContract2(),
                 postUserReq.getContract3(),
                 postUserReq.getContract4(),
-                this.jdbcTemplate.queryForObject(lastInsertIdQuery,int.class)
+                this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class)
         };
         return this.jdbcTemplate.update(createUserTermsQuery, createUserTermsParams);
     }
-    
+
+    public PostUserKeywordRes createUserKeyword(int userIdx, PostUserKeywordReq postUserKeywordReq) {
+        int[] ints = postUserKeywordReq.getCategoryIdx().stream().mapToInt(Integer::intValue).toArray(); // Integer -> int[]
+        for (int category : ints) {
+            String createUserKeywordQuery = "insert into UserCategory(userIdx, categoryIdx) values(?,?)";
+            Object[] createUserKeywordParams = new Object[] {
+                    userIdx,
+                    category
+            };
+            this.jdbcTemplate.update(createUserKeywordQuery, createUserKeywordParams);
+        }
+        return new PostUserKeywordRes("");
+    }
 
     public int checkEmail(String email) {
         String checkEmailQuery = "select exists(select email from User where email = ?)";
@@ -119,6 +133,16 @@ public class UserDao {
         } else {
             return true;
         }
+    }
+
+    public int checkCategoryExists(int categoryIdx) {
+        String checkQuery = "select exists(select * from Category where status = 'ACTIVE' and categoryIdx =?)";
+        return this.jdbcTemplate.queryForObject(checkQuery, int.class, categoryIdx);
+    }
+
+    public int checkUserCategoryExists(int userIdx) {
+        String checkQuery = "select exists(select * from UserCategory where status = 'ACTIVE' and userIdx =?)";
+        return this.jdbcTemplate.queryForObject(checkQuery, int.class, userIdx);
     }
 
     public int updatePassword(int userIdx, PatchUserPasswordReq patchUserPasswordReq) {

@@ -16,6 +16,7 @@ public enum BaseResponseStatus {
     SUCCESS_UPDATE_PASSWORD(true, 1002, "유저의 패스워드 변경에 성공하였습니다."),
     SUCCESS_LOGOUT(true , 1003, "로그아웃에 성공하였습니다."),
     SUCCESS_DELETE_USER(true, 1004, "유저 탈퇴에 성공하였습니다."),
+    SUCCESS_CREATE_KEYWORD(true, 1005, "키워드 설정에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류
@@ -36,7 +37,7 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_PASSWORD(false, 2017, "비밀번호 형식을 확인해주세요."),
     POST_USERS_INVALID_REPASSWORD(false, 2018, "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
     POST_USERS_NEW_PASSWORD_NOT_CORRECT(false, 3016, "변경하고자 하는 비밀번호가 일치하지 않습니다."),
-
+    POST_USERS_CATEGORY_NUM(false, 3017, "관심 키워드를 3개 선택해주세요."),
 
 
     /**
@@ -55,7 +56,9 @@ public enum BaseResponseStatus {
     USER_CURRENT_PASSWORD_NOT_CORRECT(false, 3016, "현재 비밀번호가 일치하지 않습니다."),
     FAILED_TO_UPDATE_USERS_PASSWORD(false, 3017, "비밀번호 수정에 실패하였습니다."),
     FAILED_TO_DELETE_USER(false, 3018, "유저 탈퇴에 실패하였습니다."),
-
+    FAILED_TO_USER_KEYWORD(false, 3019, "관심 카테고리 설정에 실패하였습니다."),
+    USER_CATEGORY_NOT_EXISTS(false, 3020, "해당 카테고리가 존재하지 않습니다"),
+    USER_CATEGORY_ALREADY_EXISTS(false, 3021, "해당 유저는 이미 관심 키워드(카테고리)를 설정하였습니다."),
 
     /**
      * 4000 : Database, Server 오류
