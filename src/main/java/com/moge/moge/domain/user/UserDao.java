@@ -1,10 +1,8 @@
 package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.User;
-import com.moge.moge.domain.user.model.req.PatchUserPasswordReq;
-import com.moge.moge.domain.user.model.req.PostLoginReq;
-import com.moge.moge.domain.user.model.req.PostUserKeywordReq;
-import com.moge.moge.domain.user.model.req.PostUserReq;
+import com.moge.moge.domain.user.model.req.*;
+import com.moge.moge.domain.user.model.res.GetUserCategoryRes;
 import com.moge.moge.domain.user.model.res.GetUserRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Collections;
+import java.util.List;
 
 @Repository
 public class UserDao {
@@ -56,6 +56,18 @@ public class UserDao {
             this.jdbcTemplate.update(createUserKeywordQuery, createUserKeywordParams);
         }
         return new PostUserKeywordRes("");
+    }
+
+    public int updateUserKeyword(int userCategoryIdx, int index) {
+        String updateQuery = "update UserCategory set categoryIdx =? where userCategoryIdx =?";
+        Object[] params = new Object[]{index, userCategoryIdx};
+        return this.jdbcTemplate.update(updateQuery, params);
+    }
+
+    public List<Integer> getUserCategoryIdx(int userIdx) {
+        String query = "select userCategoryIdx from UserCategory where userIdx = ?";
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new Integer(rs.getInt("userCategoryIdx")), userIdx);
     }
 
     public int checkEmail(String email) {

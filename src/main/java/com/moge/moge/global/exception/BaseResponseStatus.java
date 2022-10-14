@@ -16,7 +16,8 @@ public enum BaseResponseStatus {
     SUCCESS_UPDATE_PASSWORD(true, 1002, "유저의 패스워드 변경에 성공하였습니다."),
     SUCCESS_LOGOUT(true , 1003, "로그아웃에 성공하였습니다."),
     SUCCESS_DELETE_USER(true, 1004, "유저 탈퇴에 성공하였습니다."),
-    SUCCESS_CREATE_KEYWORD(true, 1005, "키워드 설정에 성공하였습니다."),
+    SUCCESS_CREATE_KEYWORD(true, 1005, "관심 키워드 설정에 성공하였습니다."),
+    SUCCESS_UPDATE_KEYWORD(true, 1006, "관심 키워드 수정에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류

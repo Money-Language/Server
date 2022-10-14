@@ -2,9 +2,11 @@ package com.moge.moge.domain.user.service;
 
 import com.moge.moge.domain.user.UserDao;
 import com.moge.moge.domain.user.UserProvider;
+import com.moge.moge.domain.user.model.req.PatchUserKeywordReq;
 import com.moge.moge.domain.user.model.req.PatchUserPasswordReq;
 import com.moge.moge.domain.user.model.req.PostUserKeywordReq;
 import com.moge.moge.domain.user.model.req.PostUserReq;
+import com.moge.moge.domain.user.model.res.GetUserCategoryRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.global.common.BaseResponse;
@@ -16,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
@@ -112,6 +116,29 @@ public class UserService {
 
             PostUserKeywordRes result = userDao.createUserKeyword(userIdx, postUserKeywordReq);
             return result;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void updateUserKeyword(int userIdx, PatchUserKeywordReq patchUserKeywordReq) throws BaseException {
+        try {
+            // 변경하고자하는 카테고리의 식별자값이 DB에 있는지 확인
+            for (int categoryIdx : patchUserKeywordReq.getCategoryIdx()) {
+                if (userDao.checkCategoryExists(categoryIdx) == 0) {
+                    throw new BaseException(USER_CATEGORY_NOT_EXISTS);
+                }
+            }
+
+            List<Integer> userCategoryIdxList = userDao.getUserCategoryIdx(userIdx);
+            int[] userCategoryIdx = userCategoryIdxList.stream().mapToInt(Integer::intValue).toArray();
+            int i = 0;
+            for (int uIdx : userCategoryIdx) {
+                System.out.println("=== uIdx : " + uIdx + "=====");
+                int index = patchUserKeywordReq.getCategoryIdx().get(i++);
+                System.out.println("=== index : " + index + "===");
+                userDao.updateUserKeyword(uIdx, index);
+            }
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

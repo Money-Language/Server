@@ -193,6 +193,29 @@ public class UserController {
         }
     }
 
+    /* 관심 키워드 수정 */
+    @ResponseBody
+    @PatchMapping("/{userIdx}/keyword")
+    public BaseResponse<String> updateUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PatchUserKeywordReq patchUserKeywordReq) {
+        try {
+            // jwt 토큰 확인
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            // 3개를 선택하지 않았다면 예외 처리
+            if (patchUserKeywordReq.getCategoryIdx().size() != 3) {
+                return new BaseResponse<>(POST_USERS_CATEGORY_NUM);
+            }
+
+            userService.updateUserKeyword(userIdx, patchUserKeywordReq);
+            return new BaseResponse<>(SUCCESS_UPDATE_KEYWORD);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
     /* 유저 탈퇴 */
     @ResponseBody
     @DeleteMapping("/{userIdx}")
@@ -209,5 +232,4 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
 }
