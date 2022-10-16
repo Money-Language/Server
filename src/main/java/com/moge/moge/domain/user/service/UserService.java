@@ -102,7 +102,7 @@ public class UserService {
     }
 
     public PostUserKeywordRes createUserKeyword(int userIdx, PostUserKeywordReq postUserKeywordReq) throws BaseException {
-        try {
+        //try {
             // 해당 카테고리가 DB에 있는지 확인
             for (int categoryIdx : postUserKeywordReq.getCategoryIdx()) {
                 if (userDao.checkCategoryExists(categoryIdx) == 0) {
@@ -116,9 +116,9 @@ public class UserService {
 
             PostUserKeywordRes result = userDao.createUserKeyword(userIdx, postUserKeywordReq);
             return result;
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
+        //} catch (Exception exception) {
+          //  throw new BaseException(DATABASE_ERROR);
+        //}
     }
 
     public void updateUserKeyword(int userIdx, PatchUserKeywordReq patchUserKeywordReq) throws BaseException {
