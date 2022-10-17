@@ -22,6 +22,7 @@ public enum BaseResponseStatus {
     SUCCESS_DELETE_AWS_S3(true, 1007, "aws s3 삭제에 성공하였습니다."),
     SUCCESS_DELETE_USER_PROFILE_IMAGE(true, 1008, "유저 프로필 이미지 삭제에 성공하였습니다."),
     SUCCESS_UPDATE_PROFILE(true, 1009, "유저의 프로필 수정에 성공하였습니다."),
+    SUCCESS_CREATE_FOLLOW(true, 1010, "팔로우에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류
@@ -64,6 +65,9 @@ public enum BaseResponseStatus {
     FAILED_TO_USER_KEYWORD(false, 3019, "관심 카테고리 설정에 실패하였습니다."),
     USER_CATEGORY_NOT_EXISTS(false, 3020, "해당 카테고리가 존재하지 않습니다"),
     USER_CATEGORY_ALREADY_EXISTS(false, 3021, "해당 유저는 이미 관심 키워드(카테고리)를 설정하였습니다."),
+    FAILED_TO_CREATE_FOLLOW(false, 3022, "팔로우 등록에 실패하였습니다."),
+    USER_FOLLOW_ALREADY_EXISTS(false, 3023, "이미 팔로우한 유저입니다."),
+    USER_NOT_EXISTS(false, 3024, "팔로우하려는 유저는 존재하지 않는 유저입니다."),
 
     /**
      * 4000 : Database, Server 오류

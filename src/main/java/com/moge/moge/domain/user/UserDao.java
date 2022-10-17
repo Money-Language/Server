@@ -185,4 +185,22 @@ public class UserDao {
         this.jdbcTemplate.update(deleteUserProfileImageQuery, userIdx);
 
     }
+
+    public int createUserFollow(int userIdx, int followingIdx) {
+        String createUserFollowQuery = "insert into Follow(followerIdx, followingIdx) values(?,?)";
+        Object[] params = new Object[]{userIdx, followingIdx };
+        return this.jdbcTemplate.update(createUserFollowQuery, params);
+    }
+
+    public int checkUserFollowExists(int userIdx, int followingIdx) {
+        String checkUserFollowExistsQuery = "select exists(select * from Follow where followerIdx =? and followingIdx =?)";
+        Object[] params = new Object[] {userIdx, followingIdx};
+        return this.jdbcTemplate.queryForObject(checkUserFollowExistsQuery, int.class, params);
+    }
+
+    public int checkUserExists(int followingIdx) {
+        String checkUserExistsQuery = "select exists(select * from User where userIdx =? and status ='ACTIVE')";
+        int param = followingIdx;
+        return this.jdbcTemplate.queryForObject(checkUserExistsQuery, int.class, param);
+    }
 }

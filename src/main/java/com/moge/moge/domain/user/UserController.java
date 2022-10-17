@@ -242,7 +242,10 @@ public class UserController {
     @DeleteMapping("/{userIdx}/profile")
     public BaseResponse<String> deleteProfileImage(@PathVariable("userIdx") int userIdx) {
         try {
-            //BaseResponse<String> stringBaseResponse = validateJwt(userIdx);
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             userService.deleteProfileImage(userIdx);
             return new BaseResponse<>(SUCCESS_DELETE_USER_PROFILE_IMAGE);
 
@@ -253,19 +256,20 @@ public class UserController {
 
     /* 팔로우 등록 */
     @ResponseBody
-    @PostMapping("/{userIdx}/follow")
-    public BaseResponse<String> createUserFollow(@PathVariable("userIdx") int userIdx) {
+    @PostMapping("/follow")
+    public BaseResponse<String> createUserFollow(@RequestBody PostUserFollowReq postUserFollowReq) {
         try {
-
-            userService.createUserFollow(userIdx);
-
+            userService.createUserFollow(postUserFollowReq.getUserIdx(), postUserFollowReq.getFollowingIdx());
             return new BaseResponse<>(SUCCESS_CREATE_FOLLOW);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
-
         }
     }
 
+    /* 언팔로우 */
+
+    /* 팔로잉 조회*/
+    /* 팔로워 조회*/
 
     /* 유저 탈퇴 */
     @ResponseBody
@@ -284,15 +288,4 @@ public class UserController {
         }
     }
 
-    private BaseResponse<String> validateJwt(int userIdx) {
-        try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
-        return null;
-    }
 }

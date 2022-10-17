@@ -147,8 +147,6 @@ public class UserService {
         try {
             // s3에 먼저 사진을 올림
             String url = s3Service.uploadFile(profileImage);
-
-            System.out.println("======" + url + "======");
             // 반환된 url을 DB에 저장
             userDao.updateUserProfile(userIdx, url, nickname);
 
@@ -158,7 +156,7 @@ public class UserService {
     }
 
     public void deleteProfileImage(int userIdx) throws BaseException {
-        //try {
+        try {
             // 1. db에서 url 찾아옴
             String userProfileImageUrlInDB = userDao.getUserProfileImage(userIdx);
 
@@ -168,8 +166,29 @@ public class UserService {
             // 3. db에서 profile 필드를 null로 변경
             userDao.deleteUserProfileImage(userIdx);
 
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void createUserFollow(int userIdx, int followingIdx) throws BaseException {
+        try {
+            // 이미 팔로우가 등록되어있는지 확인
+            if (userDao.checkUserFollowExists(userIdx, followingIdx) == 1) {
+                throw new BaseException(USER_FOLLOW_ALREADY_EXISTS);
+            }
+            // 팔로우하려는 유저가 있는지 확인
+            if (userDao.checkUserExists(followingIdx) == 0) {
+                throw new BaseException(USER_NOT_EXISTS);
+            }
+
+            int result = userDao.createUserFollow(userIdx, followingIdx);
+            if (result == 0) {
+                throw new BaseException(FAILED_TO_CREATE_FOLLOW);
+            }
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }
