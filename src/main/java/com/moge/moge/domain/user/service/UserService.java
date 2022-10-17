@@ -158,7 +158,7 @@ public class UserService {
     }
 
     public void deleteProfileImage(int userIdx) throws BaseException {
-        try {
+        //try {
             // 1. db에서 url 찾아옴
             String userProfileImageUrlInDB = userDao.getUserProfileImage(userIdx);
 
@@ -168,8 +168,8 @@ public class UserService {
             // 3. db에서 profile 필드를 null로 변경
             userDao.deleteUserProfileImage(userIdx);
 
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 }

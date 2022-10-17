@@ -228,7 +228,7 @@ public class UserController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             userService.updateProfile(userIdx, profileImage, nickname);
-            return new BaseResponse<>(SUCCESS_UPDATE_PROFILE); // 여기 수정하기
+            return new BaseResponse<>(SUCCESS_UPDATE_PROFILE);
 
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -242,14 +242,27 @@ public class UserController {
     @DeleteMapping("/{userIdx}/profile")
     public BaseResponse<String> deleteProfileImage(@PathVariable("userIdx") int userIdx) {
         try {
-            BaseResponse<String> stringBaseResponse = validateJwt(userIdx);
-            System.out.println("UserController.deleteProfileImage : " + stringBaseResponse);
-
+            //BaseResponse<String> stringBaseResponse = validateJwt(userIdx);
             userService.deleteProfileImage(userIdx);
-            return new BaseResponse<>(SUCCESS_DELETE_USER_PROFILE_IMAGE); // 여기 수정하기
+            return new BaseResponse<>(SUCCESS_DELETE_USER_PROFILE_IMAGE);
 
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 팔로우 등록 */
+    @ResponseBody
+    @PostMapping("/{userIdx}/follow")
+    public BaseResponse<String> createUserFollow(@PathVariable("userIdx") int userIdx) {
+        try {
+
+            userService.createUserFollow(userIdx);
+
+            return new BaseResponse<>(SUCCESS_CREATE_FOLLOW);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+
         }
     }
 
