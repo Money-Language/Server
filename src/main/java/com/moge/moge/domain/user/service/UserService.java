@@ -173,18 +173,20 @@ public class UserService {
 
     public void createUserFollow(int userIdx, int followingIdx) throws BaseException {
         try {
-            // 이미 팔로우가 등록되어있는지 확인
-            if (userDao.checkUserFollowExists(userIdx, followingIdx) == 1) {
-                throw new BaseException(USER_FOLLOW_ALREADY_EXISTS);
-            }
             // 팔로우하려는 유저가 있는지 확인
             if (userDao.checkUserExists(followingIdx) == 0) {
                 throw new BaseException(USER_NOT_EXISTS);
             }
-
-            int result = userDao.createUserFollow(userIdx, followingIdx);
-            if (result == 0) {
-                throw new BaseException(FAILED_TO_CREATE_FOLLOW);
+            // 이미 팔로우가 등록되어있는지 확인
+            if (userDao.checkUserFollowExists(userIdx, followingIdx) == 1) {
+                // 등록되어있으면 팔로우 해제 -> status = DELETE
+                userDao.deleteUserFollow(userIdx, followingIdx);
+            } else {
+                // 등록 안되어있드면 팔로우 등록
+                int result = userDao.createUserFollow(userIdx, followingIdx);
+                if (result == 0) {
+                    throw new BaseException(FAILED_TO_CREATE_FOLLOW);
+                }
             }
 
         } catch (Exception exception) {

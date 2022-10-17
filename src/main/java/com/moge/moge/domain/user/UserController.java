@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 import static com.moge.moge.global.util.ValidationRegex.isRegexEmail;
@@ -254,7 +253,7 @@ public class UserController {
         }
     }
 
-    /* 팔로우 등록 */
+    /* 팔로우 등록 + 취소 */
     @ResponseBody
     @PostMapping("/follow")
     public BaseResponse<String> createUserFollow(@RequestBody PostUserFollowReq postUserFollowReq) {
@@ -266,10 +265,11 @@ public class UserController {
         }
     }
 
-    /* 언팔로우 */
-
     /* 팔로잉 조회*/
+
     /* 팔로워 조회*/
+
+
 
     /* 유저 탈퇴 */
     @ResponseBody

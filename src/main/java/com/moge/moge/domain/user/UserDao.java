@@ -183,7 +183,6 @@ public class UserDao {
     public void deleteUserProfileImage(int userIdx) {
         String deleteUserProfileImageQuery = "update User set profileImage = null where userIdx =? and status = 'ACTIVE'";
         this.jdbcTemplate.update(deleteUserProfileImageQuery, userIdx);
-
     }
 
     public int createUserFollow(int userIdx, int followingIdx) {
@@ -193,7 +192,7 @@ public class UserDao {
     }
 
     public int checkUserFollowExists(int userIdx, int followingIdx) {
-        String checkUserFollowExistsQuery = "select exists(select * from Follow where followerIdx =? and followingIdx =?)";
+        String checkUserFollowExistsQuery = "select exists(select * from Follow where followerIdx =? and followingIdx =? and status = 'ACTIVE')";
         Object[] params = new Object[] {userIdx, followingIdx};
         return this.jdbcTemplate.queryForObject(checkUserFollowExistsQuery, int.class, params);
     }
@@ -202,5 +201,11 @@ public class UserDao {
         String checkUserExistsQuery = "select exists(select * from User where userIdx =? and status ='ACTIVE')";
         int param = followingIdx;
         return this.jdbcTemplate.queryForObject(checkUserExistsQuery, int.class, param);
+    }
+
+    public int deleteUserFollow(int userIdx, int followingIdx) {
+        String deleteUserFollowQuery = "update Follow set status = 'DELETE' where followerIdx =? and followingIdx =?";
+        Object[] params = new Object[]{userIdx, followingIdx};
+        return this.jdbcTemplate.update(deleteUserFollowQuery, params);
     }
 }
