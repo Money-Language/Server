@@ -144,7 +144,7 @@ public class UserService {
     }
 
     public void updateProfile(int userIdx, MultipartFile profileImage, String nickname) throws BaseException, IOException {
-        //try {
+        try {
             // s3에 먼저 사진을 올림
             String url = s3Service.uploadFile(profileImage);
 
@@ -152,8 +152,24 @@ public class UserService {
             // 반환된 url을 DB에 저장
             userDao.updateUserProfile(userIdx, url, nickname);
 
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void deleteProfileImage(int userIdx) throws BaseException {
+        try {
+            // 1. db에서 url 찾아옴
+            String userProfileImageUrlInDB = userDao.getUserProfileImage(userIdx);
+
+            // 2. s3에서 이미지 삭제
+            s3Service.deleteFile(userProfileImageUrlInDB);
+
+            // 3. db에서 profile 필드를 null로 변경
+            userDao.deleteUserProfileImage(userIdx);
+
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

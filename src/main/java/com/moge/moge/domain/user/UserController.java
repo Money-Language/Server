@@ -228,7 +228,7 @@ public class UserController {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
             userService.updateProfile(userIdx, profileImage, nickname);
-            return new BaseResponse<>(SUCCESS_CREATE_KEYWORD); // 여기 수정하기
+            return new BaseResponse<>(SUCCESS_UPDATE_PROFILE); // 여기 수정하기
 
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -238,7 +238,20 @@ public class UserController {
     }
 
     /* 프로필 사진 삭제 */
+    @ResponseBody
+    @DeleteMapping("/{userIdx}/profile")
+    public BaseResponse<String> deleteProfileImage(@PathVariable("userIdx") int userIdx) {
+        try {
+            BaseResponse<String> stringBaseResponse = validateJwt(userIdx);
+            System.out.println("UserController.deleteProfileImage : " + stringBaseResponse);
 
+            userService.deleteProfileImage(userIdx);
+            return new BaseResponse<>(SUCCESS_DELETE_USER_PROFILE_IMAGE); // 여기 수정하기
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
 
     /* 유저 탈퇴 */

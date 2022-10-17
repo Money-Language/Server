@@ -174,4 +174,15 @@ public class UserDao {
         Object[] params = new Object[]{url, nickname, userIdx};
         return this.jdbcTemplate.update(updateUserProfileQuery, params);
     }
+
+    public String getUserProfileImage(int userIdx) {
+        String getUserProfileImageQuery = "select profileImage from User where userIdx =? and status = 'ACTIVE'";
+        return this.jdbcTemplate.queryForObject(getUserProfileImageQuery, (rs, rowNum) -> new String("profileImage"), userIdx);
+    }
+
+    public void deleteUserProfileImage(int userIdx) {
+        String deleteUserProfileImageQuery = "update User set profileImage = null where userIdx =? and status = 'ACTIVE'";
+        this.jdbcTemplate.update(deleteUserProfileImageQuery, userIdx);
+
+    }
 }

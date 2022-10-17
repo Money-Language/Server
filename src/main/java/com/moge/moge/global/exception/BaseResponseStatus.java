@@ -19,8 +19,9 @@ public enum BaseResponseStatus {
     SUCCESS_CREATE_KEYWORD(true, 1005, "관심 키워드 설정에 성공하였습니다."),
     SUCCESS_UPDATE_KEYWORD(true, 1006, "관심 키워드 수정에 성공하였습니다."),
 
-
     SUCCESS_DELETE_AWS_S3(true, 1007, "aws s3 삭제에 성공하였습니다."),
+    SUCCESS_DELETE_USER_PROFILE_IMAGE(true, 1008, "유저 프로필 이미지 삭제에 성공하였습니다."),
+    SUCCESS_UPDATE_PROFILE(true, 1009, "유저의 프로필 수정에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류
