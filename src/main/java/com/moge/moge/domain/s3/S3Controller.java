@@ -18,7 +18,7 @@ public class S3Controller {
 
     @PostMapping("/file")
     public BaseResponse<List<String>> uploadFile(@RequestPart List<MultipartFile> multipartFile) {
-        return new BaseResponse<>(awsS3Service.uploadFile(multipartFile));
+        return new BaseResponse<>(awsS3Service.uploadFiles(multipartFile));
     }
 
     @DeleteMapping("/file")

@@ -2,7 +2,6 @@ package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.*;
-import com.moge.moge.domain.user.model.res.GetUserCategoryRes;
 import com.moge.moge.domain.user.model.res.GetUserRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -169,5 +167,11 @@ public class UserDao {
     public int deleteUser(int userIdx) {
         String deleteUserQuery = "update User set status = 'DELETE' where userIdx=?";
         return this.jdbcTemplate.update(deleteUserQuery, userIdx);
+    }
+
+    public int updateUserProfile(int userIdx, String url, String nickname) {
+        String updateUserProfileQuery = "update User set profileImage =?, nickname =? where userIdx =? and status = 'ACTIVE'";
+        Object[] params = new Object[]{url, nickname, userIdx};
+        return this.jdbcTemplate.update(updateUserProfileQuery, params);
     }
 }

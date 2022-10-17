@@ -2,7 +2,6 @@ package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.req.*;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
-import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.domain.user.service.MailService;
 import com.moge.moge.domain.user.service.UserService;
@@ -14,9 +13,10 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 import static com.moge.moge.global.util.ValidationRegex.isRegexEmail;
@@ -216,6 +216,29 @@ public class UserController {
         }
     }
 
+    /* 프로필 사진 + 닉네임 수정 */
+    @ResponseBody
+    @PatchMapping("/{userIdx}/profile")
+    public BaseResponse<String> updateProfile(@PathVariable("userIdx") int userIdx,
+                                              @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
+                                              @RequestPart(value = "nickname") String nickname) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            userService.updateProfile(userIdx, profileImage, nickname);
+            return new BaseResponse<>(SUCCESS_CREATE_KEYWORD); // 여기 수정하기
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /* 프로필 사진 삭제 */
+
 
 
     /* 유저 탈퇴 */
@@ -233,5 +256,17 @@ public class UserController {
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
+    }
+
+    private BaseResponse<String> validateJwt(int userIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+        return null;
     }
 }

@@ -1,16 +1,11 @@
 package com.moge.moge.domain.user.service;
 
+import com.moge.moge.domain.s3.S3Service;
 import com.moge.moge.domain.user.UserDao;
 import com.moge.moge.domain.user.UserProvider;
-import com.moge.moge.domain.user.model.req.PatchUserKeywordReq;
-import com.moge.moge.domain.user.model.req.PatchUserPasswordReq;
-import com.moge.moge.domain.user.model.req.PostUserKeywordReq;
-import com.moge.moge.domain.user.model.req.PostUserReq;
-import com.moge.moge.domain.user.model.res.GetUserCategoryRes;
+import com.moge.moge.domain.user.model.req.*;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
-import com.moge.moge.global.common.BaseResponse;
-import com.moge.moge.global.config.secret.Secret;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;
@@ -18,7 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
@@ -30,12 +27,14 @@ public class UserService {
 
     private final UserDao userDao;
     private final UserProvider userProvider;
+    private final S3Service s3Service;
     private final JwtService jwtService;
 
     @Autowired
-    public UserService(UserDao userDao, UserProvider userProvider, JwtService jwtService) {
+    public UserService(UserDao userDao, UserProvider userProvider, S3Service s3Service, JwtService jwtService) {
         this.userDao = userDao;
         this.userProvider = userProvider;
+        this.s3Service = s3Service;
         this.jwtService = jwtService;
     }
 
@@ -142,5 +141,19 @@ public class UserService {
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public void updateProfile(int userIdx, MultipartFile profileImage, String nickname) throws BaseException, IOException {
+        //try {
+            // s3에 먼저 사진을 올림
+            String url = s3Service.uploadFile(profileImage);
+
+            System.out.println("======" + url + "======");
+            // 반환된 url을 DB에 저장
+            userDao.updateUserProfile(userIdx, url, nickname);
+
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 }

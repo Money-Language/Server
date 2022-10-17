@@ -27,7 +27,7 @@ public class S3Service {
 
     private final AmazonS3 amazonS3;
 
-    public List<String> uploadFile(List<MultipartFile> multipartFile) {
+    public List<String> uploadFiles(List<MultipartFile> multipartFile) {
         List<String> fileNameList = new ArrayList<>();
 
         // forEach 구문을 통해 multipartFile로 넘어온 파일들 하나씩 fileNameList에 추가
@@ -49,6 +49,15 @@ public class S3Service {
 
         return fileNameList;
     }
+
+    public String uploadFile(MultipartFile file) throws IOException {
+        String fileName = file.getOriginalFilename();
+
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName, file.getInputStream(), null)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
+        return amazonS3.getUrl(bucket, fileName).toString();
+    }
+
 
     public void deleteFile(String fileName) {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
