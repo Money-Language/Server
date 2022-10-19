@@ -1,7 +1,7 @@
 package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.req.*;
-import com.moge.moge.domain.user.model.res.GetUserFollowingsRes;
+import com.moge.moge.domain.user.model.res.GetUserFollowRes;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.domain.user.service.MailService;
@@ -267,16 +267,16 @@ public class UserController {
         }
     }
 
-    /* 팔로잉 조회*/
+    /* 팔로잉 조회 (내가 팔로우 하는 사람) */
     @ResponseBody
     @GetMapping("/{userIdx}/following")
-    public BaseResponse<List<GetUserFollowingsRes>> getUserFollowings(@PathVariable("userIdx") int userIdx) {
+    public BaseResponse<List<GetUserFollowRes>> getUserFollowings(@PathVariable("userIdx") int userIdx) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if (userIdxByJwt != userIdx) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            List<GetUserFollowingsRes> getUserFollowingsResList = userProvider.getUserFollowings(userIdx);
+            List<GetUserFollowRes> getUserFollowingsResList = userProvider.getUserFollowings(userIdx);
             return new BaseResponse<>(getUserFollowingsResList);
 
         } catch (BaseException exception) {
@@ -284,9 +284,21 @@ public class UserController {
         }
     }
 
-    /* 팔로워 조회*/
-
-
+    /* 팔로워 조회 (나를 팔로우하는 사람) */
+    @ResponseBody
+    @GetMapping("/{userIdx}/follower")
+    public BaseResponse<List<GetUserFollowRes>> getUserFollowers(@PathVariable("userIdx") int userIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            List<GetUserFollowRes> getUserFollowersRes = userProvider.getUserFollowers(userIdx);
+            return new BaseResponse<>(getUserFollowersRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
     /* 유저 탈퇴 */
     @ResponseBody

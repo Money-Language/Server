@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetUserFollowingsRes {
+public class GetUserFollowRes {
     private int userIdx;
     private String nickname;
     private String profileImage;

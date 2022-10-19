@@ -2,8 +2,7 @@ package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
-import com.moge.moge.domain.user.model.res.GetUserFollowingsRes;
-import com.moge.moge.domain.user.model.res.GetUserRes;
+import com.moge.moge.domain.user.model.res.GetUserFollowRes;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
@@ -90,9 +89,17 @@ public class UserProvider {
         }
     }
 
-    public List<GetUserFollowingsRes> getUserFollowings(int userIdx) throws BaseException {
+    public List<GetUserFollowRes> getUserFollowings(int userIdx) throws BaseException {
         try {
             return userDao.getUserFollowings(userIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetUserFollowRes> getUserFollowers(int userIdx) throws BaseException {
+        try {
+            return userDao.getUserFollowers(userIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

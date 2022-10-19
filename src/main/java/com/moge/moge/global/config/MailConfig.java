@@ -1,5 +1,6 @@
 package com.moge.moge.global.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -10,13 +11,22 @@ import java.util.Properties;
 @Configuration
 public class MailConfig {
 
+    @Value("${spring.mail.host}")
+    private String host;
+
+    @Value("${spring.mail.username}")
+    private String username;
+
+    @Value("${spring.mail.password}")
+    private String password;
+
     @Bean
     public JavaMailSender javaMailService() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
 
-        javaMailSender.setHost("smtp.naver.com");
-        javaMailSender.setUsername("dpwls3976");
-        javaMailSender.setPassword("tlduddl91!");
+        javaMailSender.setHost(host);
+        javaMailSender.setUsername(username);
+        javaMailSender.setPassword(password);
         javaMailSender.setPort(465);
         javaMailSender.setJavaMailProperties(getMailProperties());
 
