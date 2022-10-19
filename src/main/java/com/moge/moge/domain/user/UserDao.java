@@ -2,6 +2,7 @@ package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.*;
+import com.moge.moge.domain.user.model.res.GetUserFollowingsRes;
 import com.moge.moge.domain.user.model.res.GetUserRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -207,5 +208,30 @@ public class UserDao {
         String deleteUserFollowQuery = "update Follow set status = 'DELETE' where followerIdx =? and followingIdx =?";
         Object[] params = new Object[]{userIdx, followingIdx};
         return this.jdbcTemplate.update(deleteUserFollowQuery, params);
+    }
+
+    public List<GetUserFollowingsRes> getUserFollowings(int userIdx) {
+        String getUserFollowingsQuery =
+                "select userIdx, nickname, profileImage \n" +
+                "    from User \n" +
+                "where userIdx in (select followingIdx from Follow where followerIdx = ?);";
+
+        int param = userIdx;
+        return this.jdbcTemplate.query(getUserFollowingsQuery,
+                (rs, rowNum) -> new GetUserFollowingsRes(
+                        rs.getInt("userIdx"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage")
+                ),
+                param);
+    }
+
+    public List<Integer> getUserFollowingsIdx(int userIdx) {
+        String getUserFollowingsQuery = "select followingIdx from Follow where followerIdx = ?";
+        int param = userIdx;
+        List<Integer> followingIdx = this.jdbcTemplate.query(getUserFollowingsQuery,
+                (rs, rowNum) -> new Integer(rs.getInt("followingIdx")),
+                param);
+        return followingIdx;
     }
 }

@@ -1,6 +1,7 @@
 package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.req.*;
+import com.moge.moge.domain.user.model.res.GetUserFollowingsRes;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.domain.user.service.MailService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 import static com.moge.moge.global.util.ValidationRegex.isRegexEmail;
@@ -266,6 +268,21 @@ public class UserController {
     }
 
     /* 팔로잉 조회*/
+    @ResponseBody
+    @GetMapping("/{userIdx}/following")
+    public BaseResponse<List<GetUserFollowingsRes>> getUserFollowings(@PathVariable("userIdx") int userIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            List<GetUserFollowingsRes> getUserFollowingsResList = userProvider.getUserFollowings(userIdx);
+            return new BaseResponse<>(getUserFollowingsResList);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
     /* 팔로워 조회*/
 

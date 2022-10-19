@@ -2,6 +2,8 @@ package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
+import com.moge.moge.domain.user.model.res.GetUserFollowingsRes;
+import com.moge.moge.domain.user.model.res.GetUserRes;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
@@ -10,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
@@ -81,6 +86,14 @@ public class UserProvider {
         try{
             return userDao.checkCertifiedCode(email, code);
         } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetUserFollowingsRes> getUserFollowings(int userIdx) throws BaseException {
+        try {
+            return userDao.getUserFollowings(userIdx);
+        } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
