@@ -216,14 +216,13 @@ public class UserDao {
                 "    from User \n" +
                 "where userIdx in (select followingIdx from Follow where followerIdx = ?);";
 
-        int param = userIdx;
         return this.jdbcTemplate.query(getUserFollowingsQuery,
                 (rs, rowNum) -> new GetUserFollowRes(
                         rs.getInt("userIdx"),
                         rs.getString("nickname"),
                         rs.getString("profileImage")
                 ),
-                param);
+                userIdx);
     }
 
     public List<GetUserFollowRes> getUserFollowers(int userIdx) {
@@ -239,14 +238,5 @@ public class UserDao {
                         rs.getString("profileImage")
                 ), userIdx);
     }
-
-    public List<Integer> getUserFollowingsIdx(int userIdx) {
-        String getUserFollowingsQuery = "select followingIdx from Follow where followerIdx = ?";
-        int param = userIdx;
-        return this.jdbcTemplate.query(getUserFollowingsQuery,
-                (rs, rowNum) -> new Integer(rs.getInt("followingIdx")),
-                param);
-    }
-
 
 }

@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,8 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
-import static com.moge.moge.global.util.ValidationRegex.isRegexEmail;
-import static com.moge.moge.global.util.ValidationRegex.isRegexPassword;
+import static com.moge.moge.global.util.ValidationRegex.*;
 
 @RestController
 @RequestMapping("/app/users")
@@ -66,6 +66,9 @@ public class UserController {
             }
             if (!isRegexPassword(postUserReq.getPassword())) {
                 return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
+            }
+            if (!isRegexNickname(postUserReq.getNickname())) {
+                return new BaseResponse<>(POST_USERS_INVALID_NICKNAME);
             }
             if (!postUserReq.getPassword().equals(postUserReq.getRePassword())) {
                 return new BaseResponse<>(POST_USERS_INVALID_REPASSWORD);
@@ -155,6 +158,10 @@ public class UserController {
             if (!isRegexEmail(postEmailCheckReq.getEmail())) {
                 return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
             }
+        }
+
+        if (!isRegexEmailCode(postEmailCheckReq.getCode())) {
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL_CODE);
         }
 
         if (userProvider.checkCertifiedEmail(postEmailCheckReq.getEmail()) == 0) {
@@ -270,7 +277,8 @@ public class UserController {
     /* 팔로잉 조회 (내가 팔로우 하는 사람) */
     @ResponseBody
     @GetMapping("/{userIdx}/following")
-    public BaseResponse<List<GetUserFollowRes>> getUserFollowings(@PathVariable("userIdx") int userIdx) {
+    public BaseResponse<List<GetUserFollowRes>> getUserFollowings(@PathVariable("userIdx") int userIdx,
+                                                                  @RequestParam Pageable pageable) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if (userIdxByJwt != userIdx) {

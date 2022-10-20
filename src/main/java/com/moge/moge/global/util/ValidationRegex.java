@@ -12,8 +12,25 @@ public class ValidationRegex {
         return matcher.find();
     }
 
+    // 5글자 이상의 소문자, 대문자, 숫자
     public static boolean isRegexPassword(String target) {
-        String regex = "^{5,}";
+        String regex = "^[A-Za-z0-9]{5,}$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(target);
+        return matcher.find();
+    }
+
+    // 8자리의 소문자, 대문자, 숫자
+    public static boolean isRegexEmailCode(String target) {
+        String regex = "^[A-Za-z0-9]{8}$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(target);
+        return matcher.find();
+    }
+
+    // 한글자 이상의 한글, 소문자, 대문자, 숫자 / ‘ㄴㄴ’ ‘ㅇㅇ’ 이런 글자는 안됨
+    public static boolean isRegexNickname(String target) {
+        String regex = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{1,}$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(target);
         return matcher.find();

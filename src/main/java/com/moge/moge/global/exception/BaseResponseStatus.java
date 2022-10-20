@@ -42,8 +42,10 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
     POST_USERS_INVALID_PASSWORD(false, 2017, "비밀번호 형식을 확인해주세요."),
     POST_USERS_INVALID_REPASSWORD(false, 2018, "비밀번호와 확인 비밀번호가 일치하지 않습니다."),
-    POST_USERS_NEW_PASSWORD_NOT_CORRECT(false, 3016, "변경하고자 하는 비밀번호가 일치하지 않습니다."),
-    POST_USERS_CATEGORY_NUM(false, 3017, "관심 키워드를 3개 선택해주세요."),
+    POST_USERS_INVALID_NICKNAME(false, 2019, "닉네임 형식을 확인해주세요."),
+    POST_USERS_INVALID_EMAIL_CODE(false, 2020, "이메일 코드 형식을 확인해주세요"),
+    POST_USERS_NEW_PASSWORD_NOT_CORRECT(false, 2021, "변경하고자 하는 비밀번호가 일치하지 않습니다."),
+    POST_USERS_CATEGORY_NUM(false, 2022, "관심 키워드를 3개 선택해주세요."),
 
 
     /**
