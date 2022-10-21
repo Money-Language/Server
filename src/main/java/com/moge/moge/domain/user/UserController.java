@@ -280,14 +280,17 @@ public class UserController {
     @ResponseBody
     @GetMapping("/{userIdx}/following")
     public BaseResponse<List<GetUserFollowRes>> getUserFollowings(@PathVariable("userIdx") int userIdx,
-                                                                  @PageableDefault(sort = "userIdx", direction = Sort.Direction.ASC, size = 2) Pageable pageable) {
+                                                                  int page) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if (userIdxByJwt != userIdx) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
+            if (page <= 0) {
+                return new BaseResponse<>(POST_FOLLOW_INVALID_PAGE);
+            }
 
-            List<GetUserFollowRes> getUserFollowingsResList = userProvider.getUserFollowings(userIdx);
+            List<GetUserFollowRes> getUserFollowingsResList = userProvider.getUserFollowings(userIdx, page);
             return new BaseResponse<>(getUserFollowingsResList);
 
         } catch (BaseException exception) {
@@ -298,13 +301,17 @@ public class UserController {
     /* 팔로워 조회 (나를 팔로우하는 사람) */
     @ResponseBody
     @GetMapping("/{userIdx}/follower")
-    public BaseResponse<List<GetUserFollowRes>> getUserFollowers(@PathVariable("userIdx") int userIdx) {
+    public BaseResponse<List<GetUserFollowRes>> getUserFollowers(@PathVariable("userIdx") int userIdx, int page) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if (userIdxByJwt != userIdx) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            List<GetUserFollowRes> getUserFollowersRes = userProvider.getUserFollowers(userIdx);
+            if (page <= 0) {
+                return new BaseResponse<>(POST_FOLLOW_INVALID_PAGE);
+            }
+
+            List<GetUserFollowRes> getUserFollowersRes = userProvider.getUserFollowers(userIdx, page);
             return new BaseResponse<>(getUserFollowersRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));

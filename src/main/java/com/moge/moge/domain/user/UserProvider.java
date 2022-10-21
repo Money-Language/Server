@@ -89,17 +89,17 @@ public class UserProvider {
         }
     }
 
-    public List<GetUserFollowRes> getUserFollowings(int userIdx) throws BaseException {
+    public List<GetUserFollowRes> getUserFollowings(int userIdx, int page) throws BaseException {
         try {
-            return userDao.getUserFollowings(userIdx);
+            return userDao.getUserFollowings(userIdx, page);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public List<GetUserFollowRes> getUserFollowers(int userIdx) throws BaseException {
+    public List<GetUserFollowRes> getUserFollowers(int userIdx, int page) throws BaseException {
         try {
-            return userDao.getUserFollowers(userIdx);
+            return userDao.getUserFollowers(userIdx, page);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

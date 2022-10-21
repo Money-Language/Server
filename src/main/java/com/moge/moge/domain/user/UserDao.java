@@ -211,34 +211,42 @@ public class UserDao {
         return this.jdbcTemplate.update(deleteUserFollowQuery, params);
     }
 
-    public List<GetUserFollowRes> getUserFollowings(int userIdx) {
+    public List<GetUserFollowRes> getUserFollowings(int userIdx, int page) {
         String getUserFollowingsQuery =
-                "select userIdx, nickname, profileImage \n" +
-                "    from User \n" +
-                "where userIdx in (select followingIdx from Follow where followerIdx = ?);";
+                "select U.userIdx, U.nickname, U.profileImage\n" +
+                "from User U\n" +
+                "    left join Follow F on U.userIdx = F.followingIdx\n" +
+                "where (U.status = 'ACTIVE' or U.status = 'NAVER' or U.status = 'KAKAO')" +
+                "and userIdx in (select followingIdx from Follow where followerIdx =?)\n" +
+                "order by F.createdAt desc limit 5 offset ?;\n";
 
+        Object[] params = new Object[]{userIdx, (page-1)*5};
         return this.jdbcTemplate.query(getUserFollowingsQuery,
                 (rs, rowNum) -> new GetUserFollowRes(
                         rs.getInt("userIdx"),
                         rs.getString("nickname"),
                         rs.getString("profileImage")
                 ),
-                userIdx);
+                params);
 
     }
 
-    public List<GetUserFollowRes> getUserFollowers(int userIdx) {
+    public List<GetUserFollowRes> getUserFollowers(int userIdx, int page) {
         String getUserFollowersQuery =
                 "select userIdx, nickname, profileImage \n" +
-                "    from User \n" +
-                "where userIdx in (select followerIdx from Follow where followingIdx = ?);";
+                "    from User U\n" +
+                "    left join Follow F on U.userIdx = F.followingIdx \n" +
+                "where (U.status = 'ACTIVE' or U.status = 'NAVER' or U.status = 'KAKAO') " +
+                "and userIdx in (select followerIdx from Follow where followingIdx = ?) \n" +
+                "order by F.createdAt desc limit 5 offset ?";
 
+        Object[] params = new Object[]{userIdx, (page-1)*5};
         return this.jdbcTemplate.query(getUserFollowersQuery,
                 (rs, rowNum) -> new GetUserFollowRes(
                         rs.getInt("userIdx"),
                         rs.getString("nickname"),
                         rs.getString("profileImage")
-                ), userIdx);
+                ), params);
     }
 
 }
