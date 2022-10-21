@@ -238,7 +238,7 @@ public class UserDao {
                 "    left join Follow F on U.userIdx = F.followingIdx \n" +
                 "where (U.status = 'ACTIVE' or U.status = 'NAVER' or U.status = 'KAKAO') " +
                 "and userIdx in (select followerIdx from Follow where followingIdx = ?) \n" +
-                "order by F.createdAt desc limit 5 offset ?";
+                "order by F.createdAt asc limit 5 offset ?";
 
         Object[] params = new Object[]{userIdx, (page-1)*5};
         return this.jdbcTemplate.query(getUserFollowersQuery,
