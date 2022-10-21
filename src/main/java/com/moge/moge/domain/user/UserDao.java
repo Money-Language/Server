@@ -6,6 +6,7 @@ import com.moge.moge.domain.user.model.res.GetUserFollowRes;
 import com.moge.moge.domain.user.model.res.GetUserRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -223,13 +224,14 @@ public class UserDao {
                         rs.getString("profileImage")
                 ),
                 userIdx);
+
     }
 
     public List<GetUserFollowRes> getUserFollowers(int userIdx) {
         String getUserFollowersQuery =
                 "select userIdx, nickname, profileImage \n" +
                 "    from User \n" +
-                "where userIdx in (select followingIdx from Follow where followerIdx = ?);";
+                "where userIdx in (select followerIdx from Follow where followingIdx = ?);";
 
         return this.jdbcTemplate.query(getUserFollowersQuery,
                 (rs, rowNum) -> new GetUserFollowRes(

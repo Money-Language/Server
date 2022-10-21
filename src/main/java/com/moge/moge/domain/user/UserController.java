@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -278,12 +280,13 @@ public class UserController {
     @ResponseBody
     @GetMapping("/{userIdx}/following")
     public BaseResponse<List<GetUserFollowRes>> getUserFollowings(@PathVariable("userIdx") int userIdx,
-                                                                  @RequestParam Pageable pageable) {
+                                                                  @PageableDefault(sort = "userIdx", direction = Sort.Direction.ASC, size = 2) Pageable pageable) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if (userIdxByJwt != userIdx) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
+
             List<GetUserFollowRes> getUserFollowingsResList = userProvider.getUserFollowings(userIdx);
             return new BaseResponse<>(getUserFollowingsResList);
 
