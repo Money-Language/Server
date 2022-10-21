@@ -194,15 +194,27 @@ public class UserDao {
     }
 
     public int checkUserFollowExists(int userIdx, int followingIdx) {
-        String checkUserFollowExistsQuery = "select exists(select * from Follow where followerIdx =? and followingIdx =? and status = 'ACTIVE')";
+        String checkUserFollowExistsQuery = "select exists(select * from Follow where followerIdx =? and followingIdx =? and status ='ACTIVE')";
         Object[] params = new Object[] {userIdx, followingIdx};
         return this.jdbcTemplate.queryForObject(checkUserFollowExistsQuery, int.class, params);
     }
 
     public int checkUserExists(int followingIdx) {
-        String checkUserExistsQuery = "select exists(select * from User where userIdx =? and status ='ACTIVE')";
+        String checkUserExistsQuery = "select exists(select * from User where userIdx =? and (status ='ACTIVE' or status = 'NAVER' or status = 'KAKAO'))";
         int param = followingIdx;
         return this.jdbcTemplate.queryForObject(checkUserExistsQuery, int.class, param);
+    }
+
+    public int checkUserFollowStatus(int userIdx, int followingIdx) {
+        String checkUserFollowStatusQuery = "select exists(select * from Follow where followerIdx =? and followingIdx =? and status = 'DELETE')";
+        Object[] params = new Object[] {userIdx, followingIdx};
+        return this.jdbcTemplate.queryForObject(checkUserFollowStatusQuery, int.class, params);
+    }
+
+    public int updateUserFollowStatus(int userIdx, int followingIdx) {
+        String deleteUserFollowQuery = "update Follow set status = 'ACTIVE' where followerIdx =? and followingIdx =?";
+        Object[] params = new Object[]{userIdx, followingIdx};
+        return this.jdbcTemplate.update(deleteUserFollowQuery, params);
     }
 
     public int deleteUserFollow(int userIdx, int followingIdx) {
@@ -248,5 +260,7 @@ public class UserDao {
                         rs.getString("profileImage")
                 ), params);
     }
+
+
 
 }

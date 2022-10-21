@@ -181,11 +181,16 @@ public class UserService {
             if (userDao.checkUserFollowExists(userIdx, followingIdx) == 1) {
                 // 등록되어있으면 팔로우 해제 -> status = DELETE
                 userDao.deleteUserFollow(userIdx, followingIdx);
-            } else {
-                // 등록 안되어있드면 팔로우 등록
-                int result = userDao.createUserFollow(userIdx, followingIdx);
-                if (result == 0) {
-                    throw new BaseException(FAILED_TO_CREATE_FOLLOW);
+            }
+            else { // 등록 안되어있고
+                // status 가 Delete라면
+                if (userDao.checkUserFollowStatus(userIdx, followingIdx) == 1) {
+                    userDao.updateUserFollowStatus(userIdx, followingIdx);
+                } else {
+                    int result = userDao.createUserFollow(userIdx, followingIdx);
+                    if (result == 0) {
+                        throw new BaseException(FAILED_TO_CREATE_FOLLOW);
+                    }
                 }
             }
 
