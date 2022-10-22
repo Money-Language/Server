@@ -1,13 +1,8 @@
 package com.moge.moge.domain.board;
 
-import com.moge.moge.domain.board.model.GetBoardTopLike;
-import com.moge.moge.domain.s3.S3Service;
-import com.moge.moge.domain.user.UserDao;
-import com.moge.moge.domain.user.UserProvider;
-import com.moge.moge.global.common.BaseResponse;
+import com.moge.moge.domain.board.model.GetBoardTop;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
-import com.moge.moge.global.exception.BaseResponseStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +52,17 @@ public class BoardService {
         }
     }
 
-    public List<GetBoardTopLike> getBoardTopLike() throws BaseException {
+    public List<GetBoardTop> getBoardTopLike() throws BaseException {
         try {
             return boardDao.getBoardTopLike();
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetBoardTop> getBoardTopView() throws BaseException {
+        try {
+            return boardDao.getBoardTopView();
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetBoardTopLike {
+public class GetBoardTop {
     private String categoryName;
     private String title;
     private int viewCount;

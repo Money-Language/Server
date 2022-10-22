@@ -1,6 +1,6 @@
 package com.moge.moge.domain.board;
 
-import com.moge.moge.domain.board.model.GetBoardTopLike;
+import com.moge.moge.domain.board.model.GetBoardTop;
 import com.moge.moge.domain.user.UserProvider;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
@@ -52,13 +52,25 @@ public class BoardController {
     /* 게시글 좋아요 top 10 조회 */
     @ResponseBody
     @GetMapping("/top-like")
-    public BaseResponse<List<GetBoardTopLike>> getBoardTopLike() {
+    public BaseResponse<List<GetBoardTop>> getBoardTopLike() {
         try {
-            List<GetBoardTopLike> boardTopLike = boardService.getBoardTopLike();
+            List<GetBoardTop> boardTopLike = boardService.getBoardTopLike();
             return new BaseResponse<>(boardTopLike);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    @ResponseBody
+    @GetMapping("/top-view")
+    public BaseResponse<List<GetBoardTop>> getBoardTopView() {
+        try {
+            List<GetBoardTop> boardTopView = boardService.getBoardTopView();
+            return new BaseResponse<>(boardTopView);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 
 }
