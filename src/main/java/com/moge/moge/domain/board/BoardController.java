@@ -36,10 +36,12 @@ public class BoardController {
         try {
             // jwt 토큰 확인
             int userIdxByJwt = jwtService.getUserIdx();
+            System.out.println("====" + userIdxByJwt + "===");
+
             if (userProvider.checkUser(userIdxByJwt) == 0) {
                 return new BaseResponse<>(USERS_EMPTY_USER_IDX);
             }
-            boardService.createBoardLike(boardIdx);
+            boardService.createBoardLike(boardIdx, userIdxByJwt);
             return new BaseResponse<>(SUCCESS_CREATE_BOARD_LIKE);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));

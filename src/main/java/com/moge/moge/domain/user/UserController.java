@@ -337,10 +337,10 @@ public class UserController {
     @GetMapping("/{userIdx}/board/like")
     public BaseResponse<GetUserBoardLikeRes> getUserBoardLike(@PathVariable("userIdx") int userIdx) {
         try {
-            //int userIdxByJwt = jwtService.getUserIdx();
-            //if (userIdxByJwt != userIdx) {
-            //    return new BaseResponse<>(INVALID_USER_JWT);
-            //}
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             GetUserBoardLikeRes userBoardLike = userProvider.getUserBoardLike(userIdx);
             return new BaseResponse<>(userBoardLike);
 

@@ -30,20 +30,20 @@ public class BoardService {
         this.jwtService = jwtService;
     }
 
-    public void createBoardLike(int boardIdx) throws BaseException {
+    public void createBoardLike(int boardIdx, int userIdx) throws BaseException {
         try {
             if (boardDao.checkBoardExists(boardIdx) == 0) {
                 throw new BaseException(BOARD_NOT_EXISTS);
             }
 
             // 좋아요가 눌려있으면
-            if (boardDao.checkBoardLikeExists(boardIdx) == 1) {
-                boardDao.deleteBoardLike(boardIdx);
+            if (boardDao.checkBoardLikeExists(boardIdx, userIdx) == 1) {
+                boardDao.deleteBoardLike(boardIdx, userIdx);
             } else { // 안눌려있으면
-                if (boardDao.checkBoardLikeStatus(boardIdx) == 1) {
-                    boardDao.updateBoardLikeStatus(boardIdx);
+                if (boardDao.checkBoardLikeStatus(boardIdx, userIdx) == 1) {
+                    boardDao.updateBoardLikeStatus(boardIdx, userIdx);
                 } else {
-                    int result = boardDao.createBoardLike(boardIdx);
+                    int result = boardDao.createBoardLike(boardIdx, userIdx);
                     if (result == 0) {
                         throw new BaseException(FAILED_TO_CREATE_BOARD_LIKE);
                     }

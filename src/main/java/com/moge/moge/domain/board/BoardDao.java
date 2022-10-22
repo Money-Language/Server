@@ -21,28 +21,33 @@ public class BoardDao {
         return this.jdbcTemplate.queryForObject(checkBoardExistsQuery, int.class, boardIdx);
     }
 
-    public int checkBoardLikeExists(int boardIdx) {
-        String checkBoardLikeExistsQuery = "select exists(select * from BoardLike where boardIdx =? and status = 'ACTIVE')";
-        return this.jdbcTemplate.queryForObject(checkBoardLikeExistsQuery, int.class, boardIdx);
+    public int checkBoardLikeExists(int boardIdx, int userIdx) {
+        String checkBoardLikeExistsQuery = "select exists(select * from BoardLike where boardIdx =? and userIdx = ? and status = 'ACTIVE')";
+        Object[] params = new Object[]{boardIdx, userIdx};
+        return this.jdbcTemplate.queryForObject(checkBoardLikeExistsQuery, int.class, params);
     }
 
-    public int createBoardLike(int boardIdx) {
-        String createBoardLikeQuery = "insert into BoardLike(boardIdx) values(?)";
-        return this.jdbcTemplate.update(createBoardLikeQuery, boardIdx);
+    public int createBoardLike(int boardIdx, int userIdx) {
+        String createBoardLikeQuery = "insert into BoardLike(boardIdx, userIdx) values(?, ?)";
+        Object[] params = new Object[]{boardIdx, userIdx};
+        return this.jdbcTemplate.update(createBoardLikeQuery, params);
     }
 
-    public int deleteBoardLike(int boardIdx) {
-        String deleteBoardLikeQuery = "update BoardLike set status = 'DELETE' where boardIdx =?";
-        return this.jdbcTemplate.update(deleteBoardLikeQuery, boardIdx);
+    public int deleteBoardLike(int boardIdx, int userIdx) {
+        String deleteBoardLikeQuery = "update BoardLike set status = 'DELETE' where boardIdx =? and userIdx =?";
+        Object[] params = new Object[]{boardIdx, userIdx};
+        return this.jdbcTemplate.update(deleteBoardLikeQuery, params);
     }
 
-    public int checkBoardLikeStatus(int boardIdx) {
-        String checkBoardLikeStatus = "select exists(select * from BoardLike where boardIdx = ? and status = 'DELETE')";
-        return this.jdbcTemplate.queryForObject(checkBoardLikeStatus, int.class, boardIdx);
+    public int checkBoardLikeStatus(int boardIdx, int userIdx) {
+        String checkBoardLikeStatus = "select exists(select * from BoardLike where boardIdx = ? and userIdx = ? and status = 'DELETE')";
+        Object[] params = new Object[]{boardIdx, userIdx};
+        return this.jdbcTemplate.queryForObject(checkBoardLikeStatus, int.class, params);
     }
 
-    public int updateBoardLikeStatus(int boardIdx) {
-        String updateBoardLikeStatus = "update BoardLike set status = 'ACTIVE' where boardIdx = ?";
-        return this.jdbcTemplate.update(updateBoardLikeStatus, boardIdx);
+    public int updateBoardLikeStatus(int boardIdx, int userIdx) {
+        String updateBoardLikeStatus = "update BoardLike set status = 'ACTIVE' where boardIdx = ? and userIdx =?";
+        Object[] params = new Object[]{boardIdx, userIdx};
+        return this.jdbcTemplate.update(updateBoardLikeStatus, params);
     }
 }
