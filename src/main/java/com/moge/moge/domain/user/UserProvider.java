@@ -3,6 +3,7 @@ package com.moge.moge.domain.user;
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
 import com.moge.moge.domain.user.model.res.GetUserFollowRes;
+import com.moge.moge.domain.user.model.res.GetUserProfileRes;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
@@ -110,7 +111,14 @@ public class UserProvider {
             return userDao.checkUser(userIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
+    public GetUserProfileRes getUserProfile(int userIdx) throws BaseException {
+        try {
+            return userDao.getUserProfile(userIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
         }
     }
 }

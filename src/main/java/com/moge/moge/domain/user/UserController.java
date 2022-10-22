@@ -2,6 +2,7 @@ package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.req.*;
 import com.moge.moge.domain.user.model.res.GetUserFollowRes;
+import com.moge.moge.domain.user.model.res.GetUserProfileRes;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.domain.user.service.MailService;
@@ -222,6 +223,24 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /* 프로필 조회 */
+    @ResponseBody
+    @GetMapping("/{userIdx}/profile")
+    public BaseResponse<GetUserProfileRes> getUserProfile(@PathVariable("userIdx") int userIdx) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            GetUserProfileRes userProfile = userProvider.getUserProfile(userIdx);
+            return new BaseResponse<>(userProfile);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 
     /* 프로필 사진 + 닉네임 수정 */
     @ResponseBody

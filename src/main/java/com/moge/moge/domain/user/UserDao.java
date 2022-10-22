@@ -3,6 +3,7 @@ package com.moge.moge.domain.user;
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.*;
 import com.moge.moge.domain.user.model.res.GetUserFollowRes;
+import com.moge.moge.domain.user.model.res.GetUserProfileRes;
 import com.moge.moge.domain.user.model.res.GetUserRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -263,5 +264,23 @@ public class UserDao {
     public int checkUser(int userIdx) {
         String Query = "select exists(select * from User where (status = 'ACTIVE' or status = 'NAVER' or status = 'KAKAO') and userIdx =? )";
         return this.jdbcTemplate.queryForObject(Query, int.class, userIdx);
+    }
+
+    public GetUserProfileRes getUserProfile(int userIdx) {
+        String getUserProfileQuery =
+                "select userIdx, nickname, profileImage, userPoint,\n" +
+                "    (select count(*) from Follow F where F.followingIdx = U.userIdx) as followerCount,\n" +
+                "    (select count(*) from Follow F where F.followerIdx = U.userIdx) as followingCount\n" +
+                "from User U\n" +
+                "where U.userIdx = ? and U.status != 'DELETE';";
+        return this.jdbcTemplate.queryForObject(getUserProfileQuery,
+                (rs, rowNum) -> new GetUserProfileRes(
+                        rs.getInt("userIdx"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage"),
+                        rs.getInt("userPoint"),
+                        rs.getInt("followerCount"),
+                        rs.getInt("followingCount")
+                ), userIdx);
     }
 }
