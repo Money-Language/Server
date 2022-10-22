@@ -1,10 +1,7 @@
 package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.req.*;
-import com.moge.moge.domain.user.model.res.GetUserFollowRes;
-import com.moge.moge.domain.user.model.res.GetUserProfileRes;
-import com.moge.moge.domain.user.model.res.PostLoginRes;
-import com.moge.moge.domain.user.model.res.PostUserRes;
+import com.moge.moge.domain.user.model.res.*;
 import com.moge.moge.domain.user.service.MailService;
 import com.moge.moge.domain.user.service.UserService;
 import com.moge.moge.global.common.BaseResponse;
@@ -329,6 +326,24 @@ public class UserController {
 
             List<GetUserFollowRes> getUserFollowersRes = userProvider.getUserFollowers(userIdx, page);
             return new BaseResponse<>(getUserFollowersRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 유저가 좋아요 누른 게시글 조회
+    * 카테고리명, 제목, 퀴즈개수 조회수, 좋아요수 */
+    @ResponseBody
+    @GetMapping("/{userIdx}/board/like")
+    public BaseResponse<GetUserBoardLikeRes> getUserBoardLike(@PathVariable("userIdx") int userIdx) {
+        try {
+            //int userIdxByJwt = jwtService.getUserIdx();
+            //if (userIdxByJwt != userIdx) {
+            //    return new BaseResponse<>(INVALID_USER_JWT);
+            //}
+            GetUserBoardLikeRes userBoardLike = userProvider.getUserBoardLike(userIdx);
+            return new BaseResponse<>(userBoardLike);
+
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

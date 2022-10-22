@@ -2,6 +2,7 @@ package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
+import com.moge.moge.domain.user.model.res.GetUserBoardLikeRes;
 import com.moge.moge.domain.user.model.res.GetUserFollowRes;
 import com.moge.moge.domain.user.model.res.GetUserProfileRes;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
@@ -120,5 +121,13 @@ public class UserProvider {
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public GetUserBoardLikeRes getUserBoardLike(int userIdx) throws BaseException {
+        //try {
+            return userDao.getUserBoardLike(userIdx);
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 }

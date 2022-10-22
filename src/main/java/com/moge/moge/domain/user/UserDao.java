@@ -2,10 +2,7 @@ package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.*;
-import com.moge.moge.domain.user.model.res.GetUserFollowRes;
-import com.moge.moge.domain.user.model.res.GetUserProfileRes;
-import com.moge.moge.domain.user.model.res.GetUserRes;
-import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
+import com.moge.moge.domain.user.model.res.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -281,6 +278,30 @@ public class UserDao {
                         rs.getInt("userPoint"),
                         rs.getInt("followerCount"),
                         rs.getInt("followingCount")
+                ), userIdx);
+    }
+
+    public GetUserBoardLikeRes getUserBoardLike(int userIdx) {
+        String getUserBoardLikeQuery =
+                "select \n" +
+                "    concat('#',categoryName) as categoryName, \n" +
+                "    title, \n" +
+                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount,\n" +
+                "    B.viewCount as viewCount,\n" +
+                "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount\n" +
+                "from Board B\n" +
+                "    left join Category C   on C.categoryIdx = B.categoryIdx\n" +
+                "    left join BoardLike BL on BL.boardIdx = B.boardIdx\n" +
+                "    left join User U on U.userIdx = BL.userIdx\n" +
+                "where BL.userIdx = ? and BL.status = 'ACTIVE' order by BL.createdAt desc";
+
+        return this.jdbcTemplate.queryForObject(getUserBoardLikeQuery,
+                (rs,rowNum) -> new GetUserBoardLikeRes(
+                        rs.getString("categoryName"),
+                        rs.getString("title"),
+                        rs.getInt("quizCount"),
+                        rs.getInt("viewCount"),
+                        rs.getInt("likeCount")
                 ), userIdx);
     }
 }
