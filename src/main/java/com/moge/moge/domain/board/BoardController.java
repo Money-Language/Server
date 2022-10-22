@@ -1,5 +1,6 @@
 package com.moge.moge.domain.board;
 
+import com.moge.moge.domain.board.model.GetBoardTopLike;
 import com.moge.moge.domain.user.UserProvider;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
@@ -8,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
@@ -36,8 +39,6 @@ public class BoardController {
         try {
             // jwt 토큰 확인
             int userIdxByJwt = jwtService.getUserIdx();
-            System.out.println("====" + userIdxByJwt + "===");
-
             if (userProvider.checkUser(userIdxByJwt) == 0) {
                 return new BaseResponse<>(USERS_EMPTY_USER_IDX);
             }
@@ -47,4 +48,17 @@ public class BoardController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /* 게시글 좋아요 top 10 조회 */
+    @ResponseBody
+    @GetMapping("/top-like")
+    public BaseResponse<List<GetBoardTopLike>> getBoardTopLike() {
+        try {
+            List<GetBoardTopLike> boardTopLike = boardService.getBoardTopLike();
+            return new BaseResponse<>(boardTopLike);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 }

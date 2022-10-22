@@ -1,5 +1,6 @@
 package com.moge.moge.domain.board;
 
+import com.moge.moge.domain.board.model.GetBoardTopLike;
 import com.moge.moge.domain.s3.S3Service;
 import com.moge.moge.domain.user.UserDao;
 import com.moge.moge.domain.user.UserProvider;
@@ -11,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
@@ -49,6 +52,14 @@ public class BoardService {
                     }
                 }
             }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetBoardTopLike> getBoardTopLike() throws BaseException {
+        try {
+            return boardDao.getBoardTopLike();
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
