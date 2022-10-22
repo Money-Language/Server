@@ -24,6 +24,8 @@ public enum BaseResponseStatus {
     SUCCESS_UPDATE_PROFILE(true, 1009, "유저의 프로필 수정에 성공하였습니다."),
     SUCCESS_CREATE_FOLLOW(true, 1010, "팔로우/언팔로우에 성공하였습니다."),
 
+    SUCCESS_CREATE_BOARD_LIKE(true, 1011, "게시글 좋아요 등록/해제에 성공하였습니다."),
+
     /**
      * 2000 : Request 오류
      */
@@ -47,6 +49,7 @@ public enum BaseResponseStatus {
     POST_USERS_NEW_PASSWORD_NOT_CORRECT(false, 2021, "변경하고자 하는 비밀번호가 일치하지 않습니다."),
     POST_USERS_CATEGORY_NUM(false, 2022, "관심 키워드를 3개 선택해주세요."),
     POST_FOLLOW_INVALID_PAGE(false, 2023, "페이지는 1이상의 숫자여야 합니다."),
+    USERS_EMPTY_USER_IDX(false, 2024, "유저 식별자가 존재하지 않습니다."),
 
 
     /**
@@ -71,6 +74,8 @@ public enum BaseResponseStatus {
     FAILED_TO_CREATE_FOLLOW(false, 3022, "팔로우 등록에 실패하였습니다."),
     USER_FOLLOW_ALREADY_EXISTS(false, 3023, "이미 팔로우한 유저입니다."),
     USER_NOT_EXISTS(false, 3024, "팔로우하려는 유저는 존재하지 않는 유저입니다."),
+    BOARD_NOT_EXISTS(false, 3025, "해당 게시물은 존재하지 않습니다."),
+    FAILED_TO_CREATE_BOARD_LIKE(false, 3026, "게시물 좋아요 등록,해제에 실패하였습니다."),
 
     /**
      * 4000 : Database, Server 오류

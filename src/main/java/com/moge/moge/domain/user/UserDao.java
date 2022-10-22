@@ -6,7 +6,6 @@ import com.moge.moge.domain.user.model.res.GetUserFollowRes;
 import com.moge.moge.domain.user.model.res.GetUserRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -261,6 +260,8 @@ public class UserDao {
                 ), params);
     }
 
-
-
+    public int checkUser(int userIdx) {
+        String Query = "select exists(select * from User where (status = 'ACTIVE' or status = 'NAVER' or status = 'KAKAO') and userIdx =? )";
+        return this.jdbcTemplate.queryForObject(Query, int.class, userIdx);
+    }
 }
