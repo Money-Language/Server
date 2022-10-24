@@ -12,7 +12,6 @@ import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -123,11 +122,11 @@ public class UserProvider {
         }
     }
 
-    public GetUserBoardLikeRes getUserBoardLike(int userIdx) throws BaseException {
-        //try {
+    public List<GetUserBoardLikeRes> getUserBoardLike(int userIdx) throws BaseException {
+        try {
             return userDao.getUserBoardLike(userIdx);
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

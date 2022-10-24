@@ -335,13 +335,13 @@ public class UserController {
     * 카테고리명, 제목, 퀴즈개수 조회수, 좋아요수 */
     @ResponseBody
     @GetMapping("/{userIdx}/board/like")
-    public BaseResponse<GetUserBoardLikeRes> getUserBoardLike(@PathVariable("userIdx") int userIdx) {
+    public BaseResponse<List<GetUserBoardLikeRes>> getUserBoardLike(@PathVariable("userIdx") int userIdx) {
         try {
             int userIdxByJwt = jwtService.getUserIdx();
             if (userIdxByJwt != userIdx) {
                 return new BaseResponse<>(INVALID_USER_JWT);
             }
-            GetUserBoardLikeRes userBoardLike = userProvider.getUserBoardLike(userIdx);
+            List<GetUserBoardLikeRes> userBoardLike = userProvider.getUserBoardLike(userIdx);
             return new BaseResponse<>(userBoardLike);
 
         } catch (BaseException exception) {

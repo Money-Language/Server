@@ -281,7 +281,7 @@ public class UserDao {
                 ), userIdx);
     }
 
-    public GetUserBoardLikeRes getUserBoardLike(int userIdx) {
+    public List<GetUserBoardLikeRes> getUserBoardLike(int userIdx) {
         String getUserBoardLikeQuery =
                 "select \n" +
                 "    concat('#',categoryName) as categoryName, \n" +
@@ -295,7 +295,7 @@ public class UserDao {
                 "    left join User U on U.userIdx = BL.userIdx\n" +
                 "where BL.userIdx = ? and BL.status = 'ACTIVE' order by BL.createdAt desc";
 
-        return this.jdbcTemplate.queryForObject(getUserBoardLikeQuery,
+        return this.jdbcTemplate.query(getUserBoardLikeQuery,
                 (rs,rowNum) -> new GetUserBoardLikeRes(
                         rs.getString("categoryName"),
                         rs.getString("title"),
