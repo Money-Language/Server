@@ -1,6 +1,8 @@
 package com.moge.moge.domain.board;
 
 import com.moge.moge.domain.board.model.GetBoardTop;
+import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
+import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
@@ -63,6 +65,20 @@ public class BoardService {
     public List<GetBoardTop> getBoardTopView() throws BaseException {
         try {
             return boardDao.getBoardTopView();
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int createBoardComment(PostBoardCommentReq postBoardCommentReq, int boardIdx, int userIdx) throws BaseException {
+        try {
+
+            if (postBoardCommentReq.getParentIdx() == 1) { // 만약 대댓글을 작성할 때 그룹 IDX가 존재하지 않으면 대댓글을 작성할 수 없음
+                if (boardDao.checkCommentGroupIdx(postBoardCommentReq.getGroupIdx()) == 0) {
+                    throw new BaseException(BOARD_COMMENT_GROUP_IDX_NOT_EXISTS);
+                }
+            }
+            return boardDao.createBoardComment(postBoardCommentReq, boardIdx, userIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

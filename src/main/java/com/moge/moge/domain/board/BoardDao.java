@@ -1,6 +1,7 @@
 package com.moge.moge.domain.board;
 
 import com.moge.moge.domain.board.model.GetBoardTop;
+import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -74,7 +75,7 @@ public class BoardDao {
     }
 
     public List<GetBoardTop> getBoardTopView() {
-        String query =
+        String getBoardTopViewquery =
                 "select concat('#', categoryName) as categoryName, \n" +
                 "    title, viewCount,\n" +
                 "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
@@ -82,7 +83,7 @@ public class BoardDao {
                 "from Board B\n" +
                 "    left join Category C on C.categoryIdx = B.categoryIdx\n" +
                 "order by viewCount desc limit 10;";
-        return this.jdbcTemplate.query(query,
+        return this.jdbcTemplate.query(getBoardTopViewquery,
                 (rs, rowNum) -> new GetBoardTop(
                         rs.getString("categoryName"),
                         rs.getString("title"),
@@ -90,5 +91,17 @@ public class BoardDao {
                         rs.getInt("likeCount"),
                         rs.getInt("quizCount")
                 ));
+    }
+
+    public int createBoardComment(PostBoardCommentReq postBoardCommentReq, int boardIdx, int userIdx) {
+        String createBoardCommentQuery = "insert into Comment(content, groupIdx, parentIdx, boardIdx, userIdx) values(?,?,?,?,?)";
+        Object[] params = new Object[]{postBoardCommentReq.getContent(), postBoardCommentReq.getGroupIdx(), postBoardCommentReq.getParentIdx(), boardIdx, userIdx};
+        return this.jdbcTemplate.update(createBoardCommentQuery, params);
+    }
+
+    public int checkCommentGroupIdx(int groupIdx) {
+        String checkCommentGroupIdxQuery = "select exists(select * from Comment where groupIdx = ?)";
+        return this.jdbcTemplate.update(checkCommentGroupIdxQuery, int.class, groupIdx);
+
     }
 }

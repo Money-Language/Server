@@ -1,6 +1,7 @@
 package com.moge.moge.domain.board;
 
 import com.moge.moge.domain.board.model.GetBoardTop;
+import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
 import com.moge.moge.domain.user.UserProvider;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
@@ -61,6 +62,7 @@ public class BoardController {
         }
     }
 
+    /* 게시글 조회 top 10 조회 */
     @ResponseBody
     @GetMapping("/top-view")
     public BaseResponse<List<GetBoardTop>> getBoardTopView() {
@@ -71,6 +73,34 @@ public class BoardController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+
+    /* 게시글 댓글 생성 */
+    @ResponseBody
+    @PostMapping("/{boardIdx}/comment")
+    public BaseResponse<String> createBoardComment(@PathVariable("boardIdx") int boardIdx,
+                                                  @RequestBody PostBoardCommentReq postBoardCommentReq) {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            if (userProvider.checkUser(userIdx) == 0) {
+                return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+            }
+            if (postBoardCommentReq.getContent() == null) {
+                return new BaseResponse<>(POST_BOARDS_EMPTY_COMMENT);
+            }
+            boardService.createBoardComment(postBoardCommentReq, boardIdx, userIdx);
+            return new BaseResponse<>(SUCCESS_CREATE_BOARD_COMMENT);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 댓글 전체 조회 */
+
+    /* 댓글 수정 */
+
+    /* 댓글 삭제 */
 
 
 }

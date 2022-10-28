@@ -25,6 +25,7 @@ public enum BaseResponseStatus {
     SUCCESS_CREATE_FOLLOW(true, 1010, "팔로우/언팔로우에 성공하였습니다."),
 
     SUCCESS_CREATE_BOARD_LIKE(true, 1011, "게시글 좋아요 등록/해제에 성공하였습니다."),
+    SUCCESS_CREATE_BOARD_COMMENT(true, 1012, "게시글 댓글 생성에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류
@@ -51,6 +52,7 @@ public enum BaseResponseStatus {
     POST_FOLLOW_INVALID_PAGE(false, 2023, "페이지는 1이상의 숫자여야 합니다."),
     USERS_EMPTY_USER_IDX(false, 2024, "유저 식별자가 존재하지 않습니다."),
 
+    POST_BOARDS_EMPTY_COMMENT(false, 2030, "댓글 내용을 입력해주세요."),
 
     /**
      * 3000 : Response 오류
@@ -74,8 +76,13 @@ public enum BaseResponseStatus {
     FAILED_TO_CREATE_FOLLOW(false, 3022, "팔로우 등록에 실패하였습니다."),
     USER_FOLLOW_ALREADY_EXISTS(false, 3023, "이미 팔로우한 유저입니다."),
     USER_NOT_EXISTS(false, 3024, "팔로우하려는 유저는 존재하지 않는 유저입니다."),
-    BOARD_NOT_EXISTS(false, 3025, "해당 게시물은 존재하지 않습니다."),
-    FAILED_TO_CREATE_BOARD_LIKE(false, 3026, "게시물 좋아요 등록,해제에 실패하였습니다."),
+
+    // board
+    BOARD_NOT_EXISTS(false, 3030, "해당 게시물은 존재하지 않습니다."),
+    FAILED_TO_CREATE_BOARD_LIKE(false, 3031, "게시물 좋아요 등록,해제에 실패하였습니다."),
+    BOARD_COMMENT_GROUP_IDX_NOT_EXISTS(false, 3032, "해당 댓글 그룹 식별자가 존재하지 않습니다."),
+
+
 
     /**
      * 4000 : Database, Server 오류
