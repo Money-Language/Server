@@ -117,4 +117,34 @@ public class BoardDao {
         String deleteBoardCommentQuery = "update Comment set status = 'DELETE' where commentIdx =? and status = 'ACTIVE'";
         return this.jdbcTemplate.update(deleteBoardCommentQuery, commentIdx);
     }
+
+    public int createCommentLike(int boardIdx, int commentIdx, int userIdx) {
+        String createCommentLikeQuery = "insert into CommentLike(commentIdx, userIdx) values(?,?)";
+        Object[] param = new Object[]{commentIdx, userIdx};
+        return this.jdbcTemplate.update(createCommentLikeQuery, param);
+    }
+
+    public int checkCommentLikeExists(int commentIdx, int userIdx) {
+        String checkCommentLikeExistsQuery = "select exists(select * from CommentLike where commentIdx =? and userIdx = ? and status = 'ACTIVE')";
+        Object[] params = new Object[]{commentIdx, userIdx};
+        return this.jdbcTemplate.queryForObject(checkCommentLikeExistsQuery, int.class, params);
+    }
+
+    public int deleteCommentLike(int commentIdx, int userIdx) {
+        String deleteCommentLikeQuery = "update CommentLike set status = 'DELETE' where commentIdx =? and userIdx =?";
+        Object[] params = new Object[]{commentIdx, userIdx};
+        return this.jdbcTemplate.update(deleteCommentLikeQuery, params);
+    }
+
+    public int checkCommentLikeStatus(int commentIdx, int userIdx) {
+        String checkCommentLikeStatusQuery = "select exists(select * from CommentLike where commentIdx = ? and userIdx = ? and status = 'DELETE')";
+        Object[] params = new Object[]{commentIdx, userIdx};
+        return this.jdbcTemplate.queryForObject(checkCommentLikeStatusQuery, int.class, params);
+    }
+
+    public int updateCommentLikeStatus(int commentIdx, int userIdx) {
+        String updateCommentLikeStatusQuery = "update CommentLike set status = 'ACTIVE' where commentIdx = ? and userIdx =?";
+        Object[] params = new Object[]{commentIdx, userIdx};
+        return this.jdbcTemplate.update(updateCommentLikeStatusQuery, params);
+    }
 }

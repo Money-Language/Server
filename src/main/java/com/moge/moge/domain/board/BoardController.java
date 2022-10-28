@@ -141,7 +141,24 @@ public class BoardController {
         }
     }
 
-    /* 댓글 전체 조회 */
     /* 댓글/대댓글 좋아요 누르기 */
+    @ResponseBody
+    @PostMapping("/{boardIdx}/comment/{commentIdx}/like")
+    public BaseResponse<String> createCommentLike(@PathVariable("boardIdx") int boardIdx,
+                                                   @PathVariable("commentIdx") int commentIdx) {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            if (userProvider.checkUser(userIdx) == 0) {
+                return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+            }
+            boardService.createCommentLike(boardIdx, commentIdx, userIdx);
+            return new BaseResponse<>(SUCCESS_CREATE_BOARD_COMMENT_LIKE);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 댓글 전체 조회 */
 
 }

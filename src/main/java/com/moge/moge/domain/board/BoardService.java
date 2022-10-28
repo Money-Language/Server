@@ -3,7 +3,6 @@ package com.moge.moge.domain.board;
 import com.moge.moge.domain.board.model.GetBoardTop;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
-import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
@@ -105,4 +104,27 @@ public class BoardService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public void createCommentLike(int boardIdx, int commentIdx, int userIdx) throws BaseException {
+        try {
+            if (boardDao.checkBoardExists(boardIdx) == 0) {
+                throw new BaseException(BOARD_NOT_EXISTS);
+            }
+            if (boardDao.checkCommentLikeExists(commentIdx, userIdx) == 1) {
+                boardDao.deleteCommentLike(commentIdx, userIdx);
+            } else {
+                if (boardDao.checkCommentLikeStatus(commentIdx, userIdx) == 1) {
+                    boardDao.updateCommentLikeStatus(commentIdx, userIdx);
+                } else {
+                    int result = boardDao.createCommentLike(boardIdx, commentIdx, userIdx);
+                    if (result == 0) {
+                        throw new BaseException(FAILED_TO_CREATE_COMMENT_LIKE);
+                    }
+                }
+            }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }
