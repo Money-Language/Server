@@ -304,9 +304,9 @@ public class UserDao {
                         rs.getInt("likeCount")
                 ), userIdx);
     }
-    public int checkUserComment(int userIdx, int commentIdx) {
-        String checkUserCommentQuery = "select exists(select * from Comment where userIdx =? and commentIdx =?)";
-        Object[] params = new Object[]{userIdx, commentIdx};
+    public int checkUserComment(int userIdx, int commentIdx, int boardIdx) {
+        String checkUserCommentQuery = "select exists(select * from Comment where userIdx =? and commentIdx =? and boardIdx = ?)";
+        Object[] params = new Object[]{userIdx, commentIdx, boardIdx};
         return this.jdbcTemplate.queryForObject(checkUserCommentQuery, int.class, params);
     }
 }

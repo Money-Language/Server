@@ -130,11 +130,11 @@ public class UserProvider {
         }
     }
 
-    public int checkUserComment(int userIdx, int commentIdx) throws BaseException{
-        //try {
-            return userDao.checkUserComment(userIdx, commentIdx);
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+    public int checkUserComment(int userIdx, int commentIdx, int boardIdx) throws BaseException{
+        try {
+            return userDao.checkUserComment(userIdx, commentIdx, boardIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }
