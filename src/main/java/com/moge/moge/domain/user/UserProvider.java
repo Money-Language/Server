@@ -129,4 +129,12 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int checkUserComment(int userIdx, int commentIdx) throws BaseException{
+        //try {
+            return userDao.checkUserComment(userIdx, commentIdx);
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
+    }
 }

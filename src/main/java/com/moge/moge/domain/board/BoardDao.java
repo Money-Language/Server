@@ -1,6 +1,7 @@
 package com.moge.moge.domain.board;
 
 import com.moge.moge.domain.board.model.GetBoardTop;
+import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -102,6 +103,13 @@ public class BoardDao {
     public int checkCommentGroupIdx(int groupIdx) {
         String checkCommentGroupIdxQuery = "select exists(select * from Comment where groupIdx = ?)";
         return this.jdbcTemplate.update(checkCommentGroupIdxQuery, int.class, groupIdx);
+
+    }
+
+    public int updateBoardComment(PatchBoardCommentReq patchBoardCommentReq, int commentIdx) {
+        String updateBoardCommentQuery = "update Comment set content = ? where commentIdx = ? and status = 'ACTIVE'";
+        Object[] param = new Object[]{patchBoardCommentReq.getContent(), commentIdx};
+        return this.jdbcTemplate.update(updateBoardCommentQuery, param);
 
     }
 }
