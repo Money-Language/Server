@@ -112,4 +112,9 @@ public class BoardDao {
         return this.jdbcTemplate.update(updateBoardCommentQuery, param);
 
     }
+
+    public int deleteBoardComment(int commentIdx) {
+        String deleteBoardCommentQuery = "update Comment set status = 'DELETE' where commentIdx =? and status = 'ACTIVE'";
+        return this.jdbcTemplate.update(deleteBoardCommentQuery, commentIdx);
+    }
 }

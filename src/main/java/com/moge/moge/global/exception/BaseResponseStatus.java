@@ -27,6 +27,7 @@ public enum BaseResponseStatus {
     SUCCESS_CREATE_BOARD_LIKE(true, 1011, "게시글 좋아요 등록/해제에 성공하였습니다."),
     SUCCESS_CREATE_BOARD_COMMENT(true, 1012, "게시글 댓글 생성에 성공하였습니다."),
     SUCCESS_UPDATE_BOARD_COMMENT(true, 1013, "게시글 댓글 수정에 성공하였습니다."),
+    SUCCESS_DELETE_BOARD_COMMENT(true, 1014, "게시글 댓글 삭제에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류
@@ -54,7 +55,8 @@ public enum BaseResponseStatus {
     USERS_EMPTY_USER_IDX(false, 2024, "유저 식별자가 존재하지 않습니다."),
 
     POST_BOARDS_EMPTY_COMMENT(false, 2030, "댓글 내용을 입력해주세요."),
-    POST_BOARDS_COMMENT_INVALID_JWT(false, 2031, "댓글 수정에 대한 권한이 없습니다."),
+    POST_BOARDS_COMMENT_INVALID_JWT(false, 2031, "해당 댓글에 대한 권한이 없습니다."),
+
 
     /**
      * 3000 : Response 오류
@@ -84,7 +86,7 @@ public enum BaseResponseStatus {
     FAILED_TO_CREATE_BOARD_LIKE(false, 3031, "게시물 좋아요 등록,해제에 실패하였습니다."),
     BOARD_COMMENT_GROUP_IDX_NOT_EXISTS(false, 3032, "해당 댓글 그룹 식별자가 존재하지 않습니다."),
     FAILED_TO_UPDATE_COMMENT(false, 3033, "댓글 수정에 실패하였습니다."),
-
+    FAILED_TO_DELETE_COMMENT(false, 3034, "댓글 삭제에 실패하였습니다."),
 
 
     /**

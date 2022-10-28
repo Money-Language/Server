@@ -85,13 +85,24 @@ public class BoardService {
     }
 
     public int updateBoardComment(PatchBoardCommentReq patchBoardCommentReq, int commentIdx) throws BaseException {
-        //try {
+        try {
             if (boardDao.updateBoardComment(patchBoardCommentReq, commentIdx) == 0) {
                 throw new BaseException(FAILED_TO_UPDATE_COMMENT);
             }
             return boardDao.updateBoardComment(patchBoardCommentReq, commentIdx);
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int deleteBoardComment(int commentIdx) throws BaseException {
+        try {
+            if (boardDao.deleteBoardComment(commentIdx) == 0) {
+                throw new BaseException(FAILED_TO_DELETE_COMMENT);
+            }
+            return boardDao.deleteBoardComment(commentIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }
