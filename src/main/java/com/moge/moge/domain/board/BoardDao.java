@@ -1,6 +1,7 @@
 package com.moge.moge.domain.board;
 
-import com.moge.moge.domain.board.model.GetBoardTop;
+import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
+import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class BoardDao {
         return this.jdbcTemplate.update(updateBoardLikeStatus, params);
     }
 
-    public List<GetBoardTop> getBoardTopLike() {
+    public List<GetBoardTopRes> getBoardTopLike() {
         String query =
                 "select concat('#', categoryName) as categoryName, \n" +
                 "    title, viewCount,\n" +
@@ -66,7 +67,7 @@ public class BoardDao {
                 "order by likeCount desc limit 10;";
 
         return this.jdbcTemplate.query(query,
-                (rs, rowNum) -> new GetBoardTop(
+                (rs, rowNum) -> new GetBoardTopRes(
                         rs.getString("categoryName"),
                         rs.getString("title"),
                         rs.getInt("viewCount"),
@@ -75,7 +76,7 @@ public class BoardDao {
                 ));
     }
 
-    public List<GetBoardTop> getBoardTopView() {
+    public List<GetBoardTopRes> getBoardTopView() {
         String getBoardTopViewquery =
                 "select concat('#', categoryName) as categoryName, \n" +
                 "    title, viewCount,\n" +
@@ -85,7 +86,7 @@ public class BoardDao {
                 "    left join Category C on C.categoryIdx = B.categoryIdx\n" +
                 "order by viewCount desc limit 10;";
         return this.jdbcTemplate.query(getBoardTopViewquery,
-                (rs, rowNum) -> new GetBoardTop(
+                (rs, rowNum) -> new GetBoardTopRes(
                         rs.getString("categoryName"),
                         rs.getString("title"),
                         rs.getInt("viewCount"),
@@ -146,5 +147,65 @@ public class BoardDao {
         String updateCommentLikeStatusQuery = "update CommentLike set status = 'ACTIVE' where commentIdx = ? and userIdx =?";
         Object[] params = new Object[]{commentIdx, userIdx};
         return this.jdbcTemplate.update(updateCommentLikeStatusQuery, params);
+    }
+
+    public List<GetBoardCommentRes> getBoardComments(int boardIdx) {
+        String getBoardCommentsQuery =
+                "select *\n" +
+                "from (\n" +
+                "    select C.groupIdx, C.content, C.parentIdx, \n" +
+                "    CASE\n" +
+                "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()), '분 전')\n" +
+                "        WHEN TIMESTAMPDIFF(HOUR, C.updatedAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, C.updatedAt, NOW()), '시간 전')\n" +
+                "        WHEN TIMESTAMPDIFF(DAY, C.updatedAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, C.updatedAt, NOW()), '일 전')\n" +
+                "        WHEN TIMESTAMPDIFF(WEEK, C.updatedAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, C.updatedAt, NOW()), '주 전')\n" +
+                "    ELSE CONCAT(TIMESTAMPDIFF(MONTH, C.updatedAt, NOW()), '달 전')\n" +
+                "    END AS 'elapsedTime',\n" +
+                "    U.nickname, U.profileImage, \n" +
+                "    (select count(*) from Comment where boardIdx = ?) as commentCount,\n" +
+                "    (select count(*) from CommentLike CL where CL.commentIdx = C.commentIdx and boardIdx = ?) as commentLike\n" +
+                "    from Comment C\n" +
+                "    left outer join User U on C.userIdx = U.userIdx\n" +
+                "    where parentIdx in (\n" +
+                "        select commentIdx from (\n" +
+                "            select commentIdx from Comment\n" +
+                "            where parentIdx = 0 and C.status = 'ACTIVE'\n" +
+                "            order by commentIdx desc\n" +
+                "        ) as tmp\n" +
+                "        )\n" +
+                "    ) as tmp2\n" +
+                "union ( \n" +
+                "    select C.groupIdx, C.content, C.parentIdx, \n" +
+                "    CASE\n" +
+                "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()), '분 전')\n" +
+                "        WHEN TIMESTAMPDIFF(HOUR, C.updatedAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, C.updatedAt, NOW()), '시간 전')\n" +
+                "        WHEN TIMESTAMPDIFF(DAY, C.updatedAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, C.updatedAt, NOW()), '일 전')\n" +
+                "        WHEN TIMESTAMPDIFF(WEEK, C.updatedAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, C.updatedAt, NOW()), '주 전')\n" +
+                "    ELSE CONCAT(TIMESTAMPDIFF(MONTH, C.updatedAt, NOW()), '달 전')\n" +
+                "    END AS 'elapsedTime',\n" +
+                "    U.nickname, U.profileImage,\n" +
+                "    (select count(*) from Comment where boardIdx = ?) as commentCount,\n" +
+                "    (select count(*) from CommentLike CL where CL.commentIdx = C.commentIdx and boardIdx = ?) as commentLike\n" +
+                "    from Comment C\n" +
+                "    left outer join User U on C.userIdx = U.userIdx\n" +
+                "    where boardIdx = ? and parentIdx = 0 and C.status = 'ACTIVE'\n" +
+                "    order by commentIdx desc\n" +
+                ")\n" +
+                "order by groupIdx asc, parentIdx asc;";
+
+        Object[] params = new Object[]{boardIdx, boardIdx, boardIdx, boardIdx, boardIdx};
+        return this.jdbcTemplate.query(getBoardCommentsQuery,
+                (rs, rowNum) -> new GetBoardCommentRes(
+                        rs.getInt("groupIdx"),
+                        rs.getString("content"),
+                        rs.getInt("parentIdx"),
+                        rs.getString("elapsedTime"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage"),
+                        rs.getInt("commentCount"),
+                        rs.getInt("commentLike")
+                ), params);
     }
 }

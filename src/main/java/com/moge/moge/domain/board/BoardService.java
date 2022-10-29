@@ -1,6 +1,6 @@
 package com.moge.moge.domain.board;
 
-import com.moge.moge.domain.board.model.GetBoardTop;
+import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
 import com.moge.moge.global.config.security.JwtService;
@@ -54,7 +54,7 @@ public class BoardService {
         }
     }
 
-    public List<GetBoardTop> getBoardTopLike() throws BaseException {
+    public List<GetBoardTopRes> getBoardTopLike() throws BaseException {
         try {
             return boardDao.getBoardTopLike();
         } catch (Exception exception) {
@@ -62,7 +62,7 @@ public class BoardService {
         }
     }
 
-    public List<GetBoardTop> getBoardTopView() throws BaseException {
+    public List<GetBoardTopRes> getBoardTopView() throws BaseException {
         try {
             return boardDao.getBoardTopView();
         } catch (Exception exception) {

@@ -1,4 +1,4 @@
-package com.moge.moge.domain.board.model;
+package com.moge.moge.domain.board.model.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetBoardTop {
+public class GetBoardTopRes {
     private String categoryName;
     private String title;
     private int viewCount;

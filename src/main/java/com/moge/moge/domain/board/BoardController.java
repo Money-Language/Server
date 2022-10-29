@@ -1,6 +1,9 @@
 package com.moge.moge.domain.board;
 
-import com.moge.moge.domain.board.model.GetBoardTop;
+import com.moge.moge.domain.board.BoardProvider;
+import com.moge.moge.domain.board.BoardService;
+import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
+import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
 import com.moge.moge.domain.user.UserProvider;
@@ -54,9 +57,9 @@ public class BoardController {
     /* 게시글 좋아요 top 10 조회 */
     @ResponseBody
     @GetMapping("/top-like")
-    public BaseResponse<List<GetBoardTop>> getBoardTopLike() {
+    public BaseResponse<List<GetBoardTopRes>> getBoardTopLike() {
         try {
-            List<GetBoardTop> boardTopLike = boardService.getBoardTopLike();
+            List<GetBoardTopRes> boardTopLike = boardService.getBoardTopLike();
             return new BaseResponse<>(boardTopLike);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -66,9 +69,9 @@ public class BoardController {
     /* 게시글 조회 top 10 조회 */
     @ResponseBody
     @GetMapping("/top-view")
-    public BaseResponse<List<GetBoardTop>> getBoardTopView() {
+    public BaseResponse<List<GetBoardTopRes>> getBoardTopView() {
         try {
-            List<GetBoardTop> boardTopView = boardService.getBoardTopView();
+            List<GetBoardTopRes> boardTopView = boardService.getBoardTopView();
             return new BaseResponse<>(boardTopView);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -160,5 +163,13 @@ public class BoardController {
     }
 
     /* 댓글 전체 조회 */
-
+    @ResponseBody
+    @GetMapping("/{boardIdx}/comments")
+    public BaseResponse<List<GetBoardCommentRes>> getBoardComments(@PathVariable("boardIdx") int boardIdx) {
+        try {
+            return new BaseResponse<>(boardProvider.getBoardComments(boardIdx));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }
