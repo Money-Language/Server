@@ -110,6 +110,9 @@ public class BoardController {
             if (userProvider.checkUser(userIdx) == 0) {
                 return new BaseResponse<>(USERS_EMPTY_USER_IDX);
             }
+            if (patchBoardCommentReq.getContent() == null) {
+                return new BaseResponse<>(POST_BOARDS_EMPTY_COMMENT);
+            }
             // 유저가 작성한 댓글인지 확인하기
             if (userProvider.checkUserComment(userIdx, commentIdx, boardIdx) == 0) {
                 return new BaseResponse<>(POST_BOARDS_COMMENT_INVALID_JWT); // 좀더 나은 이름으로 변경하자 : 권한이 없는 유저다!
