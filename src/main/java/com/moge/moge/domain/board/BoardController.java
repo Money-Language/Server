@@ -1,7 +1,6 @@
 package com.moge.moge.domain.board;
 
-import com.moge.moge.domain.board.BoardProvider;
-import com.moge.moge.domain.board.BoardService;
+
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
@@ -81,7 +80,7 @@ public class BoardController {
 
     /* 게시글 댓글 생성 */
     @ResponseBody
-    @PostMapping("/{boardIdx}/comment")
+    @PostMapping("/{boardIdx}/comments")
     public BaseResponse<String> createBoardComment(@PathVariable("boardIdx") int boardIdx,
                                                   @RequestBody PostBoardCommentReq postBoardCommentReq) {
         try {
@@ -102,7 +101,7 @@ public class BoardController {
 
     /* 댓글 수정 */
     @ResponseBody
-    @PatchMapping("/{boardIdx}/comment/{commentIdx}")
+    @PatchMapping("/{boardIdx}/comments/{commentIdx}")
     public BaseResponse<String> updateBoardComment(@PathVariable("boardIdx") int boardIdx,
                                                    @PathVariable("commentIdx") int commentIdx,
                                                    @RequestBody PatchBoardCommentReq patchBoardCommentReq) {
@@ -125,7 +124,7 @@ public class BoardController {
 
     /* 댓글 삭제 */
     @ResponseBody
-    @DeleteMapping("/{boardIdx}/comment/{commentIdx}")
+    @DeleteMapping("/{boardIdx}/comments/{commentIdx}")
     public BaseResponse<String> deleteBoardComment(@PathVariable("boardIdx") int boardIdx,
                                                    @PathVariable("commentIdx") int commentIdx) {
         try {
@@ -146,7 +145,7 @@ public class BoardController {
 
     /* 댓글/대댓글 좋아요 누르기 */
     @ResponseBody
-    @PostMapping("/{boardIdx}/comment/{commentIdx}/like")
+    @PostMapping("/{boardIdx}/comments/{commentIdx}/like")
     public BaseResponse<String> createCommentLike(@PathVariable("boardIdx") int boardIdx,
                                                    @PathVariable("commentIdx") int commentIdx) {
         try {
