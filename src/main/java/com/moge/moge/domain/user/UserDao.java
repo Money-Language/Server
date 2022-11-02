@@ -30,6 +30,7 @@ public class UserDao {
         this.jdbcTemplate.update(createUserQuery, createUserParams);
 
         String lastInsertIdQuery = "select last_insert_id()";
+        int userIdx = this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
 
         String createUserTermsQuery = "insert into Terms(contract1, contract2, contract3, contract4, userIdx) values(?,?,?,?,?)";
         Object[] createUserTermsParams = new Object[] {
@@ -37,9 +38,10 @@ public class UserDao {
                 postUserReq.getContract2(),
                 postUserReq.getContract3(),
                 postUserReq.getContract4(),
-                this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class)
+                userIdx
         };
-        return this.jdbcTemplate.update(createUserTermsQuery, createUserTermsParams);
+        this.jdbcTemplate.update(createUserTermsQuery, createUserTermsParams);
+        return userIdx;
     }
 
     public PostUserKeywordRes createUserKeyword(int userIdx, PostUserKeywordReq postUserKeywordReq) {
