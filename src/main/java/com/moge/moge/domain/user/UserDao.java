@@ -76,11 +76,9 @@ public class UserDao {
     }
 
     public int checkNickname(String nickname) {
-        String checkNicknameQuery = "select exists(select nickname from User where nickname = ?)";
+        String checkNicknameQuery = "select exists(select nickname from User where nickname = ? and status != 'DELETE')";
         String checkNicknameParams = nickname;
-        return this.jdbcTemplate.queryForObject(checkNicknameQuery,
-                int.class,
-                checkNicknameParams);
+        return this.jdbcTemplate.queryForObject(checkNicknameQuery, int.class, checkNicknameParams);
     }
 
     public User getPwd(PostLoginReq postLoginReq){

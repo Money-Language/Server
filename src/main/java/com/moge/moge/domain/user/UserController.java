@@ -79,6 +79,24 @@ public class UserController {
         }
     }
 
+    /* 닉네임 중복 체크 및 validation 처리 */
+    @ResponseBody
+    @PostMapping("/validate-nickname")
+    public BaseResponse<String> login(@RequestParam("nickname") String nickname) {
+        try {
+            if (nickname == null) {
+                return new BaseResponse<>(POST_USERS_EMPTY_NICKNAME);
+            }
+            if (!isRegexNickname(nickname)) {
+                return new BaseResponse<>(POST_USERS_INVALID_NICKNAME);
+            }
+            userProvider.checkNickname(nickname);
+            return new BaseResponse<>(SUCCESS_CHECK_NICKNAME);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
     /* 로그인 */
     @ResponseBody
     @PostMapping("/login")

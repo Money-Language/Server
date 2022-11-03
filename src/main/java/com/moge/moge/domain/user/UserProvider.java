@@ -41,11 +41,14 @@ public class UserProvider {
     }
 
     public int checkNickname(String nickname) throws BaseException {
-        try {
+        //try {
+            if (userDao.checkNickname(nickname) == 1) {
+                throw new BaseException(FAILED_TO_CHECK_EMAIL);
+            }
             return userDao.checkNickname(nickname);
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 
     public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException {

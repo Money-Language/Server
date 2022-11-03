@@ -30,6 +30,8 @@ public enum BaseResponseStatus {
     SUCCESS_DELETE_BOARD_COMMENT(true, 1014, "게시글 댓글 삭제에 성공하였습니다."),
     SUCCESS_CREATE_BOARD_COMMENT_LIKE(true, 1015, "게시글 댓글 좋아요 등록/해제에 성공하였습니다."),
 
+    SUCCESS_CHECK_NICKNAME(true, 1016, "중복되지 않는 이메일입니다."),
+
     /**
      * 2000 : Request 오류
      */
@@ -81,6 +83,7 @@ public enum BaseResponseStatus {
     FAILED_TO_CREATE_FOLLOW(false, 3022, "팔로우 등록에 실패하였습니다."),
     USER_FOLLOW_ALREADY_EXISTS(false, 3023, "이미 팔로우한 유저입니다."),
     USER_NOT_EXISTS(false, 3024, "팔로우하려는 유저는 존재하지 않는 유저입니다."),
+    FAILED_TO_CHECK_EMAIL(false, 3025, "이미 존재하는 이메일입니다."),
 
     // board
     BOARD_NOT_EXISTS(false, 3030, "해당 게시물은 존재하지 않습니다."),
