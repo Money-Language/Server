@@ -33,17 +33,21 @@ public class UserProvider {
     }
 
     public int checkEmail(String email) throws BaseException {
-        try{
+        //try{
+            if (userDao.checkEmail(email) == 1) {
+                throw new BaseException(FAILED_TO_CHECK_EMAIL);
+            }
             return userDao.checkEmail(email);
-        } catch (Exception exception){
-            throw new BaseException(DATABASE_ERROR);
-        }
+
+        //} catch (Exception exception){
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 
     public int checkNickname(String nickname) throws BaseException {
         //try {
             if (userDao.checkNickname(nickname) == 1) {
-                throw new BaseException(FAILED_TO_CHECK_EMAIL);
+                throw new BaseException(FAILED_TO_CHECK_NICKNAME);
             }
             return userDao.checkNickname(nickname);
         //} catch (Exception exception) {

@@ -79,10 +79,28 @@ public class UserController {
         }
     }
 
+    /* 이메일 validation */
+    @ResponseBody
+    @PostMapping("/validate-email")
+    public BaseResponse<String> validateEmail(@RequestParam("email") String email) {
+        try {
+            if (email == null) {
+                return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+            }
+            if (!isRegexEmail(email)) {
+                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+            }
+            userProvider.checkEmail(email);
+            return new BaseResponse<>(SUCCESS_CHECK_EMAIL);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
     /* 닉네임 중복 체크 및 validation 처리 */
     @ResponseBody
     @PostMapping("/validate-nickname")
-    public BaseResponse<String> login(@RequestParam("nickname") String nickname) {
+    public BaseResponse<String> validateNickname(@RequestParam("nickname") String nickname) {
         try {
             if (nickname == null) {
                 return new BaseResponse<>(POST_USERS_EMPTY_NICKNAME);
