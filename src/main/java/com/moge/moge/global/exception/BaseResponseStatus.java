@@ -32,6 +32,7 @@ public enum BaseResponseStatus {
 
     SUCCESS_CHECK_NICKNAME(true, 1016, "중복되지 않는 닉네임입니다."),
     SUCCESS_CHECK_EMAIL(true, 1017, "중복되지 않는 이메일입니다."),
+    SUCCESS_CHECK_PASSWORD(true, 1018, "이메일 validation에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류

@@ -79,6 +79,26 @@ public class UserController {
         }
     }
 
+    /* 패스워드 validation */
+    @ResponseBody
+    @PostMapping("/validate-password")
+    public BaseResponse<String> validateEmail(@RequestBody PostUserPasswordValidateReq postUserPasswordValidateReq) {
+        if (postUserPasswordValidateReq.getPassword() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
+        }
+        if (postUserPasswordValidateReq.getRePassword() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_REPASSWORD);
+        }
+        if (!isRegexPassword(postUserPasswordValidateReq.getPassword())) {
+            return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
+        }
+        if (!postUserPasswordValidateReq.getPassword().equals(postUserPasswordValidateReq.getRePassword())) {
+            return new BaseResponse<>(POST_USERS_INVALID_REPASSWORD);
+        }
+        return new BaseResponse<>(SUCCESS_CHECK_PASSWORD);
+
+    }
+
     /* 이메일 validation */
     @ResponseBody
     @PostMapping("/validate-email")

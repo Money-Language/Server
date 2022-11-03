@@ -2,6 +2,7 @@ package com.moge.moge.domain.user;
 
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
+import com.moge.moge.domain.user.model.req.PostUserPasswordValidateReq;
 import com.moge.moge.domain.user.model.res.GetUserBoardLikeRes;
 import com.moge.moge.domain.user.model.res.GetUserFollowRes;
 import com.moge.moge.domain.user.model.res.GetUserProfileRes;
@@ -137,7 +138,7 @@ public class UserProvider {
         }
     }
 
-    public int checkUserComment(int userIdx, int commentIdx, int boardIdx) throws BaseException{
+    public int checkUserComment(int userIdx, int commentIdx, int boardIdx) throws BaseException {
         try {
             return userDao.checkUserComment(userIdx, commentIdx, boardIdx);
         } catch (Exception exception) {
