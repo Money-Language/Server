@@ -34,26 +34,25 @@ public class UserProvider {
     }
 
     public int checkEmail(String email) throws BaseException {
-        //try{
-            if (userDao.checkEmail(email) == 1) {
-                throw new BaseException(FAILED_TO_CHECK_EMAIL);
-            }
+        if (userDao.checkEmail(email) == 1) {
+            throw new BaseException(FAILED_TO_CHECK_EMAIL);
+        }
+        try{
             return userDao.checkEmail(email);
-
-        //} catch (Exception exception){
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception){
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     public int checkNickname(String nickname) throws BaseException {
-        //try {
-            if (userDao.checkNickname(nickname) == 1) {
-                throw new BaseException(FAILED_TO_CHECK_NICKNAME);
-            }
+        if (userDao.checkNickname(nickname) == 1) {
+            throw new BaseException(FAILED_TO_CHECK_NICKNAME);
+        }
+        try {
             return userDao.checkNickname(nickname);
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException {
