@@ -102,8 +102,8 @@ public class BoardDao {
     }
 
     public int checkCommentGroupIdx(int groupIdx) {
-        String checkCommentGroupIdxQuery = "select exists(select * from Comment where groupIdx = ?)";
-        return this.jdbcTemplate.update(checkCommentGroupIdxQuery, int.class, groupIdx);
+        String checkCommentGroupIdxQuery = "select exists(select * from Comment where groupIdx = ? and status != 'DELETE')";
+        return this.jdbcTemplate.queryForObject(checkCommentGroupIdxQuery, int.class, groupIdx);
 
     }
 
@@ -207,5 +207,11 @@ public class BoardDao {
                         rs.getInt("commentCount"),
                         rs.getInt("commentLike")
                 ), params);
+    }
+
+    public int checkGroupParentIdx(PostBoardCommentReq postBoardCommentReq, int boardIdx) {
+        String checkGroupParentIdxQuery = "select exists(select * from Comment where boardIdx = ? and groupIdx = ? and parentIdx = 0 and status != 'DELETE')";
+        Object[] params = new Object[]{boardIdx, postBoardCommentReq.getGroupIdx()};
+        return this.jdbcTemplate.queryForObject(checkGroupParentIdxQuery, int.class, params);
     }
 }

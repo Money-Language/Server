@@ -63,6 +63,7 @@ public enum BaseResponseStatus {
     POST_BOARDS_COMMENT_INVALID_JWT(false, 2031, "해당 댓글에 대한 권한이 없습니다."),
 
 
+
     /**
      * 3000 : Response 오류
      */
@@ -95,6 +96,7 @@ public enum BaseResponseStatus {
     FAILED_TO_UPDATE_COMMENT(false, 3033, "댓글 수정에 실패하였습니다."),
     FAILED_TO_DELETE_COMMENT(false, 3034, "댓글 삭제에 실패하였습니다."),
     FAILED_TO_CREATE_COMMENT_LIKE(false, 3035, "댓글 좋아요 등록/해제에 실패하였습니다"),
+    BOARD_COMMENT_GROUP_PARENT_IDX_EXISTS(false, 3036, "해당 그룹의 부모 댓글이 이미 존재합니다."),
 
     /**
      * 4000 : Database, Server 오류

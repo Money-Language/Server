@@ -71,12 +71,19 @@ public class BoardService {
     }
 
     public int createBoardComment(PostBoardCommentReq postBoardCommentReq, int boardIdx, int userIdx) throws BaseException {
-        try {
-            if (postBoardCommentReq.getParentIdx() == 1) { // 만약 대댓글을 작성할 때 그룹 IDX가 존재하지 않으면 대댓글을 작성할 수 없음
-               if (boardDao.checkCommentGroupIdx(postBoardCommentReq.getGroupIdx()) == 0) {
-                    throw new BaseException(BOARD_COMMENT_GROUP_IDX_NOT_EXISTS);
-                }
+        if (postBoardCommentReq.getParentIdx() == 1) { // 만약 대댓글을 작성할 때 그룹 IDX가 존재하지 않으면 대댓글을 작성할 수 없음
+            if (boardDao.checkCommentGroupIdx(postBoardCommentReq.getGroupIdx()) == 0) {
+                throw new BaseException(BOARD_COMMENT_GROUP_IDX_NOT_EXISTS);
             }
+        }
+
+        if (postBoardCommentReq.getParentIdx() == 0) {
+            if (boardDao.checkGroupParentIdx(postBoardCommentReq, boardIdx) == 1) {
+                throw new BaseException(BOARD_COMMENT_GROUP_PARENT_IDX_EXISTS);
+            }
+        }
+
+        try {
             return boardDao.createBoardComment(postBoardCommentReq, boardIdx, userIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
@@ -84,10 +91,10 @@ public class BoardService {
     }
 
     public int updateBoardComment(PatchBoardCommentReq patchBoardCommentReq, int commentIdx) throws BaseException {
+        if (boardDao.updateBoardComment(patchBoardCommentReq, commentIdx) == 0) {
+            throw new BaseException(FAILED_TO_UPDATE_COMMENT);
+        }
         try {
-            if (boardDao.updateBoardComment(patchBoardCommentReq, commentIdx) == 0) {
-                throw new BaseException(FAILED_TO_UPDATE_COMMENT);
-            }
             return boardDao.updateBoardComment(patchBoardCommentReq, commentIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
@@ -95,10 +102,10 @@ public class BoardService {
     }
 
     public int deleteBoardComment(int commentIdx) throws BaseException {
+        if (boardDao.deleteBoardComment(commentIdx) == 0) {
+            throw new BaseException(FAILED_TO_DELETE_COMMENT);
+        }
         try {
-            if (boardDao.deleteBoardComment(commentIdx) == 0) {
-                throw new BaseException(FAILED_TO_DELETE_COMMENT);
-            }
             return boardDao.deleteBoardComment(commentIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
