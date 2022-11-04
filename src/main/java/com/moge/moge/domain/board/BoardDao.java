@@ -153,7 +153,7 @@ public class BoardDao {
         String getBoardCommentsQuery =
                 "select *\n" +
                 "from (\n" +
-                "    select C.groupIdx, C.content, C.parentIdx, \n" +
+                "    select C.commentIdx, C.groupIdx, C.content, C.parentIdx, \n" +
                 "    CASE\n" +
                 "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) <= 0 THEN '방금 전'\n" +
                 "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()), '분 전')\n" +
@@ -176,7 +176,7 @@ public class BoardDao {
                 "        )\n" +
                 "    ) as tmp2\n" +
                 "union ( \n" +
-                "    select C.groupIdx, C.content, C.parentIdx, \n" +
+                "    select C.commentIdx, C.groupIdx, C.content, C.parentIdx, \n" +
                 "    CASE\n" +
                 "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) <= 0 THEN '방금 전'\n" +
                 "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()), '분 전')\n" +
@@ -198,6 +198,7 @@ public class BoardDao {
         Object[] params = new Object[]{boardIdx, boardIdx, boardIdx, boardIdx, boardIdx};
         return this.jdbcTemplate.query(getBoardCommentsQuery,
                 (rs, rowNum) -> new GetBoardCommentRes(
+                        rs.getInt("commentIdx"),
                         rs.getInt("groupIdx"),
                         rs.getString("content"),
                         rs.getInt("parentIdx"),

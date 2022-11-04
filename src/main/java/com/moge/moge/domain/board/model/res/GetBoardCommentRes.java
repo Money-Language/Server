@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetBoardCommentRes {
+    private int commentIdx;
     private int groupIdx;
     private String content;
     private int parentIdx;
