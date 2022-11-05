@@ -39,4 +39,12 @@ public class BoardProvider {
         //    throw new BaseException(DATABASE_ERROR);
         //}
     }
+
+    public List<GetBoardCommentRes> getBoardCommentsByGroup(int boardIdx, int groupIdx) throws BaseException {
+        //try {
+            return boardDao.getBoardCommentsByGroup(boardIdx, groupIdx);
+        //} catch (BaseException exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
+    }
 }

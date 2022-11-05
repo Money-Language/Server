@@ -174,4 +174,16 @@ public class BoardController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /* 그룹 식별자로 해당 그룹의 댓글, 대댓글을 전체 조회 */
+    @ResponseBody
+    @GetMapping("/{boardIdx}/comments/group")
+    public BaseResponse<List<GetBoardCommentRes>> getBoardCommentsByGroup(@PathVariable("boardIdx") int boardIdx,
+                                                                   @RequestParam("groupIdx") int groupIdx) {
+        try {
+            return new BaseResponse<>(boardProvider.getBoardCommentsByGroup(boardIdx, groupIdx));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }

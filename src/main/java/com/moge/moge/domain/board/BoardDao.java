@@ -215,4 +215,66 @@ public class BoardDao {
         Object[] params = new Object[]{boardIdx, postBoardCommentReq.getGroupIdx()};
         return this.jdbcTemplate.queryForObject(checkGroupParentIdxQuery, int.class, params);
     }
+
+    public List<GetBoardCommentRes> getBoardCommentsByGroup(int boardIdx, int groupIdx) {
+        String getBoardCommentsByGroupQuery =
+                "select *\n" +
+                "from (\n" +
+                "    select C.commentIdx, C.groupIdx, C.content, C.parentIdx, \n" +
+                "    CASE\n" +
+                "            WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "            WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()), '분 전')\n" +
+                "            WHEN TIMESTAMPDIFF(HOUR, C.updatedAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, C.updatedAt, NOW()), '시간 전')\n" +
+                "            WHEN TIMESTAMPDIFF(DAY, C.updatedAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, C.updatedAt, NOW()), '일 전')\n" +
+                "            WHEN TIMESTAMPDIFF(WEEK, C.updatedAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, C.updatedAt, NOW()), '주 전')\n" +
+                "        ELSE CONCAT(TIMESTAMPDIFF(MONTH, C.updatedAt, NOW()), '달 전')\n" +
+                "        END AS 'elapsedTime',\n" +
+                "        U.nickname, U.profileImage, \n" +
+                "        (select count(*) from Comment where boardIdx = ?) as commentCount,\n" +
+                "        (select count(*) from CommentLike CL where CL.commentIdx = C.commentIdx and boardIdx = ?) as commentLike\n" +
+                "    from Comment C\n" +
+                "    left outer join User U on C.userIdx = U.userIdx\n" +
+                "    where parentIdx in (\n" +
+                "        select commentIdx from (\n" +
+                "            select commentIdx from Comment\n" +
+                "            where parentIdx = 0 and C.status = 'ACTIVE'\n" +
+                "            order by commentIdx desc\n" +
+                "        ) as tmp\n" +
+                "        )\n" +
+                "    ) as tmp2\n" +
+                "    where groupIdx = ?\n" +
+                "union ( \n" +
+                "    select C.commentIdx, C.groupIdx, C.content, C.parentIdx, \n" +
+                "    CASE\n" +
+                "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "        WHEN TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, C.updatedAt, NOW()), '분 전')\n" +
+                "        WHEN TIMESTAMPDIFF(HOUR, C.updatedAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, C.updatedAt, NOW()), '시간 전')\n" +
+                "        WHEN TIMESTAMPDIFF(DAY, C.updatedAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, C.updatedAt, NOW()), '일 전')\n" +
+                "        WHEN TIMESTAMPDIFF(WEEK, C.updatedAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, C.updatedAt, NOW()), '주 전')\n" +
+                "    ELSE CONCAT(TIMESTAMPDIFF(MONTH, C.updatedAt, NOW()), '달 전')\n" +
+                "    END AS 'elapsedTime',\n" +
+                "    U.nickname, U.profileImage,\n" +
+                "    (select count(*) from Comment where boardIdx = ?) as commentCount,\n" +
+                "    (select count(*) from CommentLike CL where CL.commentIdx = C.commentIdx and boardIdx = ?) as commentLike\n" +
+                "    from Comment C\n" +
+                "    left outer join User U on C.userIdx = U.userIdx\n" +
+                "    where boardIdx = ? and parentIdx = 0 and C.groupIdx = 1\n" +
+                "    order by commentIdx desc\n" +
+                ")\n" +
+                "order by groupIdx asc, parentIdx asc;\n";
+        
+        Object[] params = new Object[]{boardIdx, boardIdx, groupIdx, boardIdx, boardIdx, boardIdx};
+        return this.jdbcTemplate.query(getBoardCommentsByGroupQuery,
+                (rs, rowNum) -> new GetBoardCommentRes(
+                        rs.getInt("commentIdx"),
+                        rs.getInt("groupIdx"),
+                        rs.getString("content"),
+                        rs.getInt("parentIdx"),
+                        rs.getString("elapsedTime"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage"),
+                        rs.getInt("commentCount"),
+                        rs.getInt("commentLike")
+                ), params);
+    }
 }
