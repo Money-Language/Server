@@ -253,12 +253,12 @@ public class BoardDao {
                 "    (select count(*) from CommentLike CL where CL.commentIdx = C.commentIdx and boardIdx = ?) as commentLike\n" +
                 "    from Comment C\n" +
                 "    left outer join User U on C.userIdx = U.userIdx\n" +
-                "    where boardIdx = ? and parentIdx = 0 and C.groupIdx = 1\n" +
+                "    where boardIdx = ? and parentIdx = 0 and C.groupIdx = ?\n" +
                 "    order by commentIdx desc\n" +
                 ")\n" +
                 "order by groupIdx asc, parentIdx asc;\n";
 
-        Object[] params = new Object[]{boardIdx, boardIdx, groupIdx, boardIdx, boardIdx, boardIdx};
+        Object[] params = new Object[]{boardIdx, boardIdx, groupIdx, boardIdx, boardIdx, boardIdx, groupIdx};
         return this.jdbcTemplate.query(getBoardCommentsByGroupQuery,
                 (rs, rowNum) -> new GetBoardCommentRes(
                         rs.getInt("commentIdx"),
