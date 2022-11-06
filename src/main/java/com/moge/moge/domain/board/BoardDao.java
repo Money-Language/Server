@@ -58,12 +58,13 @@ public class BoardDao {
 
     public List<GetBoardTopRes> getBoardTopLike() {
         String query =
-                "select concat('#', categoryName) as categoryName, \n" +
+                "select categoryName, nickname, profileImage,\n" +
                 "    title, viewCount,\n" +
                 "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
                 "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
                 "from Board B\n" +
                 "    left join Category C on C.categoryIdx = B.categoryIdx\n" +
+                "    left join User U on B.userIdx = U.userIdx \n" +
                 "order by likeCount desc limit 10;";
 
         return this.jdbcTemplate.query(query,
@@ -72,18 +73,21 @@ public class BoardDao {
                         rs.getString("title"),
                         rs.getInt("viewCount"),
                         rs.getInt("likeCount"),
-                        rs.getInt("quizCount")
+                        rs.getInt("quizCount"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage")
                 ));
     }
 
     public List<GetBoardTopRes> getBoardTopView() {
         String getBoardTopViewquery =
-                "select concat('#', categoryName) as categoryName, \n" +
+                "select categoryName, nickname, profileImage, \n" +
                 "    title, viewCount,\n" +
                 "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
                 "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
                 "from Board B\n" +
                 "    left join Category C on C.categoryIdx = B.categoryIdx\n" +
+                "    left join User U on B.userIdx = U.userIdx \n" +
                 "order by viewCount desc limit 10;";
         return this.jdbcTemplate.query(getBoardTopViewquery,
                 (rs, rowNum) -> new GetBoardTopRes(
@@ -91,7 +95,9 @@ public class BoardDao {
                         rs.getString("title"),
                         rs.getInt("viewCount"),
                         rs.getInt("likeCount"),
-                        rs.getInt("quizCount")
+                        rs.getInt("quizCount"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage")
                 ));
     }
 

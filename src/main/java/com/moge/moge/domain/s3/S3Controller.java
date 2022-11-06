@@ -26,4 +26,9 @@ public class S3Controller {
         awsS3Service.deleteFile(fileName);
         return new BaseResponse<>(SUCCESS_DELETE_AWS_S3);
     }
+
+    @GetMapping("file")
+    public BaseResponse<String> getFile(@RequestParam String fileName) {
+        return new BaseResponse<>(awsS3Service.getFilePath(fileName));
+    }
 }

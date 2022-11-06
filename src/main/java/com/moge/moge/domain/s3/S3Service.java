@@ -63,6 +63,10 @@ public class S3Service {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
+    public String getFilePath(String path) {
+        return amazonS3.getUrl(bucket, path).toString();
+    }
+
     // 먼저 파일 업로드 시, 파일명을 난수화하기 위해 random으로 돌립니다.
     private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));

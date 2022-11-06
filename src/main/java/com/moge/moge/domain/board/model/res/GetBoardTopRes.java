@@ -15,4 +15,6 @@ public class GetBoardTopRes {
     private int viewCount;
     private int likeCount;
     private int quizCount;
+    private String nickname;
+    private String profileImage;
 }

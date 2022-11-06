@@ -3,6 +3,7 @@ package com.moge.moge.domain.board;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
+import com.moge.moge.domain.s3.S3Service;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
@@ -22,12 +23,14 @@ public class BoardService {
     private final BoardDao boardDao;
     private final BoardProvider boardProvider;
     private final JwtService jwtService;
+    private final S3Service s3Service;
 
     @Autowired
-    public BoardService(BoardDao boardDao, BoardProvider boardProvider, JwtService jwtService) {
+    public BoardService(BoardDao boardDao, BoardProvider boardProvider, JwtService jwtService, S3Service s3Service) {
         this.boardDao = boardDao;
         this.boardProvider = boardProvider;
         this.jwtService = jwtService;
+        this.s3Service = s3Service;
     }
 
     public void createBoardLike(int boardIdx, int userIdx) throws BaseException {
