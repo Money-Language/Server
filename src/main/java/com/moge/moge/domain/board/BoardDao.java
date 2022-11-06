@@ -114,11 +114,6 @@ public class BoardDao {
 
     }
 
-    public int deleteBoardComment(int commentIdx) {
-        String deleteBoardCommentQuery = "update Comment set status = 'DELETE' where commentIdx =? and status = 'ACTIVE'";
-        return this.jdbcTemplate.update(deleteBoardCommentQuery, commentIdx);
-    }
-
     public int createCommentLike(int boardIdx, int commentIdx, int userIdx) {
         String createCommentLikeQuery = "insert into CommentLike(commentIdx, userIdx) values(?,?)";
         Object[] param = new Object[]{commentIdx, userIdx};
@@ -262,7 +257,7 @@ public class BoardDao {
                 "    order by commentIdx desc\n" +
                 ")\n" +
                 "order by groupIdx asc, parentIdx asc;\n";
-        
+
         Object[] params = new Object[]{boardIdx, boardIdx, groupIdx, boardIdx, boardIdx, boardIdx};
         return this.jdbcTemplate.query(getBoardCommentsByGroupQuery,
                 (rs, rowNum) -> new GetBoardCommentRes(
@@ -276,5 +271,23 @@ public class BoardDao {
                         rs.getInt("commentCount"),
                         rs.getInt("commentLike")
                 ), params);
+    }
+
+    public int checkCommentParentIdx(int commentIdx) {
+        String checkCommentParentIdxQuery = "select parentIdx from Comment where commentIdx =?";
+        System.out.println("what : " + this.jdbcTemplate.queryForObject(checkCommentParentIdxQuery, int.class, commentIdx));
+        return this.jdbcTemplate.queryForObject(checkCommentParentIdxQuery, int.class, commentIdx);
+    }
+
+    public int deleteParentComment(int boardIdx, int commentIdx) {
+        String deleteParentCommentQuery = "update Comment set status = 'DELETE', content = '삭제된 댓글입니다.' where boardIdx =? and commentIdx =? and status = 'ACTIVE'";
+        Object[] params = new Object[]{boardIdx, commentIdx};
+        return this.jdbcTemplate.update(deleteParentCommentQuery, params);
+    }
+
+    public int deleteChildComment(int boardIdx, int commentIdx) {
+        String deleteBoardCommentQuery = "update Comment set status = 'DELETE' where boardIdx =? and commentIdx =? and status = 'ACTIVE'";
+        Object[] params = new Object[]{boardIdx, commentIdx};
+        return this.jdbcTemplate.update(deleteBoardCommentQuery, params);
     }
 }

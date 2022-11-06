@@ -101,12 +101,15 @@ public class BoardService {
         }
     }
 
-    public int deleteBoardComment(int commentIdx) throws BaseException {
-        if (boardDao.deleteBoardComment(commentIdx) == 0) {
-            throw new BaseException(FAILED_TO_DELETE_COMMENT);
-        }
+    public void deleteBoardComment(int boardIdx, int commentIdx) throws BaseException {
         try {
-            return boardDao.deleteBoardComment(commentIdx);
+            // 댓글 식별자로 해당 댓글의 부모식별자를 알아옴 -> 만약 1이라면 그냥 삭제, 0이면 댓글수정
+            if (boardDao.checkCommentParentIdx(commentIdx) == 1) {
+                boardDao.deleteChildComment(boardIdx, commentIdx);
+            } else {
+                boardDao.deleteParentComment(boardIdx, commentIdx);
+            }
+
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

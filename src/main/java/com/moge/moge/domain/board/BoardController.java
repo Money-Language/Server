@@ -138,7 +138,7 @@ public class BoardController {
             if (userProvider.checkUserComment(userIdx, commentIdx, boardIdx) == 0) {
                 return new BaseResponse<>(POST_BOARDS_COMMENT_INVALID_JWT);
             }
-            boardService.deleteBoardComment(commentIdx);
+            boardService.deleteBoardComment(boardIdx, commentIdx);
             return new BaseResponse<>(SUCCESS_DELETE_BOARD_COMMENT);
 
         } catch (BaseException exception) {
