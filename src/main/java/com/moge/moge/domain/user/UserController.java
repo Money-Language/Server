@@ -277,6 +277,23 @@ public class UserController {
         }
     }
 
+    /* 관심 키워드 조회 */
+    @ResponseBody
+    @GetMapping("/{userIdx}/keyword")
+    public BaseResponse<List<GetUserKeywordRes>> getUserKeyword(@PathVariable("userIdx") int userIdx) {
+        try {
+            // jwt 토큰 확인
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            return new BaseResponse<>(userService.getUserKeyword(userIdx));
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
     /* 프로필 조회 */
     @ResponseBody
     @GetMapping("/{userIdx}/profile")

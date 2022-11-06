@@ -309,4 +309,20 @@ public class UserDao {
         Object[] params = new Object[]{userIdx, commentIdx, boardIdx};
         return this.jdbcTemplate.queryForObject(checkUserCommentQuery, int.class, params);
     }
+
+    public List<GetUserKeywordRes> getUserKeyword(int userIdx) {
+        String getUserKeywordQuery =
+                "select C.categoryIdx, C.categoryName, C.categorySubName\n" +
+                "from Category C\n" +
+                "    left join UserCategory UC on UC.categoryIdx = C.categoryIdx\n" +
+                "    left join User U on U.userIdx = UC.userIdx\n" +
+                "where U.userIdx = ?";
+        return this.jdbcTemplate.query(getUserKeywordQuery,
+                (rs, rowNum) -> new GetUserKeywordRes(
+                        rs.getInt("categoryIdx"),
+                        rs.getString("categoryName"),
+                        rs.getString("categorySubName")
+                )
+                ,userIdx);
+    }
 }

@@ -4,6 +4,7 @@ import com.moge.moge.domain.s3.S3Service;
 import com.moge.moge.domain.user.UserDao;
 import com.moge.moge.domain.user.UserProvider;
 import com.moge.moge.domain.user.model.req.*;
+import com.moge.moge.domain.user.model.res.GetUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.global.config.security.JwtService;
@@ -138,6 +139,14 @@ public class UserService {
                 System.out.println("=== index : " + index + "===");
                 userDao.updateUserKeyword(uIdx, index);
             }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetUserKeywordRes> getUserKeyword(int userIdx) throws BaseException {
+        try {
+            return userDao.getUserKeyword(userIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
