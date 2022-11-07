@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 application.yml
+moge-b4d30-firebase-adminsdk-ottmp-31077ff3f6.json
 
 ### STS ###
 .apt_generated
