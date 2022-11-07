@@ -186,4 +186,20 @@ public class BoardController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /* 댓글 신고하기 */
+    @ResponseBody
+    @PostMapping("/{boardIdx}/comments/{commentIdx}/report")
+    public BaseResponse<String> reportComments(@PathVariable("boardIdx") int boardIdx,
+                                                                 @RequestParam("groupIdx") int commentIdx) {
+        try {
+            int userIdx = jwtService.getUserIdx();
+            if (userProvider.checkUser(userIdx) == 0) {
+                return new BaseResponse<>(USERS_EMPTY_USER_IDX);
+            }
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }
