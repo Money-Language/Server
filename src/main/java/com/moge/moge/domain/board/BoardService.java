@@ -142,15 +142,21 @@ public class BoardService {
     }
 
     public void reportComment(int userIdx, int boardIdx, int commentIdx, PostCommentReportReq postCommentReportReq) throws BaseException {
+        // 해당 댓글이 존재하지 않으면 에러 발생
         if (boardDao.checkCommentStatus(commentIdx) == 0) {
             throw new BaseException(COMMENT_NOT_EXISTS);
         }
+        // 해당 유저가 이미 신고했으면 신고 불가능
+        if (boardDao.checkUserCommentReport(userIdx, commentIdx) == 1) {
+            throw new BaseException(FAILED_TO_CREATE_COMMENT_REPORT);
+        }
+        // 신고누적횟수가 3회 이상이면 신고 불가능
+        if (boardDao.checkCommentReportCount(commentIdx) >= 3) {
+            boardDao.updateCommentStatus(commentIdx); // 신고횟수가 3번 쌓이면 INACTIVE로 status를 바꾸어줌
+            throw new BaseException(COMMENT_REPORT_EXCEED);
+        }
 
         try {
-            // 해당 유저가 이미 신고했으면 신고 불가능
-            if (boardDao.checkUserCommentReport(userIdx, commentIdx) == 1) {
-                throw new BaseException(FAILED_TO_CREATE_COMMENT_REPORT);
-            }
             boardDao.reportComment(userIdx, boardIdx, commentIdx, postCommentReportReq);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

@@ -314,4 +314,15 @@ public class BoardDao {
         String checkCommentStatusQuery = "select exists(select * from Comment where commentIdx =? and status = 'ACTIVE')";
         return this.jdbcTemplate.queryForObject(checkCommentStatusQuery, int.class, commentIdx);
     }
+
+    public int checkCommentReportCount(int commentIdx) {
+        String checkCommentReportCountQuery = "select count(*) as reportCount from Report where commentIdx = ?";
+        System.out.println("count : " + this.jdbcTemplate.queryForObject(checkCommentReportCountQuery, int.class, commentIdx));
+        return this.jdbcTemplate.queryForObject(checkCommentReportCountQuery, int.class, commentIdx);
+    }
+
+    public int updateCommentStatus(int commentIdx) {
+        String updateCommentStatusQuery = "update Comment set status = 'INACTIVE' where commentIdx = ?";
+        return this.jdbcTemplate.update(updateCommentStatusQuery, commentIdx);
+    }
 }

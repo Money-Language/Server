@@ -100,6 +100,7 @@ public enum BaseResponseStatus {
     BOARD_COMMENT_GROUP_PARENT_IDX_EXISTS(false, 3036, "해당 그룹의 부모 댓글이 이미 존재합니다."),
     FAILED_TO_CREATE_COMMENT_REPORT(false, 3037, "이미 신고한 댓글입니다."),
     COMMENT_NOT_EXISTS(false, 3038, "해당 댓글이 삭제되었거나, 존재하지 않습니다."),
+    COMMENT_REPORT_EXCEED(false, 3039, "해당 댓글은 신고 누적횟수가 3회 이상이므로 신고가 불가능합니다."),
 
     /**
      * 4000 : Database, Server 오류
