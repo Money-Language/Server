@@ -59,7 +59,7 @@ public class BoardController {
     @GetMapping("/top-like")
     public BaseResponse<List<GetBoardTopRes>> getBoardTopLike() {
         try {
-            List<GetBoardTopRes> boardTopLike = boardService.getBoardTopLike();
+            List<GetBoardTopRes> boardTopLike = boardProvider.getBoardTopLike();
             return new BaseResponse<>(boardTopLike);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -71,7 +71,7 @@ public class BoardController {
     @GetMapping("/top-view")
     public BaseResponse<List<GetBoardTopRes>> getBoardTopView() {
         try {
-            List<GetBoardTopRes> boardTopView = boardService.getBoardTopView();
+            List<GetBoardTopRes> boardTopView = boardProvider.getBoardTopView();
             return new BaseResponse<>(boardTopView);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));

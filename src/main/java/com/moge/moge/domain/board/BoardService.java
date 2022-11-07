@@ -58,22 +58,6 @@ public class BoardService {
         }
     }
 
-    public List<GetBoardTopRes> getBoardTopLike() throws BaseException {
-        try {
-            return boardDao.getBoardTopLike();
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public List<GetBoardTopRes> getBoardTopView() throws BaseException {
-        try {
-            return boardDao.getBoardTopView();
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
     public int createBoardComment(PostBoardCommentReq postBoardCommentReq, int boardIdx, int userIdx) throws BaseException {
         if (postBoardCommentReq.getParentIdx() == 1) { // 만약 대댓글을 작성할 때 그룹 IDX가 존재하지 않으면 대댓글을 작성할 수 없음
             if (boardDao.checkCommentGroupIdx(postBoardCommentReq.getGroupIdx()) == 0) {

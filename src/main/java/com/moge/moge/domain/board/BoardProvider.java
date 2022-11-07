@@ -1,6 +1,7 @@
 package com.moge.moge.domain.board;
 
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
+import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
@@ -46,5 +47,21 @@ public class BoardProvider {
         //} catch (BaseException exception) {
         //    throw new BaseException(DATABASE_ERROR);
         //}
+    }
+
+    public List<GetBoardTopRes> getBoardTopLike() throws BaseException {
+        try {
+            return boardDao.getBoardTopLike();
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetBoardTopRes> getBoardTopView() throws BaseException {
+        try {
+            return boardDao.getBoardTopView();
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }
