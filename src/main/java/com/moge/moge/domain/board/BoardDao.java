@@ -1,5 +1,6 @@
 package com.moge.moge.domain.board;
 
+import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
@@ -295,5 +296,22 @@ public class BoardDao {
         String deleteBoardCommentQuery = "update Comment set status = 'DELETE' where boardIdx =? and commentIdx =? and status = 'ACTIVE'";
         Object[] params = new Object[]{boardIdx, commentIdx};
         return this.jdbcTemplate.update(deleteBoardCommentQuery, params);
+    }
+
+    public int reportComment(int userIdx, int boardIdx, int commentIdx, PostCommentReportReq postCommentReportReq) {
+        String reportCommentQuery = "insert into Report(content, userIdx, boardIdx, commentIdx) values(?,?,?,?)";
+        Object[] params = new Object[]{postCommentReportReq.getContent(), userIdx, boardIdx, commentIdx};
+        return this.jdbcTemplate.update(reportCommentQuery, params);
+    }
+
+    public int checkUserCommentReport(int userIdx, int commentIdx) {
+        String checkUserCommentReportQuery = "select exists(select * from Report where userIdx = ? and commentIdx = ?)";
+        Object[] params = new Object[] {userIdx, commentIdx};
+        return this.jdbcTemplate.queryForObject(checkUserCommentReportQuery, int.class, params);
+    }
+
+    public int checkCommentStatus(int commentIdx) {
+        String checkCommentStatusQuery = "select exists(select * from Comment where commentIdx =? and status = 'ACTIVE')";
+        return this.jdbcTemplate.queryForObject(checkCommentStatusQuery, int.class, commentIdx);
     }
 }

@@ -29,6 +29,7 @@ public enum BaseResponseStatus {
     SUCCESS_UPDATE_BOARD_COMMENT(true, 1013, "게시글 댓글 수정에 성공하였습니다."),
     SUCCESS_DELETE_BOARD_COMMENT(true, 1014, "게시글 댓글 삭제에 성공하였습니다."),
     SUCCESS_CREATE_BOARD_COMMENT_LIKE(true, 1015, "게시글 댓글 좋아요 등록/해제에 성공하였습니다."),
+    SUCCESS_CREATE_COMMENT_REPORT(true, 1016, "댓글 신고에 성공하였습니다."),
 
     SUCCESS_CHECK_NICKNAME(true, 1016, "중복되지 않는 닉네임입니다."),
     SUCCESS_CHECK_EMAIL(true, 1017, "중복되지 않는 이메일입니다."),
@@ -97,6 +98,8 @@ public enum BaseResponseStatus {
     FAILED_TO_DELETE_COMMENT(false, 3034, "댓글 삭제에 실패하였습니다."),
     FAILED_TO_CREATE_COMMENT_LIKE(false, 3035, "댓글 좋아요 등록/해제에 실패하였습니다"),
     BOARD_COMMENT_GROUP_PARENT_IDX_EXISTS(false, 3036, "해당 그룹의 부모 댓글이 이미 존재합니다."),
+    FAILED_TO_CREATE_COMMENT_REPORT(false, 3037, "이미 신고한 댓글입니다."),
+    COMMENT_NOT_EXISTS(false, 3038, "해당 댓글이 삭제되었거나, 존재하지 않습니다."),
 
     /**
      * 4000 : Database, Server 오류

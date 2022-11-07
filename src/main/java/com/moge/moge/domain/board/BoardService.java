@@ -1,5 +1,6 @@
 package com.moge.moge.domain.board;
 
+import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
@@ -140,4 +141,19 @@ public class BoardService {
         }
     }
 
+    public void reportComment(int userIdx, int boardIdx, int commentIdx, PostCommentReportReq postCommentReportReq) throws BaseException {
+        if (boardDao.checkCommentStatus(commentIdx) == 0) {
+            throw new BaseException(COMMENT_NOT_EXISTS);
+        }
+
+        try {
+            // 해당 유저가 이미 신고했으면 신고 불가능
+            if (boardDao.checkUserCommentReport(userIdx, commentIdx) == 1) {
+                throw new BaseException(FAILED_TO_CREATE_COMMENT_REPORT);
+            }
+            boardDao.reportComment(userIdx, boardIdx, commentIdx, postCommentReportReq);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

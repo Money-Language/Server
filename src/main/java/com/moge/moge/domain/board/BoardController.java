@@ -1,6 +1,7 @@
 package com.moge.moge.domain.board;
 
 
+import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
@@ -191,12 +192,15 @@ public class BoardController {
     @ResponseBody
     @PostMapping("/{boardIdx}/comments/{commentIdx}/report")
     public BaseResponse<String> reportComments(@PathVariable("boardIdx") int boardIdx,
-                                                                 @RequestParam("groupIdx") int commentIdx) {
+                                               @PathVariable("commentIdx") int commentIdx,
+                                               @RequestBody PostCommentReportReq postCommentReportReq) {
         try {
             int userIdx = jwtService.getUserIdx();
             if (userProvider.checkUser(userIdx) == 0) {
                 return new BaseResponse<>(USERS_EMPTY_USER_IDX);
             }
+            boardService.reportComment(userIdx, boardIdx, commentIdx, postCommentReportReq);
+            return new BaseResponse<>(SUCCESS_CREATE_COMMENT_REPORT);
 
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
