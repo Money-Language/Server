@@ -317,12 +317,17 @@ public class BoardDao {
 
     public int checkCommentReportCount(int commentIdx) {
         String checkCommentReportCountQuery = "select count(*) as reportCount from Report where commentIdx = ?";
-        System.out.println("count : " + this.jdbcTemplate.queryForObject(checkCommentReportCountQuery, int.class, commentIdx));
         return this.jdbcTemplate.queryForObject(checkCommentReportCountQuery, int.class, commentIdx);
     }
 
     public int updateCommentStatus(int commentIdx) {
         String updateCommentStatusQuery = "update Comment set status = 'INACTIVE' where commentIdx = ?";
         return this.jdbcTemplate.update(updateCommentStatusQuery, commentIdx);
+    }
+
+    public int checkCommentUserIdx(int commentIdx) {
+        String checkCommentUserIdxQuery = "select userIdx from Comment where commentIdx = ?";
+        System.out.println("userIdx : " + this.jdbcTemplate.queryForObject(checkCommentUserIdxQuery, int.class, commentIdx));
+        return this.jdbcTemplate.queryForObject(checkCommentUserIdxQuery, int.class, commentIdx);
     }
 }

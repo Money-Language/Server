@@ -146,9 +146,13 @@ public class BoardService {
         if (boardDao.checkCommentStatus(commentIdx) == 0) {
             throw new BaseException(COMMENT_NOT_EXISTS);
         }
-        // 해당 유저가 이미 신고했으면 신고 불가능
-        if (boardDao.checkUserCommentReport(userIdx, commentIdx) == 1) {
+        // 자기가 쓴 댓글은 신고 불가능
+        if (boardDao.checkCommentUserIdx(commentIdx) == userIdx) {
             throw new BaseException(FAILED_TO_CREATE_COMMENT_REPORT);
+        }
+        // 해당 유저가 이미 신고한 댓글이면 신고 불가능
+        if (boardDao.checkUserCommentReport(userIdx, commentIdx) == 1) {
+            throw new BaseException(COMMENT_REPORT_ALREADY_EXISTS);
         }
         // 신고누적횟수가 3회 이상이면 신고 불가능
         if (boardDao.checkCommentReportCount(commentIdx) >= 3) {
