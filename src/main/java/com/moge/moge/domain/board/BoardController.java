@@ -3,6 +3,7 @@ package com.moge.moge.domain.board;
 
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
+import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
@@ -61,6 +62,18 @@ public class BoardController {
         try {
             List<GetBoardTopRes> boardTopLike = boardProvider.getBoardTopLike();
             return new BaseResponse<>(boardTopLike);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 게시글 검색 */
+    @ResponseBody
+    @GetMapping("/search")
+    public BaseResponse<List<GetBoardSearchRes>> getBoardByKeyword(@RequestParam("title") String title) {
+        try {
+            List<GetBoardSearchRes> getBoardSearchRes //= boardProvider.getBoardByKeyword();
+            return null;
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
