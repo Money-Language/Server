@@ -72,8 +72,11 @@ public class BoardController {
     @GetMapping("/search")
     public BaseResponse<List<GetBoardSearchRes>> getBoardByKeyword(@RequestParam("title") String title) {
         try {
-            List<GetBoardSearchRes> getBoardSearchRes //= boardProvider.getBoardByKeyword();
-            return null;
+            if (title == null) {
+                return new BaseResponse<>(EMPTY_SEARTCH_KEYWORD);
+            }
+            List<GetBoardSearchRes> getBoardSearchRes = boardProvider.getBoardByKeyword(title);
+            return new BaseResponse<>(getBoardSearchRes);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

@@ -62,8 +62,7 @@ public enum BaseResponseStatus {
 
     POST_BOARDS_EMPTY_COMMENT(false, 2030, "댓글 내용을 입력해주세요."),
     POST_BOARDS_COMMENT_INVALID_JWT(false, 2031, "해당 댓글에 대한 권한이 없습니다."),
-
-
+    EMPTY_SEARTCH_KEYWORD(false, 2032, "검색어를 입력해주세요."),
 
     /**
      * 3000 : Response 오류

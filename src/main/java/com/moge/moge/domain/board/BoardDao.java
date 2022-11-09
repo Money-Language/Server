@@ -2,6 +2,7 @@ package com.moge.moge.domain.board;
 
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
+import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
@@ -100,6 +101,29 @@ public class BoardDao {
                         rs.getString("nickname"),
                         rs.getString("profileImage")
                 ));
+    }
+
+    public List<GetBoardSearchRes> getBoardByKeyword(String title) {
+        String getBoardByKeywordQuery =
+                "select categoryName, nickname, profileImage, title, viewCount,\n" +
+                "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
+                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
+                "from Board B\n" +
+                "    left join Category C on C.categoryIdx = B.categoryIdx\n" +
+                "    left join User U on B.userIdx = U.userIdx \n" +
+                "where B.title like '%?%'\n" +
+                "order by B.updatedAt desc";
+
+        return this.jdbcTemplate.query(getBoardByKeywordQuery,
+                (rs, rowNum) -> new GetBoardSearchRes(
+                        rs.getString("categoryName"),
+                        rs.getString("title"),
+                        rs.getInt("viewCount"),
+                        rs.getInt("likeCount"),
+                        rs.getInt("quizCount"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage")
+                ), title);
     }
 
     public int createBoardComment(PostBoardCommentReq postBoardCommentReq, int boardIdx, int userIdx) {
@@ -330,4 +354,5 @@ public class BoardDao {
         System.out.println("userIdx : " + this.jdbcTemplate.queryForObject(checkCommentUserIdxQuery, int.class, commentIdx));
         return this.jdbcTemplate.queryForObject(checkCommentUserIdxQuery, int.class, commentIdx);
     }
+
 }
