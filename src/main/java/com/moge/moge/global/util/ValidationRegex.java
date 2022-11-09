@@ -30,7 +30,7 @@ public class ValidationRegex {
 
     // 한글자 이상의 한글, 소문자, 대문자, 숫자 / ‘ㄴㄴ’ ‘ㅇㅇ’ 이런 글자는 안됨
     public static boolean isRegexNickname(String target) {
-        String regex = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{1,}$";
+        String regex = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{1,8}$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(target);
         return matcher.find();
