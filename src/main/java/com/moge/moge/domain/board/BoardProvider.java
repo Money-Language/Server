@@ -3,6 +3,7 @@ package com.moge.moge.domain.board;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
+import com.moge.moge.domain.board.model.res.GetRecommendKeywordRes;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.BOARD_NOT_EXISTS;
@@ -72,5 +74,27 @@ public class BoardProvider {
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public int getAllRecommendKeywordCounts() throws BaseException {
+        try {
+            return boardDao.getAllRecommendKeywordCounts();
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetRecommendKeywordRes> getRecommendKeyword(List<Integer> randomIdxList) throws BaseException {
+        //try {
+            List<GetRecommendKeywordRes> recommendKeywordList = new ArrayList<>();
+            for (int randomIdx : randomIdxList) {
+                GetRecommendKeywordRes keyword = boardDao.getRecommendKeyword(randomIdx);
+                recommendKeywordList.add(keyword);
+            }
+            return recommendKeywordList;
+
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 }

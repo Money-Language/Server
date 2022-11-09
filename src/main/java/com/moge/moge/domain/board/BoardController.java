@@ -1,12 +1,12 @@
 package com.moge.moge.domain.board;
 
-
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
+import com.moge.moge.domain.board.model.res.GetRecommendKeywordRes;
 import com.moge.moge.domain.user.UserProvider;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
@@ -93,7 +94,6 @@ public class BoardController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
-
 
     /* 게시글 댓글 생성 */
     @ResponseBody
@@ -217,6 +217,29 @@ public class BoardController {
             }
             boardService.reportComment(userIdx, boardIdx, commentIdx, postCommentReportReq);
             return new BaseResponse<>(SUCCESS_CREATE_COMMENT_REPORT);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 추천 키워드 조회 */
+    @ResponseBody
+    @GetMapping("/search-keyword")
+    public BaseResponse<List<GetRecommendKeywordRes>> getRecommendKeyword() {
+        try {
+            int keywordCounts = boardProvider.getAllRecommendKeywordCounts();
+
+            List<Integer> randomIdxList = new ArrayList<>();
+            while(randomIdxList.size() < 5) {
+                int randomNumber = (int)(Math.random() * keywordCounts + 1);
+                if (!randomIdxList.contains(randomNumber)) {
+                    randomIdxList.add(randomNumber);
+                } else {
+                    continue;
+                }
+            }
+            return new BaseResponse<>(boardProvider.getRecommendKeyword(randomIdxList));
 
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));

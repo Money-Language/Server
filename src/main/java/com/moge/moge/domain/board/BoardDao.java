@@ -6,6 +6,7 @@ import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
+import com.moge.moge.domain.board.model.res.GetRecommendKeywordRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -355,4 +356,16 @@ public class BoardDao {
         return this.jdbcTemplate.queryForObject(checkCommentUserIdxQuery, int.class, commentIdx);
     }
 
+    public int getAllRecommendKeywordCounts() {
+        String getAllRecommendKeywordCountsQuery = "select count(*) from Recommend";
+        return this.jdbcTemplate.queryForObject(getAllRecommendKeywordCountsQuery, int.class);
+    }
+
+    public GetRecommendKeywordRes getRecommendKeyword(int randomIdx) {
+        String getRecommendKeywordQuery = "select keyword from Recommend where recommendIdx = ?";
+        return this.jdbcTemplate.queryForObject(getRecommendKeywordQuery,
+                (rs, rowNum) -> new GetRecommendKeywordRes(
+                        rs.getString("keyword")
+                ), randomIdx);
+    }
 }
