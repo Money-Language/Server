@@ -106,13 +106,12 @@ public class BoardDao {
 
     public List<GetBoardSearchRes> getBoardByKeyword(String title) {
         String getBoardByKeywordQuery =
-                "select categoryName, nickname, profileImage, title, viewCount,\n" +
+                "select categoryName, title, viewCount,\n" +
                 "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
                 "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
                 "from Board B\n" +
                 "    left join Category C on C.categoryIdx = B.categoryIdx\n" +
-                "    left join User U on B.userIdx = U.userIdx \n" +
-                "where B.title like '%?%'\n" +
+                "where B.title like concat('%', ? , '%')\n" +
                 "order by B.updatedAt desc";
 
         return this.jdbcTemplate.query(getBoardByKeywordQuery,
@@ -121,9 +120,7 @@ public class BoardDao {
                         rs.getString("title"),
                         rs.getInt("viewCount"),
                         rs.getInt("likeCount"),
-                        rs.getInt("quizCount"),
-                        rs.getString("nickname"),
-                        rs.getString("profileImage")
+                        rs.getInt("quizCount")
                 ), title);
     }
 

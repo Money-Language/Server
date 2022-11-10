@@ -69,11 +69,11 @@ public class BoardProvider {
     }
 
     public List<GetBoardSearchRes> getBoardByKeyword(String title) throws BaseException {
-        try {
+        //try {
             return boardDao.getBoardByKeyword(title);
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 
     public int getAllRecommendKeywordCounts() throws BaseException {

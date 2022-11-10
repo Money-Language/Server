@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FcmService {
 
-    private final String API_URL = "https://fcm.googleapis.com/v1/projects/tourcash-13092/messages:send";
+    private final String API_URL = "https://fcm.googleapis.com/v1/projects/moge-b4d30/messages:send";
     private final ObjectMapper objectMapper;
 
     public void sendMessageTo(String targetToken, String title, String body) throws IOException {
@@ -35,10 +35,6 @@ public class FcmService {
         System.out.println(response.body().string());
     }
 
-    /*
-     * fromStream 에 키를 넣어주면 GoogleCredentials 얻을 수 있음
-     * GoogleCredentials 는 oauth2를 이용해서 인증한 대상을 나타냄
-     */
     private String getAccessToken() throws IOException {
         String firebaseConfigPath = "firebase/firebase_service_key.json";
         GoogleCredentials googleCredential = GoogleCredentials.fromStream(
