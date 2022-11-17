@@ -129,13 +129,23 @@ public class BoardDao {
 
     public List<GetBoardSearchRes> getBoardByKeyword(String title) {
         String getBoardByKeywordQuery =
-                "select boardIdx, categoryName, title, viewCount,\n" +
-                "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
-                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
+                "select boardIdx, categoryName, nickname, profileImage, title, viewCount,\n" +
+                "\t(select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
+                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount,\n" +
+                "    (select count(*) from Comment C where C.boardIdx = B.boardIdx) as commentCount,\n" +
+                "\tCASE\n" +
+                "\t\tWHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "        WHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()), '분 전')\n" +
+                "        WHEN TIMESTAMPDIFF(HOUR, B.createdAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, B.createdAt, NOW()), '시간 전')\n" +
+                "        WHEN TIMESTAMPDIFF(DAY, B.createdAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, B.createdAt, NOW()), '일 전')\n" +
+                "        WHEN TIMESTAMPDIFF(WEEK, B.createdAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, B.createdAt, NOW()), '주 전')\n" +
+                "    ELSE CONCAT(TIMESTAMPDIFF(MONTH, B.createdAt, NOW()), '달 전')\n" +
+                "    END AS 'elapsedTime'  \n" +
                 "from Board B\n" +
-                "    left join Category C on C.categoryIdx = B.categoryIdx\n" +
-                "where B.title like concat('%', ? , '%')\n" +
-                "order by B.updatedAt desc";
+                "\tleft join Category C on C.categoryIdx = B.categoryIdx\n" +
+                "\tleft join User U on B.userIdx = U.userIdx\n" +
+                "where B.title like concat('%', ?, '%')\n" +
+                "order by B.updatedAt desc;";
 
         return this.jdbcTemplate.query(getBoardByKeywordQuery,
                 (rs, rowNum) -> new GetBoardSearchRes(
@@ -144,7 +154,11 @@ public class BoardDao {
                         rs.getString("title"),
                         rs.getInt("viewCount"),
                         rs.getInt("likeCount"),
-                        rs.getInt("quizCount")
+                        rs.getInt("quizCount"),
+                        rs.getInt("commentCount"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage"),
+                        rs.getString("elapsedTime")
                 ), title);
     }
 
