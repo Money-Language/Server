@@ -5,8 +5,9 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 application.yml
-firebase_service_key.json
-moge-b4d30-firebase-adminsdk-ottmp-d736e69d74.json
+
+firebase/moge-b4d30-firebase-adminsdk-ottmp-dda305f614.json
+google-services.json
 
 ### STS ###
 .apt_generated

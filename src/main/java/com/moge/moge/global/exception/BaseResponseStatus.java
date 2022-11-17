@@ -35,6 +35,8 @@ public enum BaseResponseStatus {
     SUCCESS_CHECK_EMAIL(true, 1017, "중복되지 않는 이메일입니다."),
     SUCCESS_CHECK_PASSWORD(true, 1018, "비밀번호 validation에 성공하였습니다."),
 
+    SUCCESS_PUSH_ALARM(true, 1020, "FCM 알람 발송에 성공하였습니다."),
+
     /**
      * 2000 : Request 오류
      */
