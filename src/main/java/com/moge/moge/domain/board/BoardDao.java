@@ -60,17 +60,25 @@ public class BoardDao {
     }
 
     public List<GetBoardTopRes> getBoardTopLike() {
-        String query =
-                "select boardIdx, categoryName, nickname, profileImage,\n" +
-                "    title, viewCount,\n" +
-                "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
-                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
+        String getBoardTopLikeQuery =
+                "select boardIdx, categoryName, nickname, profileImage, title, viewCount,\n" +
+                "\t(select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
+                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount,\n" +
+                "    (select count(*) from Comment C where C.boardIdx = B.boardIdx) as commentCount,\n" +
+                "\tCASE\n" +
+                "\t\tWHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "        WHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()), '분 전')\n" +
+                "        WHEN TIMESTAMPDIFF(HOUR, B.createdAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, B.createdAt, NOW()), '시간 전')\n" +
+                "        WHEN TIMESTAMPDIFF(DAY, B.createdAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, B.createdAt, NOW()), '일 전')\n" +
+                "        WHEN TIMESTAMPDIFF(WEEK, B.createdAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, B.createdAt, NOW()), '주 전')\n" +
+                "    ELSE CONCAT(TIMESTAMPDIFF(MONTH, B.createdAt, NOW()), '달 전')\n" +
+                "    END AS 'elapsedTime'  \n" +
                 "from Board B\n" +
-                "    left join Category C on C.categoryIdx = B.categoryIdx\n" +
-                "    left join User U on B.userIdx = U.userIdx \n" +
+                "\tleft join Category C on C.categoryIdx = B.categoryIdx\n" +
+                "\tleft join User U on B.userIdx = U.userIdx\n" +
                 "order by likeCount desc limit 10;";
 
-        return this.jdbcTemplate.query(query,
+        return this.jdbcTemplate.query(getBoardTopLikeQuery,
                 (rs, rowNum) -> new GetBoardTopRes(
                         rs.getInt("boardIdx"),
                         rs.getString("categoryName"),
@@ -78,22 +86,33 @@ public class BoardDao {
                         rs.getInt("viewCount"),
                         rs.getInt("likeCount"),
                         rs.getInt("quizCount"),
+                        rs.getInt("commentCount"),
                         rs.getString("nickname"),
-                        rs.getString("profileImage")
+                        rs.getString("profileImage"),
+                        rs.getString("elapsedTime")
                 ));
     }
 
     public List<GetBoardTopRes> getBoardTopView() {
-        String getBoardTopViewquery =
-                "select boardIdx, categoryName, nickname, profileImage, \n" +
-                "    title, viewCount,\n" +
-                "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
-                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
+        String getBoardTopViewQuery =
+                "select boardIdx, categoryName, nickname, profileImage, title, viewCount,\n" +
+                "\t(select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
+                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount,\n" +
+                "    (select count(*) from Comment C where C.boardIdx = B.boardIdx) as commentCount,\n" +
+                "\tCASE\n" +
+                "\t\tWHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "        WHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()), '분 전')\n" +
+                "        WHEN TIMESTAMPDIFF(HOUR, B.createdAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, B.createdAt, NOW()), '시간 전')\n" +
+                "        WHEN TIMESTAMPDIFF(DAY, B.createdAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, B.createdAt, NOW()), '일 전')\n" +
+                "        WHEN TIMESTAMPDIFF(WEEK, B.createdAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, B.createdAt, NOW()), '주 전')\n" +
+                "    ELSE CONCAT(TIMESTAMPDIFF(MONTH, B.createdAt, NOW()), '달 전')\n" +
+                "    END AS 'elapsedTime'  \n" +
                 "from Board B\n" +
-                "    left join Category C on C.categoryIdx = B.categoryIdx\n" +
-                "    left join User U on B.userIdx = U.userIdx \n" +
-                "order by viewCount desc limit 10;";
-        return this.jdbcTemplate.query(getBoardTopViewquery,
+                "\tleft join Category C on C.categoryIdx = B.categoryIdx\n" +
+                "\tleft join User U on B.userIdx = U.userIdx\n" +
+                "order by viewCount desc limit 10";
+
+        return this.jdbcTemplate.query(getBoardTopViewQuery,
                 (rs, rowNum) -> new GetBoardTopRes(
                         rs.getInt("boardIdx"),
                         rs.getString("categoryName"),
@@ -101,8 +120,10 @@ public class BoardDao {
                         rs.getInt("viewCount"),
                         rs.getInt("likeCount"),
                         rs.getInt("quizCount"),
+                        rs.getInt("commentCount"),
                         rs.getString("nickname"),
-                        rs.getString("profileImage")
+                        rs.getString("profileImage"),
+                        rs.getString("elapsedTime")
                 ));
     }
 
