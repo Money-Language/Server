@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetBoardSearchRes {
+    private int boardIdx;
     private String categoryName;
     private String title;
     private int viewCount;

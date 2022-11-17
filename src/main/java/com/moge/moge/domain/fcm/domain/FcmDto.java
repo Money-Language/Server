@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FcmDto {
-    private String targetToken;
     private String title;
     private String body;
 }

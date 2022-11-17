@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 application.yml
 firebase_service_key.json
+firebase/
 
 ### STS ###
 .apt_generated

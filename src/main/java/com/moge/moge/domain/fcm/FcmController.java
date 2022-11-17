@@ -1,10 +1,7 @@
 package com.moge.moge.domain.fcm;
 
 import com.moge.moge.domain.fcm.domain.FcmDto;
-import com.moge.moge.domain.fcm.domain.FcmMessage;
 import com.moge.moge.global.common.BaseResponse;
-import com.moge.moge.global.exception.BaseException;
-import com.moge.moge.global.exception.BaseResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +32,8 @@ public class FcmController {
     @PostMapping("/push")
     public BaseResponse<String> push(@RequestBody FcmDto fcmDto) {
         try {
-            fcmService.sendMessageTo(fcmDto.getTargetToken(),
+            String accessToken = fcmService.getAccessToken();
+            fcmService.sendMessageTo(accessToken,
                     fcmDto.getTitle(),
                     fcmDto.getBody()
             );
