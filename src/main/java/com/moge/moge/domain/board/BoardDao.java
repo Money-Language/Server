@@ -61,7 +61,7 @@ public class BoardDao {
 
     public List<GetBoardTopRes> getBoardTopLike() {
         String query =
-                "select categoryName, nickname, profileImage,\n" +
+                "select boardIdx, categoryName, nickname, profileImage,\n" +
                 "    title, viewCount,\n" +
                 "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
                 "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
@@ -72,6 +72,7 @@ public class BoardDao {
 
         return this.jdbcTemplate.query(query,
                 (rs, rowNum) -> new GetBoardTopRes(
+                        rs.getInt("boardIdx"),
                         rs.getString("categoryName"),
                         rs.getString("title"),
                         rs.getInt("viewCount"),
@@ -84,7 +85,7 @@ public class BoardDao {
 
     public List<GetBoardTopRes> getBoardTopView() {
         String getBoardTopViewquery =
-                "select categoryName, nickname, profileImage, \n" +
+                "select boardIdx, categoryName, nickname, profileImage, \n" +
                 "    title, viewCount,\n" +
                 "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
                 "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
@@ -94,6 +95,7 @@ public class BoardDao {
                 "order by viewCount desc limit 10;";
         return this.jdbcTemplate.query(getBoardTopViewquery,
                 (rs, rowNum) -> new GetBoardTopRes(
+                        rs.getInt("boardIdx"),
                         rs.getString("categoryName"),
                         rs.getString("title"),
                         rs.getInt("viewCount"),
@@ -106,7 +108,7 @@ public class BoardDao {
 
     public List<GetBoardSearchRes> getBoardByKeyword(String title) {
         String getBoardByKeywordQuery =
-                "select categoryName, title, viewCount,\n" +
+                "select boardIdx, categoryName, title, viewCount,\n" +
                 "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
                 "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
                 "from Board B\n" +
@@ -116,6 +118,7 @@ public class BoardDao {
 
         return this.jdbcTemplate.query(getBoardByKeywordQuery,
                 (rs, rowNum) -> new GetBoardSearchRes(
+                        rs.getInt("boardIdx"),
                         rs.getString("categoryName"),
                         rs.getString("title"),
                         rs.getInt("viewCount"),
