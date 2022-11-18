@@ -1,13 +1,12 @@
 package com.moge.moge.domain.fcm;
 
+import com.moge.moge.domain.fcm.model.FcmDto;
 import com.moge.moge.domain.fcm.model.PushMessage;
 import com.moge.moge.global.common.BaseResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
-import static com.moge.moge.global.exception.BaseResponseStatus.SUCCESS_CHECK_CERTIFY_EMAIL;
 import static com.moge.moge.global.exception.BaseResponseStatus.SUCCESS_PUSH_ALARM;
 
 @RestController

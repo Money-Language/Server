@@ -1,4 +1,4 @@
-package com.moge.moge.domain.fcm;
+package com.moge.moge.domain.fcm.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
