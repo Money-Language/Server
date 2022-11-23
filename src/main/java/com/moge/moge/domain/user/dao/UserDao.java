@@ -250,11 +250,29 @@ public class UserDao {
                 ), userIdx);
     }
 
+    public List<GetUserBoardRes> getUserBoards(int userIdx) {
+        String getUserBoardQuery =
+                "select boardIdx, categoryName, title, viewCount,\n" +
+                "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
+                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
+                "from Board B\n" +
+                "    left join Category C   on C.categoryIdx = B.categoryIdx\n" +
+                "where B.userIdx = ? and B.status != 'DELETE'";
+
+        return this.jdbcTemplate.query(getUserBoardQuery,
+                (rs,rowNum) -> new GetUserBoardRes(
+                        rs.getInt("boardIdx"),
+                        rs.getString("categoryName"),
+                        rs.getString("title"),
+                        rs.getInt("quizCount"),
+                        rs.getInt("viewCount"),
+                        rs.getInt("likeCount")
+                ), userIdx);
+    }
+
     public List<GetUserBoardLikeRes> getUserBoardLike(int userIdx) {
         String getUserBoardLikeQuery =
-                "select \n" +
-                "    concat('#',categoryName) as categoryName, \n" +
-                "    title, \n" +
+                "select B.boardIdx, categoryName, title, \n" +
                 "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount,\n" +
                 "    B.viewCount as viewCount,\n" +
                 "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount\n" +
@@ -266,6 +284,7 @@ public class UserDao {
 
         return this.jdbcTemplate.query(getUserBoardLikeQuery,
                 (rs,rowNum) -> new GetUserBoardLikeRes(
+                        rs.getInt("boardIdx"),
                         rs.getString("categoryName"),
                         rs.getString("title"),
                         rs.getInt("quizCount"),
@@ -273,6 +292,7 @@ public class UserDao {
                         rs.getInt("likeCount")
                 ), userIdx);
     }
+
     public int checkUserComment(int userIdx, int commentIdx, int boardIdx) {
         String checkUserCommentQuery = "select exists(select * from Comment where userIdx =? and commentIdx =? and boardIdx = ?)";
         Object[] params = new Object[]{userIdx, commentIdx, boardIdx};

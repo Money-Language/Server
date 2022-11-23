@@ -3,10 +3,7 @@ package com.moge.moge.domain.user.service;
 import com.moge.moge.domain.user.dao.UserDao;
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
-import com.moge.moge.domain.user.model.res.GetUserBoardLikeRes;
-import com.moge.moge.domain.user.model.res.GetUserFollowRes;
-import com.moge.moge.domain.user.model.res.GetUserProfileRes;
-import com.moge.moge.domain.user.model.res.PostLoginRes;
+import com.moge.moge.domain.user.model.res.*;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;
@@ -105,12 +102,20 @@ public class UserProvider {
         }
     }
 
+    public List<GetUserBoardRes> getUserBoards(int userIdx) throws BaseException {
+        //try {
+            return userDao.getUserBoards(userIdx);
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
+    }
+
     public List<GetUserBoardLikeRes> getUserBoardLike(int userIdx) throws BaseException {
-        try {
+        //try {
             return userDao.getUserBoardLike(userIdx);
-        } catch (Exception exception) {
-            throw new BaseException(DATABASE_ERROR);
-        }
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 
     public int checkUserComment(int userIdx, int commentIdx, int boardIdx) throws BaseException {

@@ -36,7 +36,11 @@ public class UserController {
         this.jwtService = jwtService;
     }
 
-    /* 회원가입 */
+    /**
+     * 회원 가입 API
+     * [POST] /users/sign-up
+     * @return BaseResponse<PostUserRes>
+     */
     @ResponseBody
     @PostMapping("/sign-up")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
@@ -77,63 +81,11 @@ public class UserController {
         }
     }
 
-    /* 패스워드 validation */
-    @ResponseBody
-    @PostMapping("/validate-password")
-    public BaseResponse<String> validateEmail(@RequestBody PostUserPasswordValidateReq postUserPasswordValidateReq) {
-        if (postUserPasswordValidateReq.getPassword() == null) {
-            return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
-        }
-        if (postUserPasswordValidateReq.getRePassword() == null) {
-            return new BaseResponse<>(POST_USERS_EMPTY_REPASSWORD);
-        }
-        if (!isRegexPassword(postUserPasswordValidateReq.getPassword())) {
-            return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
-        }
-        if (!postUserPasswordValidateReq.getPassword().equals(postUserPasswordValidateReq.getRePassword())) {
-            return new BaseResponse<>(POST_USERS_INVALID_REPASSWORD);
-        }
-        return new BaseResponse<>(SUCCESS_CHECK_PASSWORD);
-
-    }
-
-    /* 이메일 validation */
-    @ResponseBody
-    @PostMapping("/validate-email")
-    public BaseResponse<String> validateEmail(@RequestParam("email") String email) {
-        try {
-            if (email == null) {
-                return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
-            }
-            if (!isRegexEmail(email)) {
-                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-            }
-            userProvider.checkEmail(email);
-            return new BaseResponse<>(SUCCESS_CHECK_EMAIL);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
-    }
-
-    /* 닉네임 중복 체크 및 validation 처리 */
-    @ResponseBody
-    @PostMapping("/validate-nickname")
-    public BaseResponse<String> validateNickname(@RequestParam("nickname") String nickname) {
-        try {
-            if (nickname == null) {
-                return new BaseResponse<>(POST_USERS_EMPTY_NICKNAME);
-            }
-            if (!isRegexNickname(nickname)) {
-                return new BaseResponse<>(POST_USERS_INVALID_NICKNAME);
-            }
-            userProvider.checkNickname(nickname);
-            return new BaseResponse<>(SUCCESS_CHECK_NICKNAME);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        }
-    }
-
-    /* 로그인 */
+    /**
+     * 로그인 API
+     * [POST] /users/login
+     * @return BaseResponse<PostLoginRes>
+     */
     @ResponseBody
     @PostMapping("/login")
     public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
@@ -155,7 +107,11 @@ public class UserController {
         }
     }
 
-    /* 패스워드 변경 */
+    /**
+     * 패스워드 변경 API
+     * [PATCH] /users/password
+     * @return BaseResponse<String>
+     */
     @ResponseBody
     @PatchMapping("/{userIdx}/password")
     public BaseResponse<String> updatePassword(@PathVariable("userIdx") int userIdx,
@@ -180,8 +136,11 @@ public class UserController {
         }
     }
 
-
-    /* 관심 키워드 설정 (5개중 3개) */
+    /**
+     * 관심 키워드 설정 API
+     * [POST] /users/{userIdx}/keyword
+     * @return BaseResponse<String>
+     */
     @ResponseBody
     @PostMapping("/{userIdx}/keyword")
     public BaseResponse<String> createUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PostUserKeywordReq postUserKeywordReq) {
@@ -202,7 +161,11 @@ public class UserController {
         }
     }
 
-    /* 관심 키워드 수정 */
+    /**
+     * 관심 키워드 수정 API
+     * [PATCH] /users/{userIdx}/keyword
+     * @return BaseResponse<String>
+     */
     @ResponseBody
     @PatchMapping("/{userIdx}/keyword")
     public BaseResponse<String> updateUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PatchUserKeywordReq patchUserKeywordReq) {
@@ -225,7 +188,11 @@ public class UserController {
         }
     }
 
-    /* 관심 키워드 조회 */
+    /**
+     * 관심 키워드 조회 API
+     * [GET] /users/{userIdx}/keyword
+     * @return BaseResponse<List<GetUserKeywordRes>>
+     */
     @ResponseBody
     @GetMapping("/{userIdx}/keyword")
     public BaseResponse<List<GetUserKeywordRes>> getUserKeyword(@PathVariable("userIdx") int userIdx) {
@@ -242,7 +209,11 @@ public class UserController {
         }
     }
 
-    /* 프로필 조회 */
+    /**
+     * 프로필 조회 API
+     * [GET] /users/{userIdx}/profile
+     * @return BaseResponse<GetUserProfileRes>
+     */
     @ResponseBody
     @GetMapping("/{userIdx}/profile")
     public BaseResponse<GetUserProfileRes> getUserProfile(@PathVariable("userIdx") int userIdx) {
@@ -259,8 +230,11 @@ public class UserController {
         }
     }
 
-
-    /* 프로필 사진 + 닉네임 수정 */
+    /**
+     * 프로필 사진, 닉네임 변경 API
+     * [PATCH] /users/{userIdx}/profile
+     * @return BaseResponse<String>
+     */
     @ResponseBody
     @PatchMapping("/{userIdx}/profile")
     public BaseResponse<String> updateProfile(@PathVariable("userIdx") int userIdx,
@@ -281,7 +255,11 @@ public class UserController {
         }
     }
 
-    /* 프로필 사진 삭제 */
+    /**
+     * 프로필 사진 삭제 API
+     * [DELETE] /users/{userIdx}/profile
+     * @return BaseResponse<String>
+     */
     @ResponseBody
     @DeleteMapping("/{userIdx}/profile")
     public BaseResponse<String> deleteProfileImage(@PathVariable("userIdx") int userIdx) {
@@ -298,7 +276,11 @@ public class UserController {
         }
     }
 
-    /* 팔로우 등록 + 취소 */
+    /**
+     * 팔로우 등록 및 취소 API
+     * [POST] /users/follow
+     * @return BaseResponse<String>
+     */
     @ResponseBody
     @PostMapping("/follow")
     public BaseResponse<String> createUserFollow(@RequestBody PostUserFollowReq postUserFollowReq) {
@@ -310,7 +292,11 @@ public class UserController {
         }
     }
 
-    /* 팔로잉 조회 (내가 팔로우 하는 사람) */
+    /**
+     * 팔로잉 조회 API
+     * [GET] /users/{userIdx}/following
+     * @return BaseResponse<List<GetUserFollowRes>>
+     */
     @ResponseBody
     @GetMapping("/{userIdx}/following")
     public BaseResponse<List<GetUserFollowRes>> getUserFollowings(@PathVariable("userIdx") int userIdx,
@@ -332,7 +318,11 @@ public class UserController {
         }
     }
 
-    /* 팔로워 조회 (나를 팔로우하는 사람) */
+    /**
+     * 팔로워 조회 API
+     * [GET] /users/{userIdx}/follower
+     * @return BaseResponse<List<GetUserFollowRes>>
+     */
     @ResponseBody
     @GetMapping("/{userIdx}/follower")
     public BaseResponse<List<GetUserFollowRes>> getUserFollowers(@PathVariable("userIdx") int userIdx, int page) {
@@ -352,18 +342,42 @@ public class UserController {
         }
     }
 
-    /* 유저가 좋아요 누른 게시글 조회
-    * 카테고리명, 제목, 퀴즈개수 조회수, 좋아요수 */
+    /**
+     * 유저가 좋아요를 누른 게시글 조회 API
+     * [GET] /users/{userIdx}/boards/like
+     * @return BaseResponse<List<GetUserBoardLikeRes>>
+     */
     @ResponseBody
-    @GetMapping("/{userIdx}/board/like")
-    public BaseResponse<List<GetUserBoardLikeRes>> getUserBoardLike(@PathVariable("userIdx") int userIdx) {
+    @GetMapping("/{userIdx}/boards/like")
+    public BaseResponse<List<GetUserBoardLikeRes>> getUserBoardLikes(@PathVariable("userIdx") int userIdx) {
         try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            //int userIdxByJwt = jwtService.getUserIdx();
+            //if (userIdxByJwt != userIdx) {
+            //    return new BaseResponse<>(INVALID_USER_JWT);
+            //}
             List<GetUserBoardLikeRes> userBoardLike = userProvider.getUserBoardLike(userIdx);
             return new BaseResponse<>(userBoardLike);
+
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 유저가 작성한 게시글 조회 API
+     * [GET] /users/{userIdx}/boards
+     * @return BaseResponse<>
+     */
+    @ResponseBody
+    @GetMapping("/{userIdx}/boards")
+    public BaseResponse<List<GetUserBoardRes>> getUserBoards(@PathVariable("userIdx") int userIdx) {
+        try {
+            //int userIdxByJwt = jwtService.getUserIdx();
+            //if (userIdxByJwt != userIdx) {
+            //    return new BaseResponse<>(INVALID_USER_JWT);
+           // }
+            List<GetUserBoardRes> userBoards = userProvider.getUserBoards(userIdx);
+            return new BaseResponse<>(userBoards);
 
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
@@ -384,6 +398,73 @@ public class UserController {
 
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 패스워드 validation API
+     * [POST] /users/validate-password
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @PostMapping("/validate-password")
+    public BaseResponse<String> validateEmail(@RequestBody PostUserPasswordValidateReq postUserPasswordValidateReq) {
+        if (postUserPasswordValidateReq.getPassword() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
+        }
+        if (postUserPasswordValidateReq.getRePassword() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_REPASSWORD);
+        }
+        if (!isRegexPassword(postUserPasswordValidateReq.getPassword())) {
+            return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
+        }
+        if (!postUserPasswordValidateReq.getPassword().equals(postUserPasswordValidateReq.getRePassword())) {
+            return new BaseResponse<>(POST_USERS_INVALID_REPASSWORD);
+        }
+        return new BaseResponse<>(SUCCESS_CHECK_PASSWORD);
+
+    }
+
+    /**
+     * 이메일 validation API
+     * [POST] /users/validate-email
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @PostMapping("/validate-email")
+    public BaseResponse<String> validateEmail(@RequestParam("email") String email) {
+        try {
+            if (email == null) {
+                return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+            }
+            if (!isRegexEmail(email)) {
+                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+            }
+            userProvider.checkEmail(email);
+            return new BaseResponse<>(SUCCESS_CHECK_EMAIL);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    /**
+     * 닉네임 validation API
+     * [POST] /users/validate-nickname
+     * @return BaseResponse<String>
+     */    @ResponseBody
+    @PostMapping("/validate-nickname")
+    public BaseResponse<String> validateNickname(@RequestParam("nickname") String nickname) {
+        try {
+            if (nickname == null) {
+                return new BaseResponse<>(POST_USERS_EMPTY_NICKNAME);
+            }
+            if (!isRegexNickname(nickname)) {
+                return new BaseResponse<>(POST_USERS_INVALID_NICKNAME);
+            }
+            userProvider.checkNickname(nickname);
+            return new BaseResponse<>(SUCCESS_CHECK_NICKNAME);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 

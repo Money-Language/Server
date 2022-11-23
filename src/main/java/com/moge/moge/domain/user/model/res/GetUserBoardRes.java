@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetUserBoardLikeRes {
+public class GetUserBoardRes {
     private int boardIdx;
     private String categoryName;
     private String title;
