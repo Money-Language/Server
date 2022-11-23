@@ -1,4 +1,4 @@
-package com.moge.moge.domain.user;
+package com.moge.moge.domain.user.dao;
 
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.*;

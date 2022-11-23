@@ -1,8 +1,7 @@
 package com.moge.moge.domain.user.service;
 
 import com.moge.moge.domain.s3.S3Service;
-import com.moge.moge.domain.user.UserDao;
-import com.moge.moge.domain.user.UserProvider;
+import com.moge.moge.domain.user.dao.UserDao;
 import com.moge.moge.domain.user.model.req.*;
 import com.moge.moge.domain.user.model.res.GetUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;

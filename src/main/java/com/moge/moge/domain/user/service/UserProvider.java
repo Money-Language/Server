@@ -1,8 +1,8 @@
-package com.moge.moge.domain.user;
+package com.moge.moge.domain.user.service;
 
+import com.moge.moge.domain.user.dao.UserDao;
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
-import com.moge.moge.domain.user.model.req.PostUserPasswordValidateReq;
 import com.moge.moge.domain.user.model.res.GetUserBoardLikeRes;
 import com.moge.moge.domain.user.model.res.GetUserFollowRes;
 import com.moge.moge.domain.user.model.res.GetUserProfileRes;

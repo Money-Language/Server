@@ -1,6 +1,6 @@
 package com.moge.moge.domain.user.service;
 
-import com.moge.moge.domain.user.UserDao;
+import com.moge.moge.domain.user.dao.UserDao;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -7,7 +7,7 @@ import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
 import com.moge.moge.domain.board.model.res.GetRecommendKeywordRes;
-import com.moge.moge.domain.user.UserProvider;
+import com.moge.moge.domain.user.service.UserProvider;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;

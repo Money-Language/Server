@@ -1,5 +1,6 @@
-package com.moge.moge.domain.user;
+package com.moge.moge.domain.user.controller;
 
+import com.moge.moge.domain.user.service.UserProvider;
 import com.moge.moge.domain.user.model.req.*;
 import com.moge.moge.domain.user.model.res.*;
 import com.moge.moge.domain.user.service.MailService;
