@@ -1,9 +1,10 @@
-package com.moge.moge.domain.fcm;
+package com.moge.moge.domain.fcm.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.common.net.HttpHeaders;
+import com.moge.moge.domain.fcm.model.FcmMessage;
 import lombok.RequiredArgsConstructor;
 import okhttp3.*;
 import org.springframework.core.io.ClassPathResource;

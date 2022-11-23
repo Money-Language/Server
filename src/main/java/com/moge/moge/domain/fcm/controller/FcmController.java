@@ -1,5 +1,6 @@
-package com.moge.moge.domain.fcm;
+package com.moge.moge.domain.fcm.controller;
 
+import com.moge.moge.domain.fcm.service.FcmService;
 import com.moge.moge.domain.fcm.model.FcmDto;
 import com.moge.moge.domain.fcm.model.PushMessage;
 import com.moge.moge.global.common.BaseResponse;
