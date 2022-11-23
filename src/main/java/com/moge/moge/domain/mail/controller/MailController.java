@@ -2,7 +2,7 @@ package com.moge.moge.domain.mail.controller;
 
 import com.moge.moge.domain.mail.service.MailProvider;
 import com.moge.moge.domain.mail.service.MailService;
-import com.moge.moge.domain.user.model.req.PostEmailCheckReq;
+import com.moge.moge.domain.mail.model.req.PostEmailCheckReq;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
@@ -41,7 +41,6 @@ public class MailController {
                 return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
             }
         }
-
         try {
             String code = mailService.sendCertifiedMail(email);
             mailService.insertCertifiedCode(email, code);
