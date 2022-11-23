@@ -1,4 +1,4 @@
-package com.moge.moge.domain.user.service;
+package com.moge.moge.domain.mail.service;
 
 import com.moge.moge.domain.user.dao.UserDao;
 import com.moge.moge.global.exception.BaseException;
@@ -36,34 +36,36 @@ public class MailService {
     }
 
     public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
-
         MimeMessage message = emailSender.createMimeMessage();
-
         message.addRecipients(RecipientType.TO, to);
         message.setSubject("MOGE 모지 회원가입 이메일 인증");
+        String messageContents = createMailContents();
+        message.setText(messageContents, "utf-8", "html");
+        message.setFrom(new InternetAddress("dpwls3976@naver.com", "MOGE"));
+        return message;
+    }
 
-        String msgg = "";
-        msgg += "<div style='margin:100px;'>";
-        msgg += "<h1> 안녕하세요</h1>";
-        msgg += "<h1> MOGE 모지입니다</h1>";
-        msgg += "<br>";
-        msgg += "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
-        msgg += "<br>";
-        msgg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg += "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
-        msgg += "<div style='font-size:130%'>";
-        msgg += "CODE : <strong>";
-        msgg += ePw + "</strong><div><br/> ";
-        msgg += "</div>";
-        message.setText(msgg, "utf-8", "html");
-        message.setFrom(new InternetAddress("dpwls3976@naver.com", "GoodJob_Admin"));
-
+    private String createMailContents() {
+        String message = "";
+        message += "<div style='margin:100px;'>";
+        message += "<h1> 안녕하세요 </h1>";
+        message += "<h1> MOGE 모지입니다</h1>";
+        message += "<br>";
+        message += "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
+        message += "<br>";
+        message += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        message += "<h3 style='color:blue;'> 회원가입 인증 코드입니다.</h3>";
+        message += "<div style='font-size:130%'>";
+        message += "CODE : <strong>";
+        message += ePw + "</strong><div><br/> ";
+        message += "</div>";
         return message;
     }
 
     public String sendCertifiedMail(String to) throws Exception {
         ePw = createKey();
         MimeMessage message = createMessage(to);
+
         try {
             emailSender.send(message);
         } catch (MailException es) {
@@ -73,20 +75,20 @@ public class MailService {
         return ePw;
     }
 
-    public String createKey() {
+    private String createKey() {
         StringBuffer key = new StringBuffer();
-        Random rnd = new Random();
+        Random random = new Random();
         for (int i = 0; i < 8; i++) {
-            int index = rnd.nextInt(3); // 0~2 까지 랜덤, rnd 값에 따라서 아래 switch 문이 실행됨
+            int index = random.nextInt(3);
             switch (index) {
                 case 0:
-                    key.append((char) ((int) (rnd.nextInt(26)) + 97));
+                    key.append((char) ((int) (random.nextInt(26)) + 97));
                     break;
                 case 1:
-                    key.append((char) ((int) (rnd.nextInt(26)) + 65));
+                    key.append((char) ((int) (random.nextInt(26)) + 65));
                     break;
                 case 2:
-                    key.append((rnd.nextInt(10)));
+                    key.append((random.nextInt(10)));
                     break;
             }
         }
@@ -101,3 +103,4 @@ public class MailService {
         }
     }
 }
+

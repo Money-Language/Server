@@ -3,7 +3,6 @@ package com.moge.moge.domain.user.controller;
 import com.moge.moge.domain.user.service.UserProvider;
 import com.moge.moge.domain.user.model.req.*;
 import com.moge.moge.domain.user.model.res.*;
-import com.moge.moge.domain.user.service.MailService;
 import com.moge.moge.domain.user.service.UserService;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
@@ -30,12 +29,10 @@ public class UserController {
     @Autowired private final UserProvider userProvider;
     @Autowired private final UserService userService;
     @Autowired private final JwtService jwtService;
-    @Autowired private final MailService mailService;
 
-    public UserController(UserProvider userProvider, UserService userService, MailService mailService, JwtService jwtService){
+    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService){
         this.userProvider = userProvider;
         this.userService = userService;
-        this.mailService = mailService;
         this.jwtService = jwtService;
     }
 
@@ -183,56 +180,6 @@ public class UserController {
         }
     }
 
-    /* 이메일 인증 메일 발송 */
-    @ResponseBody
-    @PostMapping("/send-email")
-    public BaseResponse<String> sendEmail(@RequestParam("email") String email) {
-        if (email != null) {
-            if (!isRegexEmail(email)) {
-                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-            }
-        }
-
-        try {
-            String code = mailService.sendCertifiedMail(email);
-            mailService.insertCertifiedCode(email, code);
-            return new BaseResponse<>(code);
-        } catch (BaseException exception) {
-            return new BaseResponse<>(exception.getStatus());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    /* 이메일 중복 확인 */
-    @ResponseBody
-    @PostMapping("/login/check-email")
-    public BaseResponse<String> checkEmail(@RequestBody PostEmailCheckReq postEmailCheckReq) throws BaseException {
-        if (postEmailCheckReq.getEmail() != null) {
-            if (!isRegexEmail(postEmailCheckReq.getEmail())) {
-                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-            }
-        }
-
-        if (!isRegexEmailCode(postEmailCheckReq.getCode())) {
-            return new BaseResponse<>(POST_USERS_INVALID_EMAIL_CODE);
-        }
-
-        if (userProvider.checkCertifiedEmail(postEmailCheckReq.getEmail()) == 0) {
-            return new BaseResponse<>(POST_USERS_EMPTY_CERTIFIED_EMAIL);
-        }
-
-        int timeDiff = userProvider.checkCertifiedTime(postEmailCheckReq.getEmail());
-        if (timeDiff >= 1000) {
-            return new BaseResponse<>(FAILED_TO_CERTIFY_TIME);
-        }
-
-        if (!(userProvider.checkCertifiedCode(postEmailCheckReq.getEmail(), postEmailCheckReq.getCode()))) {
-            return new BaseResponse<>(FAILED_TO_CERTIFY_CODE);
-        }
-
-        return new BaseResponse<>(SUCCESS_CHECK_CERTIFY_EMAIL);
-    }
 
     /* 관심 키워드 설정 (5개중 3개) */
     @ResponseBody
