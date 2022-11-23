@@ -1,6 +1,6 @@
 package com.moge.moge.domain.mail.service;
 
-import com.moge.moge.domain.user.dao.UserDao;
+import com.moge.moge.domain.mail.dao.MailDao;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +25,13 @@ public class MailService {
 
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final UserDao userDao;
+    private final MailDao mailDao;
     private JavaMailSender emailSender;
     private String ePw;
 
     @Autowired
-    public MailService(UserDao userDao, JavaMailSender emailSender) {
-        this.userDao = userDao;
+    public MailService(MailDao mailDao, JavaMailSender emailSender) {
+        this.mailDao = mailDao;
         this.emailSender = emailSender;
     }
 
@@ -65,7 +65,6 @@ public class MailService {
     public String sendCertifiedMail(String to) throws Exception {
         ePw = createKey();
         MimeMessage message = createMessage(to);
-
         try {
             emailSender.send(message);
         } catch (MailException es) {
@@ -97,7 +96,7 @@ public class MailService {
 
     public void insertCertifiedCode(String email, String code) throws BaseException {
         try {
-            int result = userDao.insertCertifiedCode(email, code);
+            int result = mailDao.insertCertifiedCode(email, code);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

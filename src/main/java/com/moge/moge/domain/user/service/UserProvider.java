@@ -73,30 +73,6 @@ public class UserProvider {
         }
     }
 
-    public int checkCertifiedEmail(String email) throws BaseException {
-        try{
-            return userDao.checkCertifiedEmail(email);
-        } catch (Exception exception){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public int checkCertifiedTime(String email) throws BaseException {
-        try{
-            return userDao.checkCertifiedTime(email);
-        } catch (Exception exception){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public boolean checkCertifiedCode(String email, String code) throws BaseException {
-        try{
-            return userDao.checkCertifiedCode(email, code);
-        } catch (Exception exception){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
     public List<GetUserFollowRes> getUserFollowings(int userIdx, int page) throws BaseException {
         try {
             return userDao.getUserFollowings(userIdx, page);

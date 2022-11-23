@@ -1,8 +1,8 @@
 package com.moge.moge.domain.mail.controller;
 
+import com.moge.moge.domain.mail.service.MailProvider;
 import com.moge.moge.domain.mail.service.MailService;
 import com.moge.moge.domain.user.model.req.PostEmailCheckReq;
-import com.moge.moge.domain.user.service.UserProvider;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
@@ -21,11 +21,11 @@ public class MailController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final MailService mailService;
-    private final UserProvider userProvider;
+    private final MailProvider mailProvider;
 
-    public MailController(MailService mailService, UserProvider userProvider){
+    public MailController(MailService mailService, MailProvider mailProvider){
         this.mailService = mailService;
-        this.userProvider = userProvider;
+        this.mailProvider = mailProvider;
     }
 
     /**
@@ -69,17 +69,14 @@ public class MailController {
         if (!isRegexEmailCode(postEmailCheckReq.getCode())) {
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL_CODE);
         }
-
-        if (userProvider.checkCertifiedEmail(postEmailCheckReq.getEmail()) == 0) {
+        if (mailProvider.checkCertifiedEmail(postEmailCheckReq.getEmail()) == 0) {
             return new BaseResponse<>(POST_USERS_EMPTY_CERTIFIED_EMAIL);
         }
-
-        int timeDiff = userProvider.checkCertifiedTime(postEmailCheckReq.getEmail());
+        int timeDiff = mailProvider.checkCertifiedTime(postEmailCheckReq.getEmail());
         if (timeDiff >= 1000) {
             return new BaseResponse<>(FAILED_TO_CERTIFY_TIME);
         }
-
-        if (!(userProvider.checkCertifiedCode(postEmailCheckReq.getEmail(), postEmailCheckReq.getCode()))) {
+        if (!(mailProvider.checkCertifiedCode(postEmailCheckReq.getEmail(), postEmailCheckReq.getCode()))) {
             return new BaseResponse<>(FAILED_TO_CERTIFY_CODE);
         }
         return new BaseResponse<>(SUCCESS_CHECK_CERTIFY_EMAIL);
