@@ -10,8 +10,7 @@
 
 
 ## Record
-* [MOGE 팀의 개발 일지](https://www.notion.so/makeus-challenge/Money-Language-MOGE-c6267d09e23643099aae9dd94ad9bf03)  
-👉 [나의 Notion](https://www.notion.so/MOGE-2f90d6e321bb4afc8fed50a6ffc055b1)  
+👉 [나의 개발일지](https://www.notion.so/MOGE-2f90d6e321bb4afc8fed50a6ffc055b1)    
 👉 [API 명세서](https://www.notion.so/API-6e702cab8b5340e7b0eb9783f7ca1f6a)  
 
 ## Architecture
@@ -19,12 +18,12 @@
 
 ## ERD 
 
-<p align="center"><img width="800" alt="스크린샷 2022-11-23 오후 3 46 38" src="https://user-images.githubusercontent.com/97823928/203486709-af899c44-8ecc-414c-9d8e-6bfc13eb0bb4.png">
+<p align="center"><img width="870" alt="스크린샷 2022-11-23 오후 3 46 38" src="https://user-images.githubusercontent.com/97823928/203486709-af899c44-8ecc-414c-9d8e-6bfc13eb0bb4.png">
 
 ## Git Convention
 
 ```
-- feat     : 새로운 기능 / 특징
+- feat     : 새로운 기능, 특징
 - fix      : 버그를 고침
 - refactor : 리팩토링
 - chore    : 프러덕션 코드가 바뀌지 않는 기타 변경 사항
@@ -38,7 +37,19 @@
 
 ```
 main
-├─ 📦 global
+├─  📦 domain
+│   ├─ board 
+│   │  ├─ controller
+│   │  ├─ dao
+│   │  ├─ service
+│   │  └─ model
+│   ├─ fcm 
+│   ├─ mail
+│   ├─ s3
+│   ├─ user
+│   └─ quiz
+│
+├─  📦 global
 │   ├─ common
 │   ├─ config
 │   │  ├─ Awsconfig.java
@@ -53,18 +64,8 @@ main
 │   │  ├─ BaseException.java
 │   │  └─ BaseResonseStatus.java
 │   └─ util
-│      └─ ValidationRegex.java
-├─ 📦 domain
-│   ├─ board 
-│   │  ├─ controller
-│   │  ├─ dao
-│   │  ├─ service
-│   │  └─ model
-│   ├─ fcm 
-│   ├─ s3
-│   ├─ social
-│   ├─ user
-└─  └─ quiz
+└─     └─ ValidationRegex.java
+
 ```
 
 ## Issues
