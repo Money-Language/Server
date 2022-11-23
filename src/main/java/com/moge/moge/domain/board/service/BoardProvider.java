@@ -1,10 +1,10 @@
-package com.moge.moge.domain.board;
+package com.moge.moge.domain.board.service;
 
+import com.moge.moge.domain.board.dao.BoardDao;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.res.GetRecommendKeywordRes;
-import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;

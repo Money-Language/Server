@@ -1,4 +1,4 @@
-package com.moge.moge.domain.board;
+package com.moge.moge.domain.board.dao;
 
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;

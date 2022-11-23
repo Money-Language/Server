@@ -1,5 +1,7 @@
-package com.moge.moge.domain.board;
+package com.moge.moge.domain.board.controller;
 
+import com.moge.moge.domain.board.service.BoardProvider;
+import com.moge.moge.domain.board.service.BoardService;
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;

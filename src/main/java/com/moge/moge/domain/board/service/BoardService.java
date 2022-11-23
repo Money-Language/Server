@@ -1,7 +1,7 @@
-package com.moge.moge.domain.board;
+package com.moge.moge.domain.board.service;
 
+import com.moge.moge.domain.board.dao.BoardDao;
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
-import com.moge.moge.domain.board.model.res.GetBoardTopRes;
 import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
 import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
 import com.moge.moge.domain.s3.S3Service;
@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
