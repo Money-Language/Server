@@ -351,13 +351,12 @@ public class UserController {
     @GetMapping("/{userIdx}/boards/like")
     public BaseResponse<List<GetUserBoardLikeRes>> getUserBoardLikes(@PathVariable("userIdx") int userIdx) {
         try {
-            //int userIdxByJwt = jwtService.getUserIdx();
-            //if (userIdxByJwt != userIdx) {
-            //    return new BaseResponse<>(INVALID_USER_JWT);
-            //}
+            int userIdxByJwt = jwtService.getUserIdx();
+            if (userIdxByJwt != userIdx) {
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
             List<GetUserBoardLikeRes> userBoardLike = userProvider.getUserBoardLike(userIdx);
             return new BaseResponse<>(userBoardLike);
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -370,21 +369,29 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping("/{userIdx}/boards")
-    public BaseResponse<List<GetUserBoardRes>> getUserBoards(@PathVariable("userIdx") int userIdx) {
+    public BaseResponse<List<GetUserBoardRes>> getUserBoards(@PathVariable("userIdx") int userIdx,
+                                                             @RequestParam(required = false) Integer categoryIdx) {
         try {
             //int userIdxByJwt = jwtService.getUserIdx();
             //if (userIdxByJwt != userIdx) {
             //    return new BaseResponse<>(INVALID_USER_JWT);
-           // }
-            List<GetUserBoardRes> userBoards = userProvider.getUserBoards(userIdx);
-            return new BaseResponse<>(userBoards);
-
+            //}
+            if (categoryIdx == null) {
+                List<GetUserBoardRes> userBoards = userProvider.getUserBoards(userIdx);
+                return new BaseResponse<>(userBoards);
+            }
+            List<GetUserBoardRes> userBoardsByCategory = userProvider.getUserBoardsByCategory(userIdx, categoryIdx);
+            return new BaseResponse<>(userBoardsByCategory);
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
 
-    /* 유저 탈퇴 */
+    /**
+     * 탈퇴 API
+     * [DELETE] /users/{userIdx}
+     * @return BaseResponse<String>
+     */
     @ResponseBody
     @DeleteMapping("/{userIdx}")
     public BaseResponse<String> deleteUser(@PathVariable("userIdx") int userIdx) {

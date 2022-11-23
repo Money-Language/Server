@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "766825759748",
+    "project_id": "moge-b4d30",
+    "storage_bucket": "moge-b4d30.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766825759748:android:baa5c94271b3d1a55fe151",
+        "android_client_info": {
+          "package_name": "com.cmccx.moge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "766825759748-0orru1frht24hjhmglgl69tk9779bncj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDM7ufpBLbFB_sPuFJ4hn4RFG-yxZm9Es"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "766825759748-0orru1frht24hjhmglgl69tk9779bncj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:766825759748:android:69e63b79f401fa295fe151",
+        "android_client_info": {
+          "package_name": "com.moge.moge"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "766825759748-0orru1frht24hjhmglgl69tk9779bncj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDM7ufpBLbFB_sPuFJ4hn4RFG-yxZm9Es"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "766825759748-0orru1frht24hjhmglgl69tk9779bncj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

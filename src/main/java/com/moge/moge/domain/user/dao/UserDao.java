@@ -270,6 +270,27 @@ public class UserDao {
                 ), userIdx);
     }
 
+    public List<GetUserBoardRes> getUserBoardsByCategory(int userIdx, Integer categoryIdx) {
+        String getUserBoardQuery =
+                "select boardIdx, categoryName, title, viewCount,\n" +
+                "    (select count(*) from BoardLike BL where BL.boardIdx = B.boardIdx) as likeCount,\n" +
+                "    (select count(*) from Quiz Q where Q.boardIdx = B.boardIdx) as quizCount\n" +
+                "from Board B\n" +
+                "    left join Category C   on C.categoryIdx = B.categoryIdx\n" +
+                "where B.userIdx = ? and C.categoryIdx = ? and B.status != 'DELETE'";
+        Object[] params = new Object[]{userIdx, categoryIdx};
+
+        return this.jdbcTemplate.query(getUserBoardQuery,
+                (rs,rowNum) -> new GetUserBoardRes(
+                        rs.getInt("boardIdx"),
+                        rs.getString("categoryName"),
+                        rs.getString("title"),
+                        rs.getInt("quizCount"),
+                        rs.getInt("viewCount"),
+                        rs.getInt("likeCount")
+                ), params);
+    }
+
     public List<GetUserBoardLikeRes> getUserBoardLike(int userIdx) {
         String getUserBoardLikeQuery =
                 "select B.boardIdx, categoryName, title, \n" +

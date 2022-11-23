@@ -125,4 +125,13 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public List<GetUserBoardRes> getUserBoardsByCategory(int userIdx, Integer categoryIdx) throws BaseException {
+        try {
+            int categoryNumber = categoryIdx.intValue();
+            return userDao.getUserBoardsByCategory(userIdx, categoryNumber);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
