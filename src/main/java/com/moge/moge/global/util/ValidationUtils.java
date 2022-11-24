@@ -4,16 +4,30 @@ import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
 @Component
-public class ValidationUtils {
+public class ValidationUtils implements Validator {
 
     private final JwtService jwtService;
 
     public ValidationUtils(JwtService jwtService) {
         this.jwtService = jwtService;
+    }
+
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return false;
+    }
+
+    @Override
+    public void validate(Object target, Errors errors) {
+        if (target == null) {
+            errors.rejectValue("email", "email이 null값 입니다");
+        }
     }
 
     public BaseResponse<Integer> validateJwtToken(int userIdx) throws BaseException {
@@ -24,17 +38,46 @@ public class ValidationUtils {
         return new BaseResponse<>(userIdxByJwt);
     }
 
-    public BaseResponse validateSize(int target, int size) {
+    public void validateSize(int target, int size) throws BaseException {
         if (target != size) {
-            return new BaseResponse<>(POST_USERS_CATEGORY_NUM);
+            throw new BaseException<>(POST_USERS_CATEGORY_NUM);
         }
-        return null;
     }
 
-    public BaseResponse validateRange(int target, int range) {
+    public void validateRange(int target, int range) throws BaseException {
         if  (target <= range) {
-            return new BaseResponse(POST_FOLLOW_INVALID_PAGE);
+            throw new BaseException(POST_FOLLOW_INVALID_PAGE);
         }
-        return null;
     }
+
+    public static void checkEmailNull(String email) throws BaseException {
+        if (email == null) {
+            throw new BaseException(POST_USERS_EMPTY_EMAIL);
+        }
+    }
+
+    public static void checkPasswordNull(String password) throws BaseException {
+        if (password == null) {
+            throw new BaseException(POST_USERS_EMPTY_PASSWORD);
+        }
+    }
+
+    public static void checkRePasswordNull(String rePassword) throws BaseException {
+        if (rePassword == null) {
+            throw new BaseException(POST_USERS_EMPTY_REPASSWORD);
+        }
+    }
+
+    public static void checkNicknameNull(String nickname) throws BaseException {
+        if (nickname == null) {
+            throw new BaseException(POST_USERS_EMPTY_NICKNAME);
+        }
+    }
+
+    public static void checkContractNull(Integer contract1, Integer contract2, Integer contract3) throws BaseException {
+        if (contract1 == null || contract2 == null || contract3 == null) {
+            throw new BaseException(POST_USERS_EMPTY_TERMS);
+        }
+    }
+
 }

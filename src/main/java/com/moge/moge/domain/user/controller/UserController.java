@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,7 @@ import static com.moge.moge.global.exception.BaseResponseStatus.*;
 import static com.moge.moge.global.util.Constants.CATEGORY_SIZE;
 import static com.moge.moge.global.util.Constants.PAGE_RANGE;
 import static com.moge.moge.global.util.ValidationRegex.*;
+import static com.moge.moge.global.util.ValidationUtils.checkEmailNull;
 
 @RestController
 @RequestMapping("/app/users")
@@ -46,28 +48,15 @@ public class UserController {
      * [POST] /users/sign-up
      * @return BaseResponse<PostUserRes>
      */
+    @Validated
     @ResponseBody
     @PostMapping("/sign-up")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
         try {
-            if (postUserReq.getEmail() == null) {
-                return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
-            }
-            if (postUserReq.getNickname() == null) {
-                return new BaseResponse<>(POST_USERS_EMPTY_NICKNAME);
-            }
-            if (postUserReq.getPassword() == null) {
-                return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
-            }
-            if (postUserReq.getRePassword() == null) {
-                return new BaseResponse<>(POST_USERS_EMPTY_REPASSWORD);
-            }
-            if (postUserReq.getContract1() == null && postUserReq.getContract2() == null && postUserReq.getContract3() == null) {
-                return new BaseResponse<>(POST_USERS_EMPTY_TERMS);
-            }
-            if (!isRegexEmail(postUserReq.getEmail())) {
-                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-            }
+
+            //if (!isRegexEmail(postUserReq.getEmail())) {
+            //    return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+            //}
             if (!isRegexPassword(postUserReq.getPassword())) {
                 return new BaseResponse<>(POST_USERS_INVALID_PASSWORD);
             }
@@ -94,9 +83,8 @@ public class UserController {
     @ResponseBody
     @PostMapping("/login")
     public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
-        if (postLoginReq.getEmail() == null) {
-            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
-        }
+
+
         if (postLoginReq.getPassword() == null) {
             return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
         }
@@ -105,7 +93,7 @@ public class UserController {
         }
 
         try {
-            PostLoginRes postLoginRes = userProvider.login(postLoginReq);
+            PostLoginRes postLoginRes = userService.login(postLoginReq);
             return new BaseResponse<>(postLoginRes);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());

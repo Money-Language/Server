@@ -2,8 +2,10 @@ package com.moge.moge.domain.user.service;
 
 import com.moge.moge.domain.s3.S3Service;
 import com.moge.moge.domain.user.dao.UserDao;
+import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.*;
 import com.moge.moge.domain.user.model.res.GetUserKeywordRes;
+import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
 import com.moge.moge.global.config.security.JwtService;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
+import static com.moge.moge.global.util.ValidationUtils.*;
 
 @Service
 public class UserService {
@@ -55,11 +58,35 @@ public class UserService {
         }
 
         try{
+            checkEmailNull(postUserReq.getEmail());
+            checkNicknameNull(postUserReq.getNickname());
+            checkPasswordNull(postUserReq.getPassword());
+            checkRePasswordNull(postUserReq.getRePassword());
+            checkContractNull(postUserReq.getContract1(), postUserReq.getContract2(), postUserReq.getContract3());
+
             int userIdx = userDao.createUser(postUserReq);
             String jwt = jwtService.createJwt(userIdx);
             return new PostUserRes(jwt,userIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException {
+        User user = userDao.getPwd(postLoginReq);
+        String encryptPwd;
+        try {
+            encryptPwd = new SHA256().encrypt(postLoginReq.getPassword());
+        } catch (Exception ignored) {
+            throw new BaseException(PASSWORD_DECRYPTION_ERROR);
+        }
+
+        if (user.getPassword().equals(encryptPwd)) {
+            int userIdx = user.getUserIdx();
+            String jwt = jwtService.createJwt(userIdx);
+            return new PostLoginRes(userIdx, jwt);
+        } else {
+            throw new BaseException(FAILED_TO_LOGIN);
         }
     }
 
