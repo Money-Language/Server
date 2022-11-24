@@ -5,8 +5,6 @@ import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
@@ -16,8 +14,9 @@ public class ValidationUtils {
     private final JwtService jwtService;
     private final UserProvider userProvider;
 
-    public ValidationUtils(JwtService jwtService) {
+    public ValidationUtils(JwtService jwtService, UserProvider userProvider) {
         this.jwtService = jwtService;
+        this.userProvider = userProvider;
     }
 
     public BaseResponse<Integer> validateJwtToken(int userIdx) throws BaseException {
@@ -28,7 +27,7 @@ public class ValidationUtils {
         return new BaseResponse<>(userIdxByJwt);
     }
 
-    public int checkJwtTokenExists() throws BaseException throws BaseException {
+    public int checkJwtTokenExists() throws BaseException {
         int userIdxByJwt = jwtService.getUserIdx();
         if (userProvider.checkUser(userIdxByJwt) == 0) {
             throw new BaseException(USERS_EMPTY_USER_IDX);
@@ -95,5 +94,4 @@ public class ValidationUtils {
             throw new BaseException(POST_BOARDS_EMPTY_COMMENT);
         }
     }
-
 }
