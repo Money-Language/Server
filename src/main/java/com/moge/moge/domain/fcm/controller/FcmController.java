@@ -59,9 +59,7 @@ public class FcmController {
                 title = PushMessage.MENTION.getTitle();
                 body = PushMessage.MENTION.getBody();
             }
-
             fcmService.sendMessageTo(fcmDto.getToken(), title, body);
-
             return new BaseResponse<>(SUCCESS_PUSH_ALARM);
         } catch (IOException e) {
             throw new RuntimeException(e);
