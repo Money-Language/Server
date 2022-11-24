@@ -5,7 +5,7 @@ import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
 import org.springframework.stereotype.Component;
 
-import static com.moge.moge.global.exception.BaseResponseStatus.INVALID_USER_JWT;
+import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
 @Component
 public class ValidationUtils {
@@ -24,9 +24,17 @@ public class ValidationUtils {
         return new BaseResponse<>(userIdxByJwt);
     }
 
-    public boolean isNull(String target) throws BaseException {
-        return target == null ? false : true;
+    public BaseResponse validateSize(int target, int size) {
+        if (target != size) {
+            return new BaseResponse<>(POST_USERS_CATEGORY_NUM);
+        }
+        return null;
     }
 
-
+    public BaseResponse validateRange(int target, int range) {
+        if  (target <= range) {
+            return new BaseResponse(POST_FOLLOW_INVALID_PAGE);
+        }
+        return null;
+    }
 }

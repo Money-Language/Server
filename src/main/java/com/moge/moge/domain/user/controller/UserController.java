@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
+import static com.moge.moge.global.util.Constants.CATEGORY_SIZE;
+import static com.moge.moge.global.util.Constants.PAGE_RANGE;
 import static com.moge.moge.global.util.ValidationRegex.*;
 
 @RestController
@@ -128,10 +130,7 @@ public class UserController {
         }
 
         try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             userService.updatePassword(userIdx, patchUserPasswordReq);
             return new BaseResponse<>(SUCCESS_UPDATE_PASSWORD);
         } catch(BaseException exception) {
@@ -149,10 +148,7 @@ public class UserController {
     public BaseResponse<String> createUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PostUserKeywordReq postUserKeywordReq) {
         try {
             validationUtils.validateJwtToken(userIdx);
-            // 3개를 선택하지 않았다면 예외 처리
-            if (postUserKeywordReq.getCategoryIdx().size() != 3) {
-                return new BaseResponse<>(POST_USERS_CATEGORY_NUM);
-            }
+            validationUtils.validateSize(postUserKeywordReq.getCategoryIdx().size(), CATEGORY_SIZE);
             userService.createUserKeyword(userIdx, postUserKeywordReq);
             return new BaseResponse<>(SUCCESS_CREATE_KEYWORD);
         } catch (BaseException exception) {
@@ -170,14 +166,9 @@ public class UserController {
     public BaseResponse<String> updateUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PatchUserKeywordReq patchUserKeywordReq) {
         try {
             validationUtils.validateJwtToken(userIdx);
-            // 3개를 선택하지 않았다면 예외 처리
-            if (patchUserKeywordReq.getCategoryIdx().size() != 3) {
-                return new BaseResponse<>(POST_USERS_CATEGORY_NUM);
-            }
-
+            validationUtils.validateSize(patchUserKeywordReq.getCategoryIdx().size(), CATEGORY_SIZE);
             userService.updateUserKeyword(userIdx, patchUserKeywordReq);
             return new BaseResponse<>(SUCCESS_UPDATE_KEYWORD);
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -194,7 +185,6 @@ public class UserController {
         try {
             validationUtils.validateJwtToken(userIdx);
             return new BaseResponse<>(userService.getUserKeyword(userIdx));
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -210,9 +200,7 @@ public class UserController {
     public BaseResponse<GetUserProfileRes> getUserProfile(@PathVariable("userIdx") int userIdx) {
         try {
             validationUtils.validateJwtToken(userIdx);
-            GetUserProfileRes userProfile = userProvider.getUserProfile(userIdx);
-            return new BaseResponse<>(userProfile);
-
+            return new BaseResponse<>(userProvider.getUserProfile(userIdx));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -232,7 +220,6 @@ public class UserController {
             validationUtils.validateJwtToken(userIdx);
             userService.updateProfile(userIdx, profileImage, nickname);
             return new BaseResponse<>(SUCCESS_UPDATE_PROFILE);
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         } catch (IOException e) {
@@ -252,7 +239,6 @@ public class UserController {
             validationUtils.validateJwtToken(userIdx);
             userService.deleteProfileImage(userIdx);
             return new BaseResponse<>(SUCCESS_DELETE_USER_PROFILE_IMAGE);
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -285,13 +271,8 @@ public class UserController {
                                                                   int page) {
         try {
             validationUtils.validateJwtToken(userIdx);
-            if (page <= 0) {
-                return new BaseResponse<>(POST_FOLLOW_INVALID_PAGE);
-            }
-
-            List<GetUserFollowRes> getUserFollowingsResList = userProvider.getUserFollowings(userIdx, page);
-            return new BaseResponse<>(getUserFollowingsResList);
-
+            validationUtils.validateRange(page, PAGE_RANGE);
+            return new BaseResponse<>(userProvider.getUserFollowings(userIdx, page));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -307,12 +288,8 @@ public class UserController {
     public BaseResponse<List<GetUserFollowRes>> getUserFollowers(@PathVariable("userIdx") int userIdx, int page) {
         try {
             validationUtils.validateJwtToken(userIdx);
-            if (page <= 0) {
-                return new BaseResponse<>(POST_FOLLOW_INVALID_PAGE);
-            }
-
-            List<GetUserFollowRes> getUserFollowersRes = userProvider.getUserFollowers(userIdx, page);
-            return new BaseResponse<>(getUserFollowersRes);
+            validationUtils.validateRange(page, PAGE_RANGE);
+            return new BaseResponse<>(userProvider.getUserFollowers(userIdx, page));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -328,8 +305,7 @@ public class UserController {
     public BaseResponse<List<GetUserBoardLikeRes>> getUserBoardLikes(@PathVariable("userIdx") int userIdx) {
         try {
             validationUtils.validateJwtToken(userIdx);
-            List<GetUserBoardLikeRes> userBoardLike = userProvider.getUserBoardLike(userIdx);
-            return new BaseResponse<>(userBoardLike);
+            return new BaseResponse<>(userProvider.getUserBoardLike(userIdx));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -347,11 +323,9 @@ public class UserController {
         try {
             validationUtils.validateJwtToken(userIdx);
             if (categoryIdx == null) {
-                List<GetUserBoardRes> userBoards = userProvider.getUserBoards(userIdx);
-                return new BaseResponse<>(userBoards);
+                return new BaseResponse<>(userProvider.getUserBoards(userIdx));
             }
-            List<GetUserBoardRes> userBoardsByCategory = userProvider.getUserBoardsByCategory(userIdx, categoryIdx);
-            return new BaseResponse<>(userBoardsByCategory);
+            return new BaseResponse<>(userProvider.getUserBoardsByCategory(userIdx, categoryIdx));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
