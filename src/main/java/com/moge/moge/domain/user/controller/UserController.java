@@ -7,6 +7,7 @@ import com.moge.moge.domain.user.service.UserService;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
+import com.moge.moge.global.util.ValidationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,11 +30,13 @@ public class UserController {
     @Autowired private final UserProvider userProvider;
     @Autowired private final UserService userService;
     @Autowired private final JwtService jwtService;
+    private final ValidationUtils validationUtils;
 
-    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService){
+    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService, ValidationUtils validationUtils){
         this.userProvider = userProvider;
         this.userService = userService;
         this.jwtService = jwtService;
+        this.validationUtils = validationUtils;
     }
 
     /**
@@ -145,11 +148,7 @@ public class UserController {
     @PostMapping("/{userIdx}/keyword")
     public BaseResponse<String> createUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PostUserKeywordReq postUserKeywordReq) {
         try {
-            // jwt 토큰 확인
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             // 3개를 선택하지 않았다면 예외 처리
             if (postUserKeywordReq.getCategoryIdx().size() != 3) {
                 return new BaseResponse<>(POST_USERS_CATEGORY_NUM);
@@ -170,11 +169,7 @@ public class UserController {
     @PatchMapping("/{userIdx}/keyword")
     public BaseResponse<String> updateUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PatchUserKeywordReq patchUserKeywordReq) {
         try {
-            // jwt 토큰 확인
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             // 3개를 선택하지 않았다면 예외 처리
             if (patchUserKeywordReq.getCategoryIdx().size() != 3) {
                 return new BaseResponse<>(POST_USERS_CATEGORY_NUM);
@@ -197,11 +192,7 @@ public class UserController {
     @GetMapping("/{userIdx}/keyword")
     public BaseResponse<List<GetUserKeywordRes>> getUserKeyword(@PathVariable("userIdx") int userIdx) {
         try {
-            // jwt 토큰 확인
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             return new BaseResponse<>(userService.getUserKeyword(userIdx));
 
         } catch (BaseException exception) {
@@ -218,10 +209,7 @@ public class UserController {
     @GetMapping("/{userIdx}/profile")
     public BaseResponse<GetUserProfileRes> getUserProfile(@PathVariable("userIdx") int userIdx) {
         try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             GetUserProfileRes userProfile = userProvider.getUserProfile(userIdx);
             return new BaseResponse<>(userProfile);
 
@@ -241,10 +229,7 @@ public class UserController {
                                               @RequestPart(value = "profileImage", required = false) MultipartFile profileImage,
                                               @RequestPart(value = "nickname") String nickname) {
         try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             userService.updateProfile(userIdx, profileImage, nickname);
             return new BaseResponse<>(SUCCESS_UPDATE_PROFILE);
 
@@ -264,10 +249,7 @@ public class UserController {
     @DeleteMapping("/{userIdx}/profile")
     public BaseResponse<String> deleteProfileImage(@PathVariable("userIdx") int userIdx) {
         try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             userService.deleteProfileImage(userIdx);
             return new BaseResponse<>(SUCCESS_DELETE_USER_PROFILE_IMAGE);
 
@@ -302,10 +284,7 @@ public class UserController {
     public BaseResponse<List<GetUserFollowRes>> getUserFollowings(@PathVariable("userIdx") int userIdx,
                                                                   int page) {
         try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             if (page <= 0) {
                 return new BaseResponse<>(POST_FOLLOW_INVALID_PAGE);
             }
@@ -327,10 +306,7 @@ public class UserController {
     @GetMapping("/{userIdx}/follower")
     public BaseResponse<List<GetUserFollowRes>> getUserFollowers(@PathVariable("userIdx") int userIdx, int page) {
         try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             if (page <= 0) {
                 return new BaseResponse<>(POST_FOLLOW_INVALID_PAGE);
             }
@@ -351,10 +327,7 @@ public class UserController {
     @GetMapping("/{userIdx}/boards/like")
     public BaseResponse<List<GetUserBoardLikeRes>> getUserBoardLikes(@PathVariable("userIdx") int userIdx) {
         try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             List<GetUserBoardLikeRes> userBoardLike = userProvider.getUserBoardLike(userIdx);
             return new BaseResponse<>(userBoardLike);
         } catch (BaseException exception) {
@@ -372,10 +345,7 @@ public class UserController {
     public BaseResponse<List<GetUserBoardRes>> getUserBoards(@PathVariable("userIdx") int userIdx,
                                                              @RequestParam(required = false) Integer categoryIdx) {
         try {
-            //int userIdxByJwt = jwtService.getUserIdx();
-            //if (userIdxByJwt != userIdx) {
-            //    return new BaseResponse<>(INVALID_USER_JWT);
-            //}
+            validationUtils.validateJwtToken(userIdx);
             if (categoryIdx == null) {
                 List<GetUserBoardRes> userBoards = userProvider.getUserBoards(userIdx);
                 return new BaseResponse<>(userBoards);
@@ -396,13 +366,9 @@ public class UserController {
     @DeleteMapping("/{userIdx}")
     public BaseResponse<String> deleteUser(@PathVariable("userIdx") int userIdx) {
         try {
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userIdxByJwt != userIdx) {
-                return new BaseResponse<>(INVALID_USER_JWT);
-            }
+            validationUtils.validateJwtToken(userIdx);
             userService.deleteUser(userIdx);
             return new BaseResponse<>(SUCCESS_DELETE_USER);
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
