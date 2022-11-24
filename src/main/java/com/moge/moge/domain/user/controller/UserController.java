@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,7 +21,6 @@ import java.util.List;
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 import static com.moge.moge.global.util.Constants.CATEGORY_SIZE;
 import static com.moge.moge.global.util.Constants.PAGE_RANGE;
-import static com.moge.moge.global.util.ValidationUtils.checkSamePassword;
 
 @RestController
 @RequestMapping("/app/users")

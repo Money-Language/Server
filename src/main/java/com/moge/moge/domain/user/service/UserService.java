@@ -8,7 +8,6 @@ import com.moge.moge.domain.user.model.res.GetUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
-import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;
@@ -44,6 +43,7 @@ public class UserService {
     }
 
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
+        /* 유효성 체크 */
         checkEmailNull(postUserReq.getEmail());
         checkNicknameNull(postUserReq.getNickname());
         checkPasswordNull(postUserReq.getPassword());
@@ -52,10 +52,8 @@ public class UserService {
         isRegexEmail(postUserReq.getEmail());
         isRegexPassword(postUserReq.getPassword());
         isRegexNickname(postUserReq.getNickname());
+        checkSamePassword(postUserReq.getPassword(), postUserReq.getRePassword());
 
-        if (!postUserReq.getPassword().equals(postUserReq.getRePassword())) {
-            throw new BaseException(POST_USERS_INVALID_REPASSWORD);
-        }
         if (userProvider.checkEmail(postUserReq.getEmail()) == 1) {
             throw new BaseException(DUPLICATED_EMAIL);
         }
@@ -63,15 +61,10 @@ public class UserService {
             throw new BaseException(DUPLICATED_NICKNAME);
         }
 
-        String pwd;
-        try {
-            pwd = new SHA256().encrypt(postUserReq.getPassword());
-            postUserReq.setPassword(pwd);
-        } catch (Exception ignored) {
-            throw new BaseException(PASSWORD_ENCRYPTION_ERROR);
-        }
-
+        /* 비즈니스 로직 */
         try{
+            String encryptedPassword = encryptPwd(postUserReq.getPassword());
+            postUserReq.setPassword(encryptedPassword);
             int userIdx = userDao.createUser(postUserReq);
             String jwt = jwtService.createJwt(userIdx);
             return new PostUserRes(jwt,userIdx);
@@ -81,19 +74,15 @@ public class UserService {
     }
 
     public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException {
+        /* 유효성 체크 */
         checkEmailNull(postLoginReq.getEmail());
         checkPasswordNull(postLoginReq.getPassword());
         isRegexEmail(postLoginReq.getEmail());
         isRegexPassword(postLoginReq.getPassword());
 
+        /* 비즈니스 로직 */
         User user = userDao.getPwd(postLoginReq);
-        String encryptPwd;
-        try {
-            encryptPwd = new SHA256().encrypt(postLoginReq.getPassword());
-        } catch (Exception ignored) {
-            throw new BaseException(PASSWORD_DECRYPTION_ERROR);
-        }
-
+        String encryptPwd = encryptPwd(postLoginReq.getPassword());
         if (user.getPassword().equals(encryptPwd)) {
             int userIdx = user.getUserIdx();
             String jwt = jwtService.createJwt(userIdx);
@@ -109,11 +98,7 @@ public class UserService {
         }
 
         String updatedPwd;
-        String encryptPwd;
-
-        encryptPwd = new SHA256().encrypt(patchUserPasswordReq.getCurrentPassword());
-
-        System.out.println(encryptPwd);
+        String encryptPwd = encryptPwd(patchUserPasswordReq.getCurrentPassword());
 
         if (!encryptPwd.equals(userDao.getUser(userIdx).getPassword())) {
             throw new BaseException(USER_CURRENT_PASSWORD_NOT_CORRECT);
@@ -121,13 +106,12 @@ public class UserService {
 
         try {
             isRegexPassword(patchUserPasswordReq.getModPassword());
-            updatedPwd = new SHA256().encrypt(patchUserPasswordReq.getModPassword());
+            updatedPwd = encryptPwd(patchUserPasswordReq.getModPassword());
             patchUserPasswordReq.setModPassword(updatedPwd);
             int result = userDao.updatePassword(userIdx, patchUserPasswordReq);
             if (result == 0) {
                 throw new BaseException(FAILED_TO_UPDATE_USERS_PASSWORD);
             }
-
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -146,23 +130,19 @@ public class UserService {
     }
 
     public PostUserKeywordRes createUserKeyword(int userIdx, PostUserKeywordReq postUserKeywordReq) throws BaseException {
-        //try {
-            // 해당 카테고리가 DB에 있는지 확인
+        try {
             for (int categoryIdx : postUserKeywordReq.getCategoryIdx()) {
                 if (userDao.checkCategoryExists(categoryIdx) == 0) {
                     throw new BaseException(USER_CATEGORY_NOT_EXISTS);
                 }
             }
-            // 이미 설정 되어있으면 불가능, 수정 api로만 가능하도록
             if (userDao.checkUserCategoryExists(userIdx) == 1) {
                 throw new BaseException(USER_CATEGORY_ALREADY_EXISTS);
             }
-
-            PostUserKeywordRes result = userDao.createUserKeyword(userIdx, postUserKeywordReq);
-            return result;
-        //} catch (Exception exception) {
-          //  throw new BaseException(DATABASE_ERROR);
-        //}
+            return userDao.createUserKeyword(userIdx, postUserKeywordReq);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     public void updateUserKeyword(int userIdx, PatchUserKeywordReq patchUserKeywordReq) throws BaseException {
@@ -173,14 +153,11 @@ public class UserService {
                     throw new BaseException(USER_CATEGORY_NOT_EXISTS);
                 }
             }
-
             List<Integer> userCategoryIdxList = userDao.getUserCategoryIdx(userIdx);
             int[] userCategoryIdx = userCategoryIdxList.stream().mapToInt(Integer::intValue).toArray();
             int i = 0;
             for (int uIdx : userCategoryIdx) {
-                System.out.println("=== uIdx : " + uIdx + "=====");
                 int index = patchUserKeywordReq.getCategoryIdx().get(i++);
-                System.out.println("=== index : " + index + "===");
                 userDao.updateUserKeyword(uIdx, index);
             }
         } catch (Exception exception) {
@@ -198,11 +175,8 @@ public class UserService {
 
     public void updateProfile(int userIdx, MultipartFile profileImage, String nickname) throws BaseException, IOException {
         try {
-            // s3에 먼저 사진을 올림
             String url = s3Service.uploadFile(profileImage);
-            // 반환된 url을 DB에 저장
             userDao.updateUserProfile(userIdx, url, nickname);
-
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -210,15 +184,9 @@ public class UserService {
 
     public void deleteProfileImage(int userIdx) throws BaseException {
         try {
-            // 1. db에서 url 찾아옴
             String userProfileImageUrlInDB = userDao.getUserProfileImage(userIdx);
-
-            // 2. s3에서 이미지 삭제
             s3Service.deleteFile(userProfileImageUrlInDB);
-
-            // 3. db에서 profile 필드를 null로 변경
             userDao.deleteUserProfileImage(userIdx);
-
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -249,6 +217,16 @@ public class UserService {
 
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    private String encryptPwd(String password) throws BaseException {
+        String encryptPwd;
+        try {
+            encryptPwd = new SHA256().encrypt(password);
+            return encryptPwd;
+        } catch (Exception ignored) {
+            throw new BaseException(PASSWORD_DECRYPTION_ERROR);
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.moge.moge.global.util;
 
-import com.moge.moge.domain.user.model.req.PostUserPasswordValidateReq;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
@@ -11,24 +10,12 @@ import org.springframework.validation.Validator;
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 
 @Component
-public class ValidationUtils implements Validator {
+public class ValidationUtils {
 
     private final JwtService jwtService;
 
     public ValidationUtils(JwtService jwtService) {
         this.jwtService = jwtService;
-    }
-
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return false;
-    }
-
-    @Override
-    public void validate(Object target, Errors errors) {
-        if (target == null) {
-            errors.rejectValue("email", "email이 null값 입니다");
-        }
     }
 
     public BaseResponse<Integer> validateJwtToken(int userIdx) throws BaseException {
@@ -81,8 +68,8 @@ public class ValidationUtils implements Validator {
         }
     }
 
-    public static void checkSamePassword(PostUserPasswordValidateReq postUserPasswordValidateReq) throws BaseException {
-        if (!postUserPasswordValidateReq.getPassword().equals(postUserPasswordValidateReq.getRePassword())) {
+    public static void checkSamePassword(String password, String rePassword) throws BaseException {
+        if (!password.equals(rePassword)) {
             throw new BaseException(POST_USERS_INVALID_REPASSWORD);
         }
     }

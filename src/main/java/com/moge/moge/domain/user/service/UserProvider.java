@@ -64,8 +64,9 @@ public class UserProvider {
         try {
             checkPasswordNull(postUserPasswordValidateReq.getPassword());
             checkRePasswordNull(postUserPasswordValidateReq.getRePassword());
+            checkSamePassword(postUserPasswordValidateReq.getPassword(), postUserPasswordValidateReq.getRePassword());
             isRegexPassword(postUserPasswordValidateReq.getPassword());
-            checkSamePassword(postUserPasswordValidateReq);
+
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -104,19 +105,19 @@ public class UserProvider {
     }
 
     public List<GetUserBoardRes> getUserBoards(int userIdx) throws BaseException {
-        //try {
+        try {
             return userDao.getUserBoards(userIdx);
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     public List<GetUserBoardLikeRes> getUserBoardLike(int userIdx) throws BaseException {
-        //try {
+        try {
             return userDao.getUserBoardLike(userIdx);
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     public int checkUserComment(int userIdx, int commentIdx, int boardIdx) throws BaseException {
