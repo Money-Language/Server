@@ -13,6 +13,7 @@ import com.moge.moge.domain.user.service.UserProvider;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
+import com.moge.moge.global.util.ValidationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +34,14 @@ public class BoardController {
     @Autowired private final BoardService boardService;
     @Autowired private final UserProvider userProvider;
     @Autowired private final JwtService jwtService;
+    @Autowired private final ValidationUtils validationUtils;
 
-    public BoardController(BoardProvider boardProvider, BoardService boardService, UserProvider userProvider, JwtService jwtService){
+    public BoardController(BoardProvider boardProvider, BoardService boardService, UserProvider userProvider, JwtService jwtService, ValidationUtils validationUtils){
         this.boardProvider = boardProvider;
         this.boardService = boardService;
         this.userProvider = userProvider;
         this.jwtService = jwtService;
+        this.validationUtils = validationUtils;
     }
 
     /* 게시글 좋아요 등록, 취소 */
@@ -46,11 +49,7 @@ public class BoardController {
     @PostMapping("/{boardIdx}/like")
     public BaseResponse<String> createBoardLike(@PathVariable("boardIdx") int boardIdx) {
         try {
-            // jwt 토큰 확인
-            int userIdxByJwt = jwtService.getUserIdx();
-            if (userProvider.checkUser(userIdxByJwt) == 0) {
-                return new BaseResponse<>(USERS_EMPTY_USER_IDX);
-            }
+            int userIdxByJwt = validationUtils.checkJwtTokenExists();
             boardService.createBoardLike(boardIdx, userIdxByJwt);
             return new BaseResponse<>(SUCCESS_CREATE_BOARD_LIKE);
         } catch (BaseException exception) {
@@ -103,14 +102,11 @@ public class BoardController {
     public BaseResponse<String> createBoardComment(@PathVariable("boardIdx") int boardIdx,
                                                   @RequestBody PostBoardCommentReq postBoardCommentReq) {
         try {
-            int userIdx = jwtService.getUserIdx();
-            if (userProvider.checkUser(userIdx) == 0) {
-                return new BaseResponse<>(USERS_EMPTY_USER_IDX);
-            }
+            int userIdxByJwt = validationUtils.checkJwtTokenExists();
             if (postBoardCommentReq.getContent() == null) {
                 return new BaseResponse<>(POST_BOARDS_EMPTY_COMMENT);
             }
-            boardService.createBoardComment(postBoardCommentReq, boardIdx, userIdx);
+            boardService.createBoardComment(postBoardCommentReq, boardIdx, userIdxByJwt);
             return new BaseResponse<>(SUCCESS_CREATE_BOARD_COMMENT);
 
         } catch (BaseException exception) {
@@ -125,15 +121,13 @@ public class BoardController {
                                                    @PathVariable("commentIdx") int commentIdx,
                                                    @RequestBody PatchBoardCommentReq patchBoardCommentReq) {
         try {
-            int userIdx = jwtService.getUserIdx();
-            if (userProvider.checkUser(userIdx) == 0) {
-                return new BaseResponse<>(USERS_EMPTY_USER_IDX);
-            }
+            int userIdxByJwt = validationUtils.checkJwtTokenExists();
+
             if (patchBoardCommentReq.getContent() == null) {
                 return new BaseResponse<>(POST_BOARDS_EMPTY_COMMENT);
             }
             // 유저가 작성한 댓글인지 확인하기
-            if (userProvider.checkUserComment(userIdx, commentIdx, boardIdx) == 0) {
+            if (userProvider.checkUserComment(userIdxByJwt, commentIdx, boardIdx) == 0) {
                 return new BaseResponse<>(POST_BOARDS_COMMENT_INVALID_JWT); // 좀더 나은 이름으로 변경하자 : 권한이 없는 유저다!
             }
             boardService.updateBoardComment(patchBoardCommentReq, commentIdx);
@@ -150,11 +144,8 @@ public class BoardController {
     public BaseResponse<String> deleteBoardComment(@PathVariable("boardIdx") int boardIdx,
                                                    @PathVariable("commentIdx") int commentIdx) {
         try {
-            int userIdx = jwtService.getUserIdx();
-            if (userProvider.checkUser(userIdx) == 0) {
-                return new BaseResponse<>(USERS_EMPTY_USER_IDX);
-            }
-            if (userProvider.checkUserComment(userIdx, commentIdx, boardIdx) == 0) {
+            int userIdxByJwt = validationUtils.checkJwtTokenExists();
+            if (userProvider.checkUserComment(userIdxByJwt, commentIdx, boardIdx) == 0) {
                 return new BaseResponse<>(POST_BOARDS_COMMENT_INVALID_JWT);
             }
             boardService.deleteBoardComment(boardIdx, commentIdx);
@@ -171,11 +162,8 @@ public class BoardController {
     public BaseResponse<String> createCommentLike(@PathVariable("boardIdx") int boardIdx,
                                                    @PathVariable("commentIdx") int commentIdx) {
         try {
-            int userIdx = jwtService.getUserIdx();
-            if (userProvider.checkUser(userIdx) == 0) {
-                return new BaseResponse<>(USERS_EMPTY_USER_IDX);
-            }
-            boardService.createCommentLike(boardIdx, commentIdx, userIdx);
+            int userIdxByJwt = validationUtils.checkJwtTokenExists();
+            boardService.createCommentLike(boardIdx, commentIdx, userIdxByJwt);
             return new BaseResponse<>(SUCCESS_CREATE_BOARD_COMMENT_LIKE);
 
         } catch (BaseException exception) {
@@ -213,11 +201,8 @@ public class BoardController {
                                                @PathVariable("commentIdx") int commentIdx,
                                                @RequestBody PostCommentReportReq postCommentReportReq) {
         try {
-            int userIdx = jwtService.getUserIdx();
-            if (userProvider.checkUser(userIdx) == 0) {
-                return new BaseResponse<>(USERS_EMPTY_USER_IDX);
-            }
-            boardService.reportComment(userIdx, boardIdx, commentIdx, postCommentReportReq);
+            int userIdxByJwt = validationUtils.checkJwtTokenExists();
+            boardService.reportComment(userIdxByJwt, boardIdx, commentIdx, postCommentReportReq);
             return new BaseResponse<>(SUCCESS_CREATE_COMMENT_REPORT);
 
         } catch (BaseException exception) {

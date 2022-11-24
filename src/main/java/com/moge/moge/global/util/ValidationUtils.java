@@ -1,5 +1,6 @@
 package com.moge.moge.global.util;
 
+import com.moge.moge.domain.user.service.UserProvider;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
@@ -13,6 +14,7 @@ import static com.moge.moge.global.exception.BaseResponseStatus.*;
 public class ValidationUtils {
 
     private final JwtService jwtService;
+    private final UserProvider userProvider;
 
     public ValidationUtils(JwtService jwtService) {
         this.jwtService = jwtService;
@@ -24,6 +26,14 @@ public class ValidationUtils {
             return new BaseResponse<>(INVALID_USER_JWT);
         }
         return new BaseResponse<>(userIdxByJwt);
+    }
+
+    public int checkJwtTokenExists() throws BaseException throws BaseException {
+        int userIdxByJwt = jwtService.getUserIdx();
+        if (userProvider.checkUser(userIdxByJwt) == 0) {
+            throw new BaseException(USERS_EMPTY_USER_IDX);
+        }
+        return userIdxByJwt;
     }
 
     public void validateSize(int target, int size) throws BaseException {
