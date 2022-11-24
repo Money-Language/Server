@@ -83,4 +83,17 @@ public class ValidationUtils {
             throw new BaseException(POST_USERS_INVALID_REPASSWORD);
         }
     }
+
+    public static void checkTitleNull(String title) throws BaseException {
+        if (title == null) {
+            throw new BaseException(EMPTY_SEARTCH_KEYWORD);
+        }
+    }
+
+    public static void checkCommentNull(String content) throws BaseException {
+        if (content == null) {
+            throw new BaseException(POST_BOARDS_EMPTY_COMMENT);
+        }
+    }
+
 }

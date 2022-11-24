@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
+import static com.moge.moge.global.util.Constants.RECOMMEND_KEYWORD_SIZE;
+import static com.moge.moge.global.util.ValidationUtils.checkCommentNull;
+import static com.moge.moge.global.util.ValidationUtils.checkTitleNull;
 
 @RestController
 @RequestMapping("/app/boards")
@@ -62,8 +65,7 @@ public class BoardController {
     @GetMapping("/top-like")
     public BaseResponse<List<GetBoardTopRes>> getBoardTopLike() {
         try {
-            List<GetBoardTopRes> boardTopLike = boardProvider.getBoardTopLike();
-            return new BaseResponse<>(boardTopLike);
+            return new BaseResponse<>(boardProvider.getBoardTopLike());
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -74,11 +76,8 @@ public class BoardController {
     @GetMapping("/search")
     public BaseResponse<List<GetBoardSearchRes>> getBoardByKeyword(@RequestParam("title") String title) {
         try {
-            if (title == null) {
-                return new BaseResponse<>(EMPTY_SEARTCH_KEYWORD);
-            }
-            List<GetBoardSearchRes> getBoardSearchRes = boardProvider.getBoardByKeyword(title);
-            return new BaseResponse<>(getBoardSearchRes);
+            checkTitleNull(title);
+            return new BaseResponse<>(boardProvider.getBoardByKeyword(title));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -103,9 +102,7 @@ public class BoardController {
                                                   @RequestBody PostBoardCommentReq postBoardCommentReq) {
         try {
             int userIdxByJwt = validationUtils.checkJwtTokenExists();
-            if (postBoardCommentReq.getContent() == null) {
-                return new BaseResponse<>(POST_BOARDS_EMPTY_COMMENT);
-            }
+            checkCommentNull(postBoardCommentReq.getContent());
             boardService.createBoardComment(postBoardCommentReq, boardIdx, userIdxByJwt);
             return new BaseResponse<>(SUCCESS_CREATE_BOARD_COMMENT);
 
@@ -122,17 +119,11 @@ public class BoardController {
                                                    @RequestBody PatchBoardCommentReq patchBoardCommentReq) {
         try {
             int userIdxByJwt = validationUtils.checkJwtTokenExists();
-
-            if (patchBoardCommentReq.getContent() == null) {
-                return new BaseResponse<>(POST_BOARDS_EMPTY_COMMENT);
-            }
-            // 유저가 작성한 댓글인지 확인하기
             if (userProvider.checkUserComment(userIdxByJwt, commentIdx, boardIdx) == 0) {
-                return new BaseResponse<>(POST_BOARDS_COMMENT_INVALID_JWT); // 좀더 나은 이름으로 변경하자 : 권한이 없는 유저다!
+                return new BaseResponse<>(POST_BOARDS_COMMENT_INVALID_JWT);
             }
             boardService.updateBoardComment(patchBoardCommentReq, commentIdx);
             return new BaseResponse<>(SUCCESS_UPDATE_BOARD_COMMENT);
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -204,7 +195,6 @@ public class BoardController {
             int userIdxByJwt = validationUtils.checkJwtTokenExists();
             boardService.reportComment(userIdxByJwt, boardIdx, commentIdx, postCommentReportReq);
             return new BaseResponse<>(SUCCESS_CREATE_COMMENT_REPORT);
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
@@ -218,7 +208,7 @@ public class BoardController {
             int keywordCounts = boardProvider.getAllRecommendKeywordCounts();
 
             List<Integer> randomIdxList = new ArrayList<>();
-            while(randomIdxList.size() < 5) {
+            while(randomIdxList.size() < RECOMMEND_KEYWORD_SIZE) {
                 int randomNumber = (int)(Math.random() * keywordCounts + 1);
                 if (!randomIdxList.contains(randomNumber)) {
                     randomIdxList.add(randomNumber);
@@ -227,7 +217,6 @@ public class BoardController {
                 }
             }
             return new BaseResponse<>(boardProvider.getRecommendKeyword(randomIdxList));
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

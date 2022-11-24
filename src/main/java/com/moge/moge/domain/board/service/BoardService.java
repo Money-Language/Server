@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
+import static com.moge.moge.global.util.ValidationUtils.checkCommentNull;
 
 @Service
 public class BoardService {
@@ -81,6 +82,7 @@ public class BoardService {
             throw new BaseException(FAILED_TO_UPDATE_COMMENT);
         }
         try {
+            checkCommentNull(patchBoardCommentReq.getContent());
             return boardDao.updateBoardComment(patchBoardCommentReq, commentIdx);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
