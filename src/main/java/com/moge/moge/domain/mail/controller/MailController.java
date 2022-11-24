@@ -36,11 +36,11 @@ public class MailController {
     @ResponseBody
     @PostMapping("/send-email")
     public BaseResponse<String> sendEmail(@RequestParam("email") String email) {
-        if (email != null) {
-            if (!isRegexEmail(email)) {
-                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-            }
-        }
+       // if (email != null) {
+       //     if (!isRegexEmail(email)) {
+       //         return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+       //     }
+       // }
         try {
             String code = mailService.sendCertifiedMail(email);
             mailService.insertCertifiedCode(email, code);
@@ -60,14 +60,14 @@ public class MailController {
     @ResponseBody
     @PostMapping("/login/check-email")
     public BaseResponse<String> checkEmail(@RequestBody PostEmailCheckReq postEmailCheckReq) throws BaseException {
-        if (postEmailCheckReq.getEmail() != null) {
-            if (!isRegexEmail(postEmailCheckReq.getEmail())) {
-                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
-            }
-        }
-        if (!isRegexEmailCode(postEmailCheckReq.getCode())) {
-            return new BaseResponse<>(POST_USERS_INVALID_EMAIL_CODE);
-        }
+        //if (postEmailCheckReq.getEmail() != null) {
+        //    if (!isRegexEmail(postEmailCheckReq.getEmail())) {
+        //        return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        //    }
+        //}
+        //if (!isRegexEmailCode(postEmailCheckReq.getCode())) {
+        //    return new BaseResponse<>(POST_USERS_INVALID_EMAIL_CODE);
+        //}
         if (mailProvider.checkCertifiedEmail(postEmailCheckReq.getEmail()) == 0) {
             return new BaseResponse<>(POST_USERS_EMPTY_CERTIFIED_EMAIL);
         }

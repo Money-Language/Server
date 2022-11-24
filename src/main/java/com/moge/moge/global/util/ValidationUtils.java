@@ -1,5 +1,6 @@
 package com.moge.moge.global.util;
 
+import com.moge.moge.domain.user.model.req.PostUserPasswordValidateReq;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
@@ -40,7 +41,7 @@ public class ValidationUtils implements Validator {
 
     public void validateSize(int target, int size) throws BaseException {
         if (target != size) {
-            throw new BaseException<>(POST_USERS_CATEGORY_NUM);
+            throw new BaseException(POST_USERS_CATEGORY_NUM);
         }
     }
 
@@ -80,4 +81,9 @@ public class ValidationUtils implements Validator {
         }
     }
 
+    public static void checkSamePassword(PostUserPasswordValidateReq postUserPasswordValidateReq) throws BaseException {
+        if (!postUserPasswordValidateReq.getPassword().equals(postUserPasswordValidateReq.getRePassword())) {
+            throw new BaseException(POST_USERS_INVALID_REPASSWORD);
+        }
+    }
 }

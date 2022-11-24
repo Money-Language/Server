@@ -8,6 +8,7 @@ import com.moge.moge.domain.user.model.res.GetUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostLoginRes;
 import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
 import com.moge.moge.domain.user.model.res.PostUserRes;
+import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
+import static com.moge.moge.global.util.ValidationRegex.*;
 import static com.moge.moge.global.util.ValidationUtils.*;
 
 @Service
@@ -42,6 +44,18 @@ public class UserService {
     }
 
     public PostUserRes createUser(PostUserReq postUserReq) throws BaseException {
+        checkEmailNull(postUserReq.getEmail());
+        checkNicknameNull(postUserReq.getNickname());
+        checkPasswordNull(postUserReq.getPassword());
+        checkRePasswordNull(postUserReq.getRePassword());
+        checkContractNull(postUserReq.getContract1(), postUserReq.getContract2(), postUserReq.getContract3());
+        isRegexEmail(postUserReq.getEmail());
+        isRegexPassword(postUserReq.getPassword());
+        isRegexNickname(postUserReq.getNickname());
+
+        if (!postUserReq.getPassword().equals(postUserReq.getRePassword())) {
+            throw new BaseException(POST_USERS_INVALID_REPASSWORD);
+        }
         if (userProvider.checkEmail(postUserReq.getEmail()) == 1) {
             throw new BaseException(DUPLICATED_EMAIL);
         }
@@ -58,12 +72,6 @@ public class UserService {
         }
 
         try{
-            checkEmailNull(postUserReq.getEmail());
-            checkNicknameNull(postUserReq.getNickname());
-            checkPasswordNull(postUserReq.getPassword());
-            checkRePasswordNull(postUserReq.getRePassword());
-            checkContractNull(postUserReq.getContract1(), postUserReq.getContract2(), postUserReq.getContract3());
-
             int userIdx = userDao.createUser(postUserReq);
             String jwt = jwtService.createJwt(userIdx);
             return new PostUserRes(jwt,userIdx);
@@ -73,6 +81,11 @@ public class UserService {
     }
 
     public PostLoginRes login(PostLoginReq postLoginReq) throws BaseException {
+        checkEmailNull(postLoginReq.getEmail());
+        checkPasswordNull(postLoginReq.getPassword());
+        isRegexEmail(postLoginReq.getEmail());
+        isRegexPassword(postLoginReq.getPassword());
+
         User user = userDao.getPwd(postLoginReq);
         String encryptPwd;
         try {
@@ -91,6 +104,10 @@ public class UserService {
     }
 
     public void updatePassword(int userIdx, PatchUserPasswordReq patchUserPasswordReq) throws BaseException{
+        if (!patchUserPasswordReq.getModPassword().equals(patchUserPasswordReq.getReModPassword())) {
+            throw new BaseException(POST_USERS_NEW_PASSWORD_NOT_CORRECT);
+        }
+
         String updatedPwd;
         String encryptPwd;
 
@@ -103,6 +120,7 @@ public class UserService {
         }
 
         try {
+            isRegexPassword(patchUserPasswordReq.getModPassword());
             updatedPwd = new SHA256().encrypt(patchUserPasswordReq.getModPassword());
             patchUserPasswordReq.setModPassword(updatedPwd);
             int result = userDao.updatePassword(userIdx, patchUserPasswordReq);

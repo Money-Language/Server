@@ -3,7 +3,9 @@ package com.moge.moge.domain.user.service;
 import com.moge.moge.domain.user.dao.UserDao;
 import com.moge.moge.domain.user.model.User;
 import com.moge.moge.domain.user.model.req.PostLoginReq;
+import com.moge.moge.domain.user.model.req.PostUserPasswordValidateReq;
 import com.moge.moge.domain.user.model.res.*;
+import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
+import static com.moge.moge.global.util.ValidationRegex.*;
+import static com.moge.moge.global.util.ValidationUtils.*;
 
 @Service
 public class UserProvider {
@@ -35,6 +39,8 @@ public class UserProvider {
             throw new BaseException(FAILED_TO_CHECK_EMAIL);
         }
         try{
+            checkEmailNull(email);
+            isRegexEmail(email);
             return userDao.checkEmail(email);
         } catch (Exception exception){
             throw new BaseException(DATABASE_ERROR);
@@ -46,7 +52,20 @@ public class UserProvider {
             throw new BaseException(FAILED_TO_CHECK_NICKNAME);
         }
         try {
+            checkNicknameNull(nickname);
+            isRegexNickname(nickname);
             return userDao.checkNickname(nickname);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void checkPassword(PostUserPasswordValidateReq postUserPasswordValidateReq) throws BaseException {
+        try {
+            checkPasswordNull(postUserPasswordValidateReq.getPassword());
+            checkRePasswordNull(postUserPasswordValidateReq.getRePassword());
+            isRegexPassword(postUserPasswordValidateReq.getPassword());
+            checkSamePassword(postUserPasswordValidateReq);
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -116,4 +135,6 @@ public class UserProvider {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+
 }
