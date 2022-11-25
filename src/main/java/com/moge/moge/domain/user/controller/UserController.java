@@ -30,13 +30,11 @@ public class UserController {
 
     @Autowired private final UserProvider userProvider;
     @Autowired private final UserService userService;
-    @Autowired private final JwtService jwtService;
-    private final ValidationUtils validationUtils;
+    @Autowired private final ValidationUtils validationUtils;
 
-    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService, ValidationUtils validationUtils){
+    public UserController(UserProvider userProvider, UserService userService, ValidationUtils validationUtils){
         this.userProvider = userProvider;
         this.userService = userService;
-        this.jwtService = jwtService;
         this.validationUtils = validationUtils;
     }
 

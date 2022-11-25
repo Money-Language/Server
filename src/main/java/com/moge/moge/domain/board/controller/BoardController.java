@@ -71,18 +71,6 @@ public class BoardController {
         }
     }
 
-    /* 게시글 검색 */
-    @ResponseBody
-    @GetMapping("/search")
-    public BaseResponse<List<GetBoardSearchRes>> getBoardByKeyword(@RequestParam("title") String title) {
-        try {
-            checkTitleNull(title);
-            return new BaseResponse<>(boardProvider.getBoardByKeyword(title));
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
-
     /* 게시글 조회 top 10 조회 */
     @ResponseBody
     @GetMapping("/top-view")
@@ -95,7 +83,19 @@ public class BoardController {
         }
     }
 
-    /* 게시글 댓글 생성 */
+    /* 게시글 검색 */
+    @ResponseBody
+    @GetMapping("/search")
+    public BaseResponse<List<GetBoardSearchRes>> getBoardByKeyword(@RequestParam("title") String title) {
+        try {
+            checkTitleNull(title);
+            return new BaseResponse<>(boardProvider.getBoardByKeyword(title));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 댓글 생성 */
     @ResponseBody
     @PostMapping("/{boardIdx}/comments")
     public BaseResponse<String> createBoardComment(@PathVariable("boardIdx") int boardIdx,
@@ -147,7 +147,7 @@ public class BoardController {
         }
     }
 
-    /* 댓글/대댓글 좋아요 누르기 */
+    /* 댓글, 대댓글 좋아요 누르기 */
     @ResponseBody
     @PostMapping("/{boardIdx}/comments/{commentIdx}/like")
     public BaseResponse<String> createCommentLike(@PathVariable("boardIdx") int boardIdx,
