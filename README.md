@@ -10,10 +10,11 @@
 
 
 ## Record
-👉 [나의 개발일지](https://www.notion.so/MOGE-2f90d6e321bb4afc8fed50a6ffc055b1)    
-👉 [API 명세서](https://www.notion.so/API-6e702cab8b5340e7b0eb9783f7ca1f6a)  
+🐾 [개발일지 및 이슈 보러가기](https://www.notion.so/MOGE-2f90d6e321bb4afc8fed50a6ffc055b1)    
+💭 [API 명세서](https://www.notion.so/API-6e702cab8b5340e7b0eb9783f7ca1f6a)  
 
 ## Architecture
+
 
 
 ## ERD 
@@ -67,11 +68,6 @@ main
 └─     └─ ValidationRegex.java
 
 ```
-
-## Issues
-
-* [💡 반복적인 validation 처리를 위한 ValidateUtils 생성 ]()  
-* [💡 소셜로그인 시 중복된 이메일 가입을 허용하는 문제 ]() 
 
 ## App Description
 
