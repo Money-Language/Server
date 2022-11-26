@@ -7,7 +7,7 @@ build/
 application.yml
 
 moge-b4d30-firebase-adminsdk-ottmp-dda305f614.json
-google-services.jso
+google-services.json
 gradlew
 gradlew.bat
 settings.gradle
