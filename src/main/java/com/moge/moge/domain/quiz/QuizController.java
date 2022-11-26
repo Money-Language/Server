@@ -1,8 +1,10 @@
 package com.moge.moge.domain.quiz;
 
 import com.moge.moge.domain.quiz.dto.req.PostBoardReq;
+import com.moge.moge.domain.quiz.dto.req.PostQuizAnswerReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizReq;
 import com.moge.moge.domain.quiz.dto.res.PostBoardRes;
+import com.moge.moge.domain.quiz.dto.res.PostQuizAnswerRes;
 import com.moge.moge.domain.quiz.dto.res.PostQuizRes;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.exception.BaseException;
@@ -44,6 +46,18 @@ public class QuizController {
         try {
             int userIdx = validationUtils.checkJwtTokenExists();
             return new BaseResponse<>(quizService.createQuiz(postQuizReq));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 정답 등록 */
+    @ResponseBody
+    @PostMapping("/answer")
+    public BaseResponse<PostQuizAnswerRes> createAnswer(PostQuizAnswerReq postQuizAnswerReq) {
+        try {
+            validationUtils.checkJwtTokenExists();
+            return new BaseResponse(quizService.createAnswer(postQuizAnswerReq));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }
