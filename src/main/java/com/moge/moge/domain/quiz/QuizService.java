@@ -1,13 +1,16 @@
 package com.moge.moge.domain.quiz;
 
 import com.moge.moge.domain.quiz.dto.req.PostBoardReq;
+import com.moge.moge.domain.quiz.dto.req.PostQuizReq;
 import com.moge.moge.domain.quiz.dto.res.PostBoardRes;
+import com.moge.moge.domain.quiz.dto.res.PostQuizRes;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.DATABASE_ERROR;
+import static com.moge.moge.global.util.ValidationUtils.checkTitleNull;
 
 @Service
 public class QuizService {
@@ -25,11 +28,18 @@ public class QuizService {
             // title , categoryIdx null 체크
 
             return quizDao.createBoard(userIdx, postBoardReq);
-
-
-
         } catch(Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public PostQuizRes createQuiz(PostQuizReq postQuizReq) throws BaseException {
+        //try {
+            // null 체크
+
+            return quizDao.createQuiz(postQuizReq);
+        //} catch(Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 }
