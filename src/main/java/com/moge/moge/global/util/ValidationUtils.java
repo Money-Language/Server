@@ -7,6 +7,8 @@ import com.moge.moge.global.exception.BaseException;
 import org.springframework.stereotype.Component;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
+import static com.moge.moge.global.util.Constants.MAX_CATEGORY_IDX;
+import static com.moge.moge.global.util.Constants.MIN_CATEGORY_IDX;
 
 @Component
 public class ValidationUtils {
@@ -94,4 +96,11 @@ public class ValidationUtils {
             throw new BaseException(POST_BOARDS_EMPTY_COMMENT);
         }
     }
+
+    public static void checkCategoryIdxRange(int categoryIdx) throws BaseException {
+        if (categoryIdx > MAX_CATEGORY_IDX || categoryIdx < MIN_CATEGORY_IDX) {
+            throw new BaseException(USER_CATEGORY_NOT_EXISTS);
+        }
+    }
+
 }

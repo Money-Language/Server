@@ -225,7 +225,6 @@ public class UserService {
         }
     }
 
-
     private String encryptPwd(String password) throws BaseException {
         String encryptPwd;
         try {

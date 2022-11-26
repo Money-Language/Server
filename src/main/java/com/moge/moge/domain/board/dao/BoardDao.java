@@ -2,6 +2,7 @@ package com.moge.moge.domain.board.dao;
 
 import com.moge.moge.domain.board.dto.res.GetBoardQuizAnswerRes;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
+import com.moge.moge.domain.board.dto.res.GetBoardRes;
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
@@ -440,4 +441,127 @@ public class BoardDao {
                         rs.getString("hint")
                 ), params);
     }
+
+    public List<GetBoardRes> getBoardsByCategoryIdx(int categoryIdx) {
+        String query =
+                "SELECT  B.boardIdx, U.nickname, U.profileImage,\n" +
+                "    CASE\n" +
+                "         WHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "         WHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()), '분 전')\n" +
+                "         WHEN TIMESTAMPDIFF(HOUR, B.createdAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, B.createdAt, NOW()), '시간 전')\n" +
+                "         WHEN TIMESTAMPDIFF(DAY, B.createdAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, B.createdAt, NOW()), '일 전')\n" +
+                "         WHEN TIMESTAMPDIFF(WEEK, B.createdAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, B.createdAt, NOW()), '주 전')\n" +
+                "    ELSE CONCAT(TIMESTAMPDIFF(MONTH, B.createdAt, NOW()), '달 전')\n" +
+                "    END AS 'elapsedTime',\n" +
+                "    B.title,\n" +
+                "    COUNT(distinct Q.quizIdx) AS 'quizCount',\n" +
+                "    B.viewCount,\n" +
+                "    COUNT(distinct (case when BL.status='ACTIVE' then BL.boardLikeIdx end)) AS 'likeCount',\n" +
+                "    COUNT(distinct (case when CM.status='ACTIVE' then CM.commentIdx end)) AS 'commentCount'\n" +
+                "FROM User U\n" +
+                "    LEFT JOIN Board B on U.userIdx = B.userIdx\n" +
+                "    LEFT JOIN Quiz Q on B.boardIdx = Q.boardIdx\n" +
+                "    LEFT JOIN Category C on B.categoryIdx = C.categoryIdx\n" +
+                "    LEFT JOIN BoardLike BL on B.boardIdx = BL.boardIdx\n" +
+                "    LEFT JOIN Comment CM on B.boardIdx = CM.boardIdx\n" +
+                "WHERE C.categoryIdx = ? AND B.status = 'ACTIVE'\n" +
+                "GROUP BY B.boardIdx, B.viewCount\n" +
+                "ORDER BY elapsedTime ASC\n";
+
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new GetBoardRes(
+                        rs.getInt("boardIdx"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage"),
+                        rs.getString("elapsedTime"),
+                        rs.getString("title"),
+                        rs.getInt("quizCount"),
+                        rs.getInt("viewCount"),
+                        rs.getInt("likeCount"),
+                        rs.getInt("commentCount")
+
+                ), categoryIdx);
+    }
+
+    public List<GetBoardRes> getBoardsByCategoryIdxOrderByView(int categoryIdx) {
+        String query =
+                "SELECT  B.boardIdx, U.nickname, U.profileImage,\n" +
+                "    CASE\n" +
+                "         WHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "         WHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()), '분 전')\n" +
+                "         WHEN TIMESTAMPDIFF(HOUR, B.createdAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, B.createdAt, NOW()), '시간 전')\n" +
+                "         WHEN TIMESTAMPDIFF(DAY, B.createdAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, B.createdAt, NOW()), '일 전')\n" +
+                "         WHEN TIMESTAMPDIFF(WEEK, B.createdAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, B.createdAt, NOW()), '주 전')\n" +
+                "    ELSE CONCAT(TIMESTAMPDIFF(MONTH, B.createdAt, NOW()), '달 전')\n" +
+                "    END AS 'elapsedTime',\n" +
+                "    B.title,\n" +
+                "    COUNT(distinct Q.quizIdx) AS 'quizCount',\n" +
+                "    B.viewCount,\n" +
+                "    COUNT(distinct (case when BL.status='ACTIVE' then BL.boardLikeIdx end)) AS 'likeCount',\n" +
+                "    COUNT(distinct (case when CM.status='ACTIVE' then CM.commentIdx end)) AS 'commentCount'\n" +
+                "FROM User U\n" +
+                "    LEFT JOIN Board B on U.userIdx = B.userIdx\n" +
+                "    LEFT JOIN Quiz Q on B.boardIdx = Q.boardIdx\n" +
+                "    LEFT JOIN Category C on B.categoryIdx = C.categoryIdx\n" +
+                "    LEFT JOIN BoardLike BL on B.boardIdx = BL.boardIdx\n" +
+                "    LEFT JOIN Comment CM on B.boardIdx = CM.boardIdx\n" +
+                "WHERE C.categoryIdx = ? AND B.status = 'ACTIVE'\n" +
+                "GROUP BY B.boardIdx, B.viewCount\n" +
+                "ORDER BY B.viewCount DESC\n";
+
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new GetBoardRes(
+                        rs.getInt("boardIdx"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage"),
+                        rs.getString("elapsedTime"),
+                        rs.getString("title"),
+                        rs.getInt("quizCount"),
+                        rs.getInt("viewCount"),
+                        rs.getInt("likeCount"),
+                        rs.getInt("commentCount")
+
+                ), categoryIdx);
+    }
+
+    public List<GetBoardRes> getBoardsByCategoryIdxOrderByLike(int categoryIdx) {
+        String query = "SELECT  B.boardIdx, U.nickname, U.profileImage,\n" +
+                "    CASE\n" +
+                "         WHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) <= 0 THEN '방금 전'\n" +
+                "         WHEN TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()) < 60 THEN CONCAT(TIMESTAMPDIFF(MINUTE, B.createdAt, NOW()), '분 전')\n" +
+                "         WHEN TIMESTAMPDIFF(HOUR, B.createdAt, NOW()) < 24 THEN CONCAT(TIMESTAMPDIFF(HOUR, B.createdAt, NOW()), '시간 전')\n" +
+                "         WHEN TIMESTAMPDIFF(DAY, B.createdAt, NOW()) < 7 THEN CONCAT(TIMESTAMPDIFF(DAY, B.createdAt, NOW()), '일 전')\n" +
+                "         WHEN TIMESTAMPDIFF(WEEK, B.createdAt, NOW()) < 5 THEN CONCAT(TIMESTAMPDIFF(WEEK, B.createdAt, NOW()), '주 전')\n" +
+                "    ELSE CONCAT(TIMESTAMPDIFF(MONTH, B.createdAt, NOW()), '달 전')\n" +
+                "    END AS 'elapsedTime',\n" +
+                "    B.title,\n" +
+                "    COUNT(distinct Q.quizIdx) AS 'quizCount',\n" +
+                "    B.viewCount,\n" +
+                "    COUNT(distinct (case when BL.status='ACTIVE' then BL.boardLikeIdx end)) AS 'likeCount',\n" +
+                "    COUNT(distinct (case when CM.status='ACTIVE' then CM.commentIdx end)) AS 'commentCount'\n" +
+                "FROM User U\n" +
+                "    LEFT JOIN Board B on U.userIdx = B.userIdx\n" +
+                "    LEFT JOIN Quiz Q on B.boardIdx = Q.boardIdx\n" +
+                "    LEFT JOIN Category C on B.categoryIdx = C.categoryIdx\n" +
+                "    LEFT JOIN BoardLike BL on B.boardIdx = BL.boardIdx\n" +
+                "    LEFT JOIN Comment CM on B.boardIdx = CM.boardIdx\n" +
+                "WHERE C.categoryIdx = ? AND B.status = 'ACTIVE'\n" +
+                "GROUP BY B.boardIdx, B.viewCount\n" +
+                "ORDER BY B.likeCount DESC\n";
+
+        return this.jdbcTemplate.query(query,
+                (rs, rowNum) -> new GetBoardRes(
+                        rs.getInt("boardIdx"),
+                        rs.getString("nickname"),
+                        rs.getString("profileImage"),
+                        rs.getString("elapsedTime"),
+                        rs.getString("title"),
+                        rs.getInt("quizCount"),
+                        rs.getInt("viewCount"),
+                        rs.getInt("likeCount"),
+                        rs.getInt("commentCount")
+
+                ), categoryIdx);
+    }
+
 }

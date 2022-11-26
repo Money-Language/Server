@@ -3,6 +3,7 @@ package com.moge.moge.domain.board.service;
 import com.moge.moge.domain.board.dao.BoardDao;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizAnswerRes;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
+import com.moge.moge.domain.board.dto.res.GetBoardRes;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
@@ -19,6 +20,9 @@ import java.util.List;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.BOARD_NOT_EXISTS;
 import static com.moge.moge.global.exception.BaseResponseStatus.DATABASE_ERROR;
+import static com.moge.moge.global.util.Constants.ORDER_BY_LIKE;
+import static com.moge.moge.global.util.Constants.ORDER_BY_VIEW;
+import static com.moge.moge.global.util.ValidationUtils.checkCategoryIdxRange;
 
 @Service
 public class BoardProvider {
@@ -112,13 +116,29 @@ public class BoardProvider {
     }
 
     public List<GetBoardQuizAnswerRes> getBoardQuizAnswers(int boardIdx, int quizIdx) throws BaseException {
-        //try {
+        try {
             if (boardDao.checkBoardExists(boardIdx) == 0) {
                 throw new BaseException(BOARD_NOT_EXISTS);
             }
             return boardDao.getBoardQuizAnswers(boardIdx, quizIdx);
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetBoardRes> getBoardsByCategoryIdx(int categoryIdx, int order) throws BaseException {
+        checkCategoryIdxRange(categoryIdx);
+
+        try {
+            if (order == ORDER_BY_VIEW) {
+                return boardDao.getBoardsByCategoryIdxOrderByView(categoryIdx);
+            }
+            if (order == ORDER_BY_LIKE) {
+                return boardDao.getBoardsByCategoryIdxOrderByLike(categoryIdx);
+            }
+            return boardDao.getBoardsByCategoryIdx(categoryIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }
