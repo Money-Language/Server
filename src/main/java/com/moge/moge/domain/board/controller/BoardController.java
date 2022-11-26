@@ -1,5 +1,6 @@
 package com.moge.moge.domain.board.controller;
 
+import com.moge.moge.domain.board.dto.res.GetBoardQuizAnswerRes;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
 import com.moge.moge.domain.board.service.BoardProvider;
 import com.moge.moge.domain.board.service.BoardService;
@@ -67,6 +68,18 @@ public class BoardController {
     public BaseResponse<List<GetBoardQuizRes>> getBoardQuiz(@PathVariable("boardIdx") int boardIdx) {
         try {
             return new BaseResponse<>(boardProvider.getBoardQuiz(boardIdx));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 게시글별 퀴즈 정답 조회*/
+    @ResponseBody
+    @GetMapping("/{boardIdx}/quiz/{quizIdx}")
+    public BaseResponse<List<GetBoardQuizAnswerRes>> getBoardQuizAnswers(@PathVariable("boardIdx") int boardIdx,
+                                                                         @PathVariable("quizIdx") int quizIdx) {
+        try {
+            return new BaseResponse<>(boardProvider.getBoardQuizAnswers(boardIdx, quizIdx));
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

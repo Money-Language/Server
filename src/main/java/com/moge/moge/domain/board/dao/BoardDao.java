@@ -1,5 +1,6 @@
 package com.moge.moge.domain.board.dao;
 
+import com.moge.moge.domain.board.dto.res.GetBoardQuizAnswerRes;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
@@ -418,5 +419,25 @@ public class BoardDao {
                         rs.getInt("quizType"),
                         rs.getString("question")
                 ), boardIdx);
+    }
+
+    public List<GetBoardQuizAnswerRes> getBoardQuizAnswers(int boardIdx, int quizIdx) {
+        String getBoardQuizAnswer =
+                "select Q.quizIdx,\n" +
+                "    if (Q.quizType = 1, (O.content), (S.content)) as content,\n" +
+                "    if (Q.quizType = 1, (O.isAnswer), (S.isAnswer)) as isAnswer,\n" +
+                "    if (Q.quizType = 1, 'OBJECTIVE', S.hint) as hint\n" +
+                "from Quiz Q\n" +
+                "left join ObjectiveAnswer O on Q.quizIdx = O.quizIdx\n" +
+                "left join SubjectiveAnswer S on Q.quizIdx = S.quizIdx\n" +
+                "where Q.boardIdx = ? and Q.quizIdx = ? and Q.status = 'ACTIVE'";
+        Object[] params = new Object[]{boardIdx, quizIdx};
+        return this.jdbcTemplate.query(getBoardQuizAnswer,
+                (rs, rowNum) -> new GetBoardQuizAnswerRes(
+                        rs.getInt("quizIdx"),
+                        rs.getString("content"),
+                        rs.getInt("isAnswer"),
+                        rs.getString("hint")
+                ), params);
     }
 }

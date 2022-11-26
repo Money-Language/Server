@@ -1,6 +1,7 @@
 package com.moge.moge.domain.board.service;
 
 import com.moge.moge.domain.board.dao.BoardDao;
+import com.moge.moge.domain.board.dto.res.GetBoardQuizAnswerRes;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
@@ -108,5 +109,16 @@ public class BoardProvider {
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public List<GetBoardQuizAnswerRes> getBoardQuizAnswers(int boardIdx, int quizIdx) throws BaseException {
+        //try {
+            if (boardDao.checkBoardExists(boardIdx) == 0) {
+                throw new BaseException(BOARD_NOT_EXISTS);
+            }
+            return boardDao.getBoardQuizAnswers(boardIdx, quizIdx);
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 }
