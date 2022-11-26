@@ -1,6 +1,7 @@
 package com.moge.moge.domain.board.service;
 
 import com.moge.moge.domain.board.dao.BoardDao;
+import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
@@ -33,15 +34,15 @@ public class BoardProvider {
     }
 
     public List<GetBoardCommentRes> getBoardComments(int boardIdx) throws BaseException {
-        //try {
+        try {
             if (boardDao.checkBoardExists(boardIdx) == 0) {
                 throw new BaseException(BOARD_NOT_EXISTS);
             }
             return boardDao.getBoardComments(boardIdx);
 
-        //} catch (BaseException exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (BaseException exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     public List<GetBoardCommentRes> getBoardCommentsByGroup(int boardIdx, int groupIdx) throws BaseException {
@@ -85,7 +86,7 @@ public class BoardProvider {
     }
 
     public List<GetRecommendKeywordRes> getRecommendKeyword(List<Integer> randomIdxList) throws BaseException {
-        //try {
+        try {
             List<GetRecommendKeywordRes> recommendKeywordList = new ArrayList<>();
             for (int randomIdx : randomIdxList) {
                 GetRecommendKeywordRes keyword = boardDao.getRecommendKeyword(randomIdx);
@@ -93,8 +94,19 @@ public class BoardProvider {
             }
             return recommendKeywordList;
 
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<GetBoardQuizRes> getBoardQuiz(int boardIdx) throws BaseException {
+        try {
+            if (boardDao.checkBoardExists(boardIdx) == 0) {
+                throw new BaseException(BOARD_NOT_EXISTS);
+            }
+            return boardDao.getBoardQuiz(boardIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

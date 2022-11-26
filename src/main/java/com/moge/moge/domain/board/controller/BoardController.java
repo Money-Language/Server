@@ -1,5 +1,6 @@
 package com.moge.moge.domain.board.controller;
 
+import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
 import com.moge.moge.domain.board.service.BoardProvider;
 import com.moge.moge.domain.board.service.BoardService;
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
@@ -60,9 +61,16 @@ public class BoardController {
         }
     }
 
-
     /* 게시글별 퀴즈 조회*/
-
+    @ResponseBody
+    @GetMapping("/{boardIdx}/quiz")
+    public BaseResponse<List<GetBoardQuizRes>> getBoardQuiz(@PathVariable("boardIdx") int boardIdx) {
+        try {
+            return new BaseResponse<>(boardProvider.getBoardQuiz(boardIdx));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
     /* 게시글 좋아요 등록, 취소 */
     @ResponseBody

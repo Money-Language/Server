@@ -1,5 +1,6 @@
 package com.moge.moge.domain.board.dao;
 
+import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
 import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
@@ -407,5 +408,15 @@ public class BoardDao {
     public int updateViewCount(int boardIdx) {
         String updateViewCountQuery = "update Board set viewCount = viewCount + 1 where boardIdx = ?";
         return this.jdbcTemplate.update(updateViewCountQuery, boardIdx);
+    }
+
+    public List<GetBoardQuizRes> getBoardQuiz(int boardIdx) {
+        String getBoardQuizQuery = "select quizIdx, quizType, question from Quiz where boardIdx = ? and status = 'ACTIVE'";
+        return this.jdbcTemplate.query(getBoardQuizQuery,
+                (rs, rowNum) -> new GetBoardQuizRes(
+                        rs.getInt("quizIdx"),
+                        rs.getInt("quizType"),
+                        rs.getString("question")
+                ), boardIdx);
     }
 }
