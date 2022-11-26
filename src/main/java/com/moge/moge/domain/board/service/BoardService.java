@@ -150,4 +150,18 @@ public class BoardService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public void updateViewCount(int boardIdx) throws BaseException {
+        try {
+            if (boardDao.checkBoardExists(boardIdx) == 0) {
+                throw new BaseException(BOARD_NOT_EXISTS);
+            }
+            int result = boardDao.updateViewCount(boardIdx);
+            if (result == 0) {
+                throw new BaseException(FAILED_TO_UPDATE_VIEW_COUNT);
+            }
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

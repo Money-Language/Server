@@ -403,4 +403,9 @@ public class BoardDao {
                         rs.getString("keyword")
                 ), randomIdx);
     }
+
+    public int updateViewCount(int boardIdx) {
+        String updateViewCountQuery = "update Board set viewCount = viewCount + 1 where boardIdx = ?";
+        return this.jdbcTemplate.update(updateViewCountQuery, boardIdx);
+    }
 }

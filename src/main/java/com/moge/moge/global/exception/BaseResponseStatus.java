@@ -29,13 +29,14 @@ public enum BaseResponseStatus {
     SUCCESS_UPDATE_BOARD_COMMENT(true, 1013, "게시글 댓글 수정에 성공하였습니다."),
     SUCCESS_DELETE_BOARD_COMMENT(true, 1014, "게시글 댓글 삭제에 성공하였습니다."),
     SUCCESS_CREATE_BOARD_COMMENT_LIKE(true, 1015, "게시글 댓글 좋아요 등록/해제에 성공하였습니다."),
-    SUCCESS_CREATE_COMMENT_REPORT(true, 1016, "댓글 신고에 성공하였습니다."),
+    SUCCESS_UPDATE_BOARD_VIEW_COUNT(true, 1016, "게시글 조회수 증가에 성공하였습니다."),
+    SUCCESS_CREATE_COMMENT_REPORT(true, 1017, "댓글 신고에 성공하였습니다."),
 
-    SUCCESS_CHECK_NICKNAME(true, 1016, "중복되지 않는 닉네임입니다."),
-    SUCCESS_CHECK_EMAIL(true, 1017, "중복되지 않는 이메일입니다."),
-    SUCCESS_CHECK_PASSWORD(true, 1018, "비밀번호 validation에 성공하였습니다."),
+    SUCCESS_CHECK_NICKNAME(true, 1020, "중복되지 않는 닉네임입니다."),
+    SUCCESS_CHECK_EMAIL(true, 1021, "중복되지 않는 이메일입니다."),
+    SUCCESS_CHECK_PASSWORD(true, 1022, "비밀번호 validation에 성공하였습니다."),
 
-    SUCCESS_PUSH_ALARM(true, 1020, "FCM 알람 발송에 성공하였습니다."),
+    SUCCESS_PUSH_ALARM(true, 1030, "FCM 알람 발송에 성공하였습니다."),
 
     /**
      * 2000 : Request 오류
@@ -105,6 +106,7 @@ public enum BaseResponseStatus {
     COMMENT_NOT_EXISTS(false, 3038, "해당 댓글이 삭제되었거나, 존재하지 않습니다."),
     COMMENT_REPORT_EXCEED(false, 3039, "해당 댓글은 신고 누적횟수가 3회 이상이므로 신고가 불가능합니다."),
     COMMENT_REPORT_ALREADY_EXISTS(false, 3040, "이미 신고한 댓글입니다."),
+    FAILED_TO_UPDATE_VIEW_COUNT(false, 3041, "조회수 증가에 실패하였습니다."),
 
     /**
      * 4000 : Database, Server 오류

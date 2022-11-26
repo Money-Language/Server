@@ -47,6 +47,23 @@ public class BoardController {
         this.validationUtils = validationUtils;
     }
 
+    /* 게시글 조회수 증가 */
+    @ResponseBody
+    @PostMapping("/{boardIdx}/view-count")
+    public BaseResponse<String> updateViewCount(@PathVariable("boardIdx") int boardIdx) {
+        try {
+            validationUtils.checkJwtTokenExists();
+            boardService.updateViewCount(boardIdx);
+            return new BaseResponse<>(SUCCESS_UPDATE_BOARD_VIEW_COUNT);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+
+    /* 게시글별 퀴즈 조회*/
+
+
     /* 게시글 좋아요 등록, 취소 */
     @ResponseBody
     @PostMapping("/{boardIdx}/like")
