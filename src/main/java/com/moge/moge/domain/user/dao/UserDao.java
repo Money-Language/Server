@@ -333,6 +333,19 @@ public class UserDao {
                         rs.getString("categoryName"),
                         rs.getString("categorySubName")
                 )
-                ,userIdx);
+                , userIdx);
+    }
+
+    public GetUserPointRes getUserPoints(int userIdx) {
+        String getUserPointsQuery =
+                " select userIdx, nickname, userPoint\n" +
+                " from User\n" +
+                " where userIdx = ? and status = 'ACTIVE'";
+        return this.jdbcTemplate.queryForObject(getUserPointsQuery,
+                (rs, rowNum) -> new GetUserPointRes(
+                        rs.getInt("userIdx"),
+                        rs.getString("nickname"),
+                        rs.getInt("userPoint")
+                ), userIdx);
     }
 }

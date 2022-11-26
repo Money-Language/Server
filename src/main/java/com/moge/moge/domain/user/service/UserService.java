@@ -4,10 +4,7 @@ import com.moge.moge.domain.s3.S3Service;
 import com.moge.moge.domain.user.dao.UserDao;
 import com.moge.moge.domain.user.dto.User;
 import com.moge.moge.domain.user.dto.req.*;
-import com.moge.moge.domain.user.dto.res.GetUserKeywordRes;
-import com.moge.moge.domain.user.dto.res.PostLoginRes;
-import com.moge.moge.domain.user.dto.res.PostUserKeywordRes;
-import com.moge.moge.domain.user.dto.res.PostUserRes;
+import com.moge.moge.domain.user.dto.res.*;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;
@@ -220,6 +217,15 @@ public class UserService {
         }
     }
 
+    public GetUserPointRes getUserPoints(int userIdx) throws BaseException {
+        try {
+            return userDao.getUserPoints(userIdx);
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
     private String encryptPwd(String password) throws BaseException {
         String encryptPwd;
         try {
@@ -229,4 +235,6 @@ public class UserService {
             throw new BaseException(PASSWORD_DECRYPTION_ERROR);
         }
     }
+
+
 }

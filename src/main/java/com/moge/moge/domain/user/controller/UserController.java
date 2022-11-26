@@ -37,6 +37,7 @@ public class UserController {
         this.validationUtils = validationUtils;
     }
 
+    /* 회원가입*/
     @ResponseBody
     @PostMapping("/sign-up")
     public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
@@ -48,6 +49,7 @@ public class UserController {
         }
     }
 
+    /* 로그인 */
     @ResponseBody
     @PostMapping("/login")
     public BaseResponse<PostLoginRes> login(@RequestBody PostLoginReq postLoginReq) {
@@ -59,6 +61,7 @@ public class UserController {
         }
     }
 
+    /* 비밀번호 수정 */
     @ResponseBody
     @PatchMapping("/{userIdx}/password")
     public BaseResponse<String> updatePassword(@PathVariable("userIdx") int userIdx,
@@ -72,6 +75,7 @@ public class UserController {
         }
     }
 
+    /* 키워드 설정 */
     @ResponseBody
     @PostMapping("/{userIdx}/keyword")
     public BaseResponse<String> createUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PostUserKeywordReq postUserKeywordReq) {
@@ -85,6 +89,7 @@ public class UserController {
         }
     }
 
+    /* 키워드 수정*/
     @ResponseBody
     @PatchMapping("/{userIdx}/keyword")
     public BaseResponse<String> updateUserKeyword(@PathVariable("userIdx") int userIdx, @RequestBody PatchUserKeywordReq patchUserKeywordReq) {
@@ -98,6 +103,7 @@ public class UserController {
         }
     }
 
+    /* 키워드 조회 */
     @ResponseBody
     @GetMapping("/{userIdx}/keyword")
     public BaseResponse<List<GetUserKeywordRes>> getUserKeyword(@PathVariable("userIdx") int userIdx) {
@@ -109,6 +115,7 @@ public class UserController {
         }
     }
 
+    /* 프로필 조회 */
     @ResponseBody
     @GetMapping("/{userIdx}/profile")
     public BaseResponse<GetUserProfileRes> getUserProfile(@PathVariable("userIdx") int userIdx) {
@@ -120,6 +127,7 @@ public class UserController {
         }
     }
 
+    /* 프로필 수정 (사진, 닉네임)*/
     @ResponseBody
     @PatchMapping("/{userIdx}/profile")
     public BaseResponse<String> updateProfile(@PathVariable("userIdx") int userIdx,
@@ -136,6 +144,7 @@ public class UserController {
         }
     }
 
+    /* 프로필 사진 삭제*/
     @ResponseBody
     @DeleteMapping("/{userIdx}/profile")
     public BaseResponse<String> deleteProfileImage(@PathVariable("userIdx") int userIdx) {
@@ -148,6 +157,7 @@ public class UserController {
         }
     }
 
+    /* 팔로우 등록, 취소 */
     @ResponseBody
     @PostMapping("/follow")
     public BaseResponse<String> createUserFollow(@RequestBody PostUserFollowReq postUserFollowReq) {
@@ -159,6 +169,7 @@ public class UserController {
         }
     }
 
+    /* 팔로잉 조회 */
     @ResponseBody
     @GetMapping("/{userIdx}/following")
     public BaseResponse<List<GetUserFollowRes>> getUserFollowings(@PathVariable("userIdx") int userIdx,
@@ -172,6 +183,7 @@ public class UserController {
         }
     }
 
+    /* 팔로워 조회 */
     @ResponseBody
     @GetMapping("/{userIdx}/follower")
     public BaseResponse<List<GetUserFollowRes>> getUserFollowers(@PathVariable("userIdx") int userIdx, int page) {
@@ -184,6 +196,7 @@ public class UserController {
         }
     }
 
+    /* 유저가 좋아요 누른 게시글 조회 */
     @ResponseBody
     @GetMapping("/{userIdx}/boards/like")
     public BaseResponse<List<GetUserBoardLikeRes>> getUserBoardLikes(@PathVariable("userIdx") int userIdx) {
@@ -195,6 +208,7 @@ public class UserController {
         }
     }
 
+    /* 유저가 작성한 게시글 조회 */
     @ResponseBody
     @GetMapping("/{userIdx}/boards")
     public BaseResponse<List<GetUserBoardRes>> getUserBoards(@PathVariable("userIdx") int userIdx,
@@ -210,6 +224,7 @@ public class UserController {
         }
     }
 
+    /* 유저 탈퇴 */
     @ResponseBody
     @DeleteMapping("/{userIdx}")
     public BaseResponse<String> deleteUser(@PathVariable("userIdx") int userIdx) {
@@ -221,6 +236,19 @@ public class UserController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /* 유저 포인트 조회 */
+    @ResponseBody
+    @GetMapping("/{userIdx}/points")
+    public BaseResponse<GetUserPointRes> getUserPoints(@PathVariable("userIdx") int userIdx) {
+        try {
+            validationUtils.validateJwtToken(userIdx);
+            return new BaseResponse<>(userService.getUserPoints(userIdx));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
 
     @ResponseBody
     @PostMapping("/validate-password")
