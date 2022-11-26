@@ -23,6 +23,7 @@ import static com.moge.moge.global.exception.BaseResponseStatus.DATABASE_ERROR;
 import static com.moge.moge.global.util.Constants.ORDER_BY_LIKE;
 import static com.moge.moge.global.util.Constants.ORDER_BY_VIEW;
 import static com.moge.moge.global.util.ValidationUtils.checkCategoryIdxRange;
+import static com.moge.moge.global.util.ValidationUtils.checkTitleNull;
 
 @Service
 public class BoardProvider {
@@ -44,7 +45,6 @@ public class BoardProvider {
                 throw new BaseException(BOARD_NOT_EXISTS);
             }
             return boardDao.getBoardComments(boardIdx);
-
         } catch (BaseException exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -75,6 +75,7 @@ public class BoardProvider {
     }
 
     public List<GetBoardSearchRes> getBoardByKeyword(String title) throws BaseException {
+        checkTitleNull(title);
         try {
             return boardDao.getBoardByKeyword(title);
         } catch (Exception exception) {

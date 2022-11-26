@@ -99,20 +99,6 @@ public class BoardController {
         }
     }
 
-
-    /* 게시글 좋아요 등록, 취소 */
-    @ResponseBody
-    @PostMapping("/{boardIdx}/like")
-    public BaseResponse<String> createBoardLike(@PathVariable("boardIdx") int boardIdx) {
-        try {
-            int userIdxByJwt = validationUtils.checkJwtTokenExists();
-            boardService.createBoardLike(boardIdx, userIdxByJwt);
-            return new BaseResponse<>(SUCCESS_CREATE_BOARD_LIKE);
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
-    }
-
     /* 게시글 좋아요 top 10 조회 */
     @ResponseBody
     @GetMapping("/top-like")
@@ -147,6 +133,22 @@ public class BoardController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /* 게시글 좋아요 등록, 취소 */
+    @ResponseBody
+    @PostMapping("/{boardIdx}/like")
+    public BaseResponse<String> createBoardLike(@PathVariable("boardIdx") int boardIdx) {
+        try {
+            int userIdxByJwt = validationUtils.checkJwtTokenExists();
+            boardService.createBoardLike(boardIdx, userIdxByJwt);
+            return new BaseResponse<>(SUCCESS_CREATE_BOARD_LIKE);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /* 게시글 신고하기 */
+    /* 퀴즈 신고하기 */
 
     /* 댓글 생성 */
     @ResponseBody
