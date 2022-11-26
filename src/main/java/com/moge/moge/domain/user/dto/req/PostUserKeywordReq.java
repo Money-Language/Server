@@ -1,15 +1,16 @@
-package com.moge.moge.domain.user.model.req;
+package com.moge.moge.domain.user.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostLoginReq {
-    private String email;
-    private String password;
+public class PostUserKeywordReq {
+    private List<Integer> categoryIdx;
 }

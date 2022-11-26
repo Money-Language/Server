@@ -1,17 +1,16 @@
-package com.moge.moge.domain.user.model.res;
+package com.moge.moge.domain.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class GetUserFollowRes {
+public class User {
     private int userIdx;
+    private String email;
     private String nickname;
+    private String password;
     private String profileImage;
 }

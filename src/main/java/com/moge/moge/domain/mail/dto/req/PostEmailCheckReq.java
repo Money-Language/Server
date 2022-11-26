@@ -1,4 +1,4 @@
-package com.moge.moge.domain.mail.model.req;
+package com.moge.moge.domain.mail.dto.req;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

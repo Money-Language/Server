@@ -1,4 +1,4 @@
-package com.moge.moge.domain.user.model.res;
+package com.moge.moge.domain.user.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

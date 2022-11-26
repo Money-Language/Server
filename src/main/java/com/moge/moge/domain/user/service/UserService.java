@@ -2,12 +2,12 @@ package com.moge.moge.domain.user.service;
 
 import com.moge.moge.domain.s3.S3Service;
 import com.moge.moge.domain.user.dao.UserDao;
-import com.moge.moge.domain.user.model.User;
-import com.moge.moge.domain.user.model.req.*;
-import com.moge.moge.domain.user.model.res.GetUserKeywordRes;
-import com.moge.moge.domain.user.model.res.PostLoginRes;
-import com.moge.moge.domain.user.model.res.PostUserKeywordRes;
-import com.moge.moge.domain.user.model.res.PostUserRes;
+import com.moge.moge.domain.user.dto.User;
+import com.moge.moge.domain.user.dto.req.*;
+import com.moge.moge.domain.user.dto.res.GetUserKeywordRes;
+import com.moge.moge.domain.user.dto.res.PostLoginRes;
+import com.moge.moge.domain.user.dto.res.PostUserKeywordRes;
+import com.moge.moge.domain.user.dto.res.PostUserRes;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;

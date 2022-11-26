@@ -1,4 +1,4 @@
-package com.moge.moge.domain.user.model.req;
+package com.moge.moge.domain.user.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostUserPasswordValidateReq {
+public class PostLoginReq {
+    private String email;
     private String password;
-    private String rePassword;
 }

@@ -1,11 +1,10 @@
 package com.moge.moge.domain.user.controller;
 
 import com.moge.moge.domain.user.service.UserProvider;
-import com.moge.moge.domain.user.model.req.*;
-import com.moge.moge.domain.user.model.res.*;
+import com.moge.moge.domain.user.dto.req.*;
+import com.moge.moge.domain.user.dto.res.*;
 import com.moge.moge.domain.user.service.UserService;
 import com.moge.moge.global.common.BaseResponse;
-import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
 import com.moge.moge.global.util.ValidationUtils;
 import org.slf4j.Logger;

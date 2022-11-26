@@ -1,8 +1,8 @@
 package com.moge.moge.domain.user.dao;
 
-import com.moge.moge.domain.user.model.User;
-import com.moge.moge.domain.user.model.req.*;
-import com.moge.moge.domain.user.model.res.*;
+import com.moge.moge.domain.user.dto.User;
+import com.moge.moge.domain.user.dto.req.*;
+import com.moge.moge.domain.user.dto.res.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

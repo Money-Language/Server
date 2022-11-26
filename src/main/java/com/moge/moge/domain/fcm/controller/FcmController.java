@@ -1,8 +1,8 @@
 package com.moge.moge.domain.fcm.controller;
 
 import com.moge.moge.domain.fcm.service.FcmService;
-import com.moge.moge.domain.fcm.model.FcmDto;
-import com.moge.moge.domain.fcm.model.PushMessage;
+import com.moge.moge.domain.fcm.dto.FcmDto;
+import com.moge.moge.domain.fcm.dto.PushMessage;
 import com.moge.moge.global.common.BaseResponse;
 import org.springframework.web.bind.annotation.*;
 

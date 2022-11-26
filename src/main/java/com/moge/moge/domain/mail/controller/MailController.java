@@ -2,7 +2,7 @@ package com.moge.moge.domain.mail.controller;
 
 import com.moge.moge.domain.mail.service.MailProvider;
 import com.moge.moge.domain.mail.service.MailService;
-import com.moge.moge.domain.mail.model.req.PostEmailCheckReq;
+import com.moge.moge.domain.mail.dto.req.PostEmailCheckReq;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.moge.moge.global.exception.BaseResponseStatus.*;
 import static com.moge.moge.global.exception.BaseResponseStatus.SUCCESS_CHECK_CERTIFY_EMAIL;
-import static com.moge.moge.global.util.ValidationRegex.isRegexEmail;
-import static com.moge.moge.global.util.ValidationRegex.isRegexEmailCode;
 
 @RestController
 @RequestMapping("/app/users")

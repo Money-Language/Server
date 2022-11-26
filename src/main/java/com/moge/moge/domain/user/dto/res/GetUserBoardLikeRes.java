@@ -1,4 +1,4 @@
-package com.moge.moge.domain.user.model.res;
+package com.moge.moge.domain.user.dto.res;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetUserBoardRes {
+public class GetUserBoardLikeRes {
     private int boardIdx;
     private String categoryName;
     private String title;

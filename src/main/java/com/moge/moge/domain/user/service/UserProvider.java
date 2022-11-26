@@ -1,13 +1,9 @@
 package com.moge.moge.domain.user.service;
 
 import com.moge.moge.domain.user.dao.UserDao;
-import com.moge.moge.domain.user.model.User;
-import com.moge.moge.domain.user.model.req.PostLoginReq;
-import com.moge.moge.domain.user.model.req.PostUserPasswordValidateReq;
-import com.moge.moge.domain.user.model.res.*;
-import com.moge.moge.global.common.BaseResponse;
+import com.moge.moge.domain.user.dto.req.PostUserPasswordValidateReq;
+import com.moge.moge.domain.user.dto.res.*;
 import com.moge.moge.global.config.security.JwtService;
-import com.moge.moge.global.config.security.SHA256;
 import com.moge.moge.global.exception.BaseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

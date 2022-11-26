@@ -1,4 +1,4 @@
-package com.moge.moge.domain.user.model.req;
+package com.moge.moge.domain.user.dto.req;
 
 import lombok.Getter;
 import lombok.Setter;
