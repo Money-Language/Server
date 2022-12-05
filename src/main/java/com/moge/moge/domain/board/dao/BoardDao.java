@@ -1,14 +1,15 @@
 package com.moge.moge.domain.board.dao;
 
+import com.moge.moge.domain.board.dto.req.PostBoardReportReq;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizAnswerRes;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
 import com.moge.moge.domain.board.dto.res.GetBoardRes;
-import com.moge.moge.domain.board.model.req.PostCommentReportReq;
+import com.moge.moge.domain.board.dto.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
-import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
-import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
+import com.moge.moge.domain.board.dto.req.PatchBoardCommentReq;
+import com.moge.moge.domain.board.dto.req.PostBoardCommentReq;
 import com.moge.moge.domain.board.model.res.GetRecommendKeywordRes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -367,13 +368,13 @@ public class BoardDao {
         return this.jdbcTemplate.update(reportCommentQuery, params);
     }
 
-    public int checkUserCommentReport(int userIdx, int commentIdx) {
+    public int checkCommentReportAlreadyExists(int userIdx, int commentIdx) {
         String checkUserCommentReportQuery = "select exists(select * from Report where userIdx = ? and commentIdx = ?)";
         Object[] params = new Object[] {userIdx, commentIdx};
         return this.jdbcTemplate.queryForObject(checkUserCommentReportQuery, int.class, params);
     }
 
-    public int checkCommentStatus(int commentIdx) {
+    public int checkCommentExists(int commentIdx) {
         String checkCommentStatusQuery = "select exists(select * from Comment where commentIdx =? and status = 'ACTIVE')";
         return this.jdbcTemplate.queryForObject(checkCommentStatusQuery, int.class, commentIdx);
     }
@@ -388,7 +389,7 @@ public class BoardDao {
         return this.jdbcTemplate.update(updateCommentStatusQuery, commentIdx);
     }
 
-    public int checkCommentUserIdx(int commentIdx) {
+    public int checkCommentWriter(int commentIdx) {
         String checkCommentUserIdxQuery = "select userIdx from Comment where commentIdx = ?";
         System.out.println("userIdx : " + this.jdbcTemplate.queryForObject(checkCommentUserIdxQuery, int.class, commentIdx));
         return this.jdbcTemplate.queryForObject(checkCommentUserIdxQuery, int.class, commentIdx);
@@ -564,4 +565,30 @@ public class BoardDao {
                 ), categoryIdx);
     }
 
+    public int checkBoardWriter(int boardIdx) {
+        String checkCommentUserIdxQuery = "select userIdx from Board where boardIdx = ?";
+        return this.jdbcTemplate.queryForObject(checkCommentUserIdxQuery, int.class, boardIdx);
+    }
+
+    public int checkBoardReportAlreadyExists(int userIdx, int boardIdx) {
+        String checkUserBoardReportQuery = "select exists(select * from Report where userIdx = ? and boardIdx = ?)";
+        Object[] params = new Object[] {userIdx, boardIdx};
+        return this.jdbcTemplate.queryForObject(checkUserBoardReportQuery, int.class, params);
+    }
+
+    public int checkBoardReportCount(int boardIdx) {
+        String checkCommentReportCountQuery = "select count(*) as reportCount from Report where boardIdx = ?";
+        return this.jdbcTemplate.queryForObject(checkCommentReportCountQuery, int.class, boardIdx);
+    }
+
+    public int updateBoardStatus(int boardIdx) {
+        String updateBoardStatusQuery = "update Board set status = 'INACTIVE' where boardIdx = ?";
+        return this.jdbcTemplate.update(updateBoardStatusQuery, boardIdx);
+    }
+
+    public int reportBoard(int userIdx, int boardIdx, PostBoardReportReq postBoardReportReq) {
+        String reportCommentQuery = "insert into Report(content, userIdx, boardIdx) values(?,?,?)";
+        Object[] params = new Object[]{postBoardReportReq.getContent(), userIdx, boardIdx};
+        return this.jdbcTemplate.update(reportCommentQuery, params);
+    }
 }

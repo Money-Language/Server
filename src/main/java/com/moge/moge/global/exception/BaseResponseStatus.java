@@ -31,6 +31,7 @@ public enum BaseResponseStatus {
     SUCCESS_CREATE_BOARD_COMMENT_LIKE(true, 1015, "게시글 댓글 좋아요 등록/해제에 성공하였습니다."),
     SUCCESS_UPDATE_BOARD_VIEW_COUNT(true, 1016, "게시글 조회수 증가에 성공하였습니다."),
     SUCCESS_CREATE_COMMENT_REPORT(true, 1017, "댓글 신고에 성공하였습니다."),
+    SUCCESS_CREATE_BOARD_REPORT(true, 1018, "게시글 신고에 성공하였습니다"),
 
     SUCCESS_CHECK_NICKNAME(true, 1020, "중복되지 않는 닉네임입니다."),
     SUCCESS_CHECK_EMAIL(true, 1021, "중복되지 않는 이메일입니다."),
@@ -68,6 +69,8 @@ public enum BaseResponseStatus {
     POST_BOARDS_EMPTY_COMMENT(false, 2030, "댓글 내용을 입력해주세요."),
     POST_BOARDS_COMMENT_INVALID_JWT(false, 2031, "해당 댓글에 대한 권한이 없습니다."),
     EMPTY_SEARTCH_KEYWORD(false, 2032, "검색어를 입력해주세요."),
+    EMPTY_BOARDS_REPORT_CONTENT(false, 3033, "게시글 신고 사유를 입력해주세요."),
+    EMPTY_COMMENTS_REPORT_CONTENT(false, 3034, "댓글 신고 사유를 입력해주세요."),
 
     POST_INVALID_QUIZ_ANSWER_HINT(false, 2040, "힌트 값이 잘못되었습니다."),
 
@@ -110,6 +113,9 @@ public enum BaseResponseStatus {
     COMMENT_REPORT_EXCEED(false, 3039, "해당 댓글은 신고 누적횟수가 3회 이상이므로 신고가 불가능합니다."),
     COMMENT_REPORT_ALREADY_EXISTS(false, 3040, "이미 신고한 댓글입니다."),
     FAILED_TO_UPDATE_VIEW_COUNT(false, 3041, "조회수 증가에 실패하였습니다."),
+    FAILED_TO_CREATE_BOARD_REPORT(false, 3042, "자신의 게시글은 신고할 수 없습니다."),
+    BOARD_REPORT_ALREADY_EXISTS(false, 3043, "이미 신고한 게시글입니다."),
+    BOARD_REPORT_EXCEED(false, 3044, "해당 게시글은 신고 누적횟수가 3회 이상이므로 신고가 불가능합니다."),
 
     //quiz
     QUIZ_STATUS_DELETE(false, 3050, "퀴즈가 삭제된 상태입니다."),

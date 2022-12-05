@@ -1,18 +1,18 @@
 package com.moge.moge.domain.board.controller;
 
+import com.moge.moge.domain.board.dto.req.PatchBoardCommentReq;
+import com.moge.moge.domain.board.dto.req.PostBoardCommentReq;
+import com.moge.moge.domain.board.dto.req.PostBoardReportReq;
+import com.moge.moge.domain.board.dto.req.PostCommentReportReq;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizAnswerRes;
 import com.moge.moge.domain.board.dto.res.GetBoardQuizRes;
 import com.moge.moge.domain.board.dto.res.GetBoardRes;
 import com.moge.moge.domain.board.service.BoardProvider;
 import com.moge.moge.domain.board.service.BoardService;
-import com.moge.moge.domain.board.model.req.PostCommentReportReq;
 import com.moge.moge.domain.board.model.res.GetBoardCommentRes;
 import com.moge.moge.domain.board.model.res.GetBoardSearchRes;
 import com.moge.moge.domain.board.model.res.GetBoardTopRes;
-import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
-import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
 import com.moge.moge.domain.board.model.res.GetRecommendKeywordRes;
-import com.moge.moge.domain.user.dto.res.GetUserBoardRes;
 import com.moge.moge.domain.user.service.UserProvider;
 import com.moge.moge.global.common.BaseResponse;
 import com.moge.moge.global.config.security.JwtService;
@@ -148,7 +148,18 @@ public class BoardController {
     }
 
     /* 게시글 신고하기 */
-    /* 퀴즈 신고하기 */
+    @ResponseBody
+    @PostMapping("/{boardIdx}/report")
+    public BaseResponse<String> reportBoard(@PathVariable("boardIdx") int boardIdx,
+                                            @RequestBody PostBoardReportReq postBoardReportReq) {
+        try {
+            int userIdxByJwt = validationUtils.checkJwtTokenExists();
+            boardService.reportBoard(userIdxByJwt, boardIdx, postBoardReportReq);
+            return new BaseResponse<>(SUCCESS_CREATE_BOARD_REPORT);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 
     /* 댓글 생성 */
     @ResponseBody
@@ -160,7 +171,6 @@ public class BoardController {
             checkCommentNull(postBoardCommentReq.getContent());
             boardService.createBoardComment(postBoardCommentReq, boardIdx, userIdxByJwt);
             return new BaseResponse<>(SUCCESS_CREATE_BOARD_COMMENT);
-
         } catch (BaseException exception) {
             return new BaseResponse<>((exception.getStatus()));
         }

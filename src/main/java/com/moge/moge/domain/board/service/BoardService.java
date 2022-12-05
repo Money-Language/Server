@@ -1,9 +1,10 @@
 package com.moge.moge.domain.board.service;
 
 import com.moge.moge.domain.board.dao.BoardDao;
-import com.moge.moge.domain.board.model.req.PostCommentReportReq;
-import com.moge.moge.domain.board.model.req.PatchBoardCommentReq;
-import com.moge.moge.domain.board.model.req.PostBoardCommentReq;
+import com.moge.moge.domain.board.dto.req.PostBoardReportReq;
+import com.moge.moge.domain.board.dto.req.PostCommentReportReq;
+import com.moge.moge.domain.board.dto.req.PatchBoardCommentReq;
+import com.moge.moge.domain.board.dto.req.PostBoardCommentReq;
 import com.moge.moge.domain.s3.S3Service;
 import com.moge.moge.global.config.security.JwtService;
 import com.moge.moge.global.exception.BaseException;
@@ -127,15 +128,18 @@ public class BoardService {
 
     public void reportComment(int userIdx, int boardIdx, int commentIdx, PostCommentReportReq postCommentReportReq) throws BaseException {
         // 해당 댓글이 존재하지 않으면 에러 발생
-        if (boardDao.checkCommentStatus(commentIdx) == 0) {
+        if (boardDao.checkCommentExists(commentIdx) == 0) {
             throw new BaseException(COMMENT_NOT_EXISTS);
         }
+        if (postCommentReportReq.getContent() == null) {
+            throw new BaseException(EMPTY_COMMENTS_REPORT_CONTENT);
+        }
         // 자기가 쓴 댓글은 신고 불가능
-        if (boardDao.checkCommentUserIdx(commentIdx) == userIdx) {
+        if (boardDao.checkCommentWriter(commentIdx) == userIdx) {
             throw new BaseException(FAILED_TO_CREATE_COMMENT_REPORT);
         }
         // 해당 유저가 이미 신고한 댓글이면 신고 불가능
-        if (boardDao.checkUserCommentReport(userIdx, commentIdx) == 1) {
+        if (boardDao.checkCommentReportAlreadyExists(userIdx, commentIdx) == 1) {
             throw new BaseException(COMMENT_REPORT_ALREADY_EXISTS);
         }
         // 신고누적횟수가 3회 이상이면 신고 불가능
@@ -149,6 +153,30 @@ public class BoardService {
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public void reportBoard(int userIdx, int boardIdx, PostBoardReportReq postBoardReportReq) throws BaseException {
+        //try {
+            if (boardDao.checkBoardExists(boardIdx) == 0) {
+                throw new BaseException(BOARD_NOT_EXISTS);
+            }
+            if (postBoardReportReq.getContent() == null) {
+                throw new BaseException(EMPTY_BOARDS_REPORT_CONTENT);
+            }
+            if (boardDao.checkBoardWriter(boardIdx) == userIdx) {
+                throw new BaseException(FAILED_TO_CREATE_BOARD_REPORT);
+            }
+            if (boardDao.checkBoardReportAlreadyExists(userIdx, boardIdx) == 1) {
+                throw new BaseException(BOARD_REPORT_ALREADY_EXISTS);
+            }
+            if (boardDao.checkBoardReportCount(boardIdx) >= 3) {
+                boardDao.updateBoardStatus(boardIdx);
+                throw new BaseException(BOARD_REPORT_EXCEED);
+            }
+            boardDao.reportBoard(userIdx,boardIdx, postBoardReportReq);
+        //} catch (Exception exception) {
+        //    throw new BaseException(DATABASE_ERROR);
+        //}
     }
 
     public void updateViewCount(int boardIdx) throws BaseException {
