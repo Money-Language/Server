@@ -9,5 +9,7 @@ public class Constants {
     public static final Integer ORDER_BY_LIKE = 2;
     public static final Integer MIN_CATEGORY_IDX = 1;
     public static final Integer MAX_CATEGORY_IDX = 5;
+    public static final Integer OBJECTIVE = 1;
+    public static final Integer SUBJECTIVE = 2;
 
 }

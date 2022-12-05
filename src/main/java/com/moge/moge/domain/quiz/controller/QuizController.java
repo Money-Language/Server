@@ -1,5 +1,7 @@
-package com.moge.moge.domain.quiz;
+package com.moge.moge.domain.quiz.controller;
 
+import com.moge.moge.domain.quiz.dto.req.PostQuizPointReq;
+import com.moge.moge.domain.quiz.service.QuizService;
 import com.moge.moge.domain.quiz.dto.req.PostBoardReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizAnswerReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizReq;
@@ -12,6 +14,8 @@ import com.moge.moge.global.util.ValidationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import static com.moge.moge.global.exception.BaseResponseStatus.SUCCESS_UPDATE_POINT;
 
 @RestController
 @RequestMapping("/app/quiz")
@@ -63,4 +67,16 @@ public class QuizController {
         }
     }
 
+    /* 포인트 획득 */
+    @ResponseBody
+    @PostMapping("/points")
+    public BaseResponse<String> updatePoints(@RequestBody PostQuizPointReq postQuizPointReq) {
+        try {
+            int userIdx = validationUtils.checkJwtTokenExists();
+            quizService.updatePoints(userIdx, postQuizPointReq);
+            return new BaseResponse<>(SUCCESS_UPDATE_POINT);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
 }

@@ -38,6 +38,8 @@ public enum BaseResponseStatus {
 
     SUCCESS_PUSH_ALARM(true, 1030, "FCM 알람 발송에 성공하였습니다."),
 
+    SUCCESS_UPDATE_POINT(true, 1040, "포인트 증가에 성공하였습니다."),
+
     /**
      * 2000 : Request 오류
      */
@@ -68,6 +70,7 @@ public enum BaseResponseStatus {
     EMPTY_SEARTCH_KEYWORD(false, 2032, "검색어를 입력해주세요."),
 
     POST_INVALID_QUIZ_ANSWER_HINT(false, 2040, "힌트 값이 잘못되었습니다."),
+
 
     /**
      * 3000 : Response 오류
@@ -107,6 +110,9 @@ public enum BaseResponseStatus {
     COMMENT_REPORT_EXCEED(false, 3039, "해당 댓글은 신고 누적횟수가 3회 이상이므로 신고가 불가능합니다."),
     COMMENT_REPORT_ALREADY_EXISTS(false, 3040, "이미 신고한 댓글입니다."),
     FAILED_TO_UPDATE_VIEW_COUNT(false, 3041, "조회수 증가에 실패하였습니다."),
+
+    //quiz
+    QUIZ_STATUS_DELETE(false, 3050, "퀴즈가 삭제된 상태입니다."),
 
     /**
      * 4000 : Database, Server 오류
