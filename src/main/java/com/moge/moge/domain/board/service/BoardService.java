@@ -156,7 +156,7 @@ public class BoardService {
     }
 
     public void reportBoard(int userIdx, int boardIdx, PostBoardReportReq postBoardReportReq) throws BaseException {
-        //try {
+        try {
             if (boardDao.checkBoardExists(boardIdx) == 0) {
                 throw new BaseException(BOARD_NOT_EXISTS);
             }
@@ -174,9 +174,9 @@ public class BoardService {
                 throw new BaseException(BOARD_REPORT_EXCEED);
             }
             boardDao.reportBoard(userIdx,boardIdx, postBoardReportReq);
-        //} catch (Exception exception) {
-        //    throw new BaseException(DATABASE_ERROR);
-        //}
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
     public void updateViewCount(int boardIdx) throws BaseException {

@@ -1,6 +1,7 @@
 package com.moge.moge.domain.quiz.controller;
 
 import com.moge.moge.domain.quiz.dto.req.PostQuizPointReq;
+import com.moge.moge.domain.quiz.dto.res.GetDailyQuizRes;
 import com.moge.moge.domain.quiz.service.QuizService;
 import com.moge.moge.domain.quiz.dto.req.PostBoardReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizAnswerReq;
@@ -79,4 +80,18 @@ public class QuizController {
             return new BaseResponse<>((exception.getStatus()));
         }
     }
+
+    /* 오늘의 퀴즈 조회 */
+    @ResponseBody
+    @GetMapping("/daily")
+    public BaseResponse<GetDailyQuizRes> getDailyQuiz() {
+        try {
+            int userIdx = validationUtils.checkJwtTokenExists();
+            return new BaseResponse<>(quizService.getDailyQuiz());
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**/
 }

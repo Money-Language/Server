@@ -5,6 +5,7 @@ import com.moge.moge.domain.quiz.dto.req.PostBoardReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizAnswerReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizPointReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizReq;
+import com.moge.moge.domain.quiz.dto.res.GetDailyQuizRes;
 import com.moge.moge.domain.quiz.dto.res.PostBoardRes;
 import com.moge.moge.domain.quiz.dto.res.PostQuizAnswerRes;
 import com.moge.moge.domain.quiz.dto.res.PostQuizRes;
@@ -81,6 +82,14 @@ public class QuizService {
                 quizDao.updatePointsBySubjective(userIdx, postQuizPointReq.getQuizIdx());
             }
         } catch(Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public GetDailyQuizRes getDailyQuiz() throws BaseException {
+        try {
+            return quizDao.getDailyQUiz();
+        }  catch(Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
     }

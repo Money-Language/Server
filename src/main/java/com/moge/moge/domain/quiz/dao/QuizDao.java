@@ -4,6 +4,7 @@ import com.moge.moge.domain.quiz.dto.req.PostBoardReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizAnswerReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizPointReq;
 import com.moge.moge.domain.quiz.dto.req.PostQuizReq;
+import com.moge.moge.domain.quiz.dto.res.GetDailyQuizRes;
 import com.moge.moge.domain.quiz.dto.res.PostBoardRes;
 import com.moge.moge.domain.quiz.dto.res.PostQuizAnswerRes;
 import com.moge.moge.domain.quiz.dto.res.PostQuizRes;
@@ -105,5 +106,20 @@ public class QuizDao {
     public String getQuizStatus(int quizIdx) {
         String getQuizStatusQuery = "select status from Quiz where quizIdx = ?";
         return this.jdbcTemplate.queryForObject(getQuizStatusQuery, String.class, quizIdx);
+    }
+
+    public GetDailyQuizRes getDailyQUiz() {
+        String getDailyQuizQuery =
+                "SELECT Q.quizIdx, Q.quizType, Q.question, Q.boardIdx\n" +
+                "FROM Quiz Q\n" +
+                "WHERE Q.status = 'ACTIVE'\n" +
+                "ORDER BY RAND() limit 1";
+        return this.jdbcTemplate.queryForObject(getDailyQuizQuery,
+                (rs, rowNum) -> new GetDailyQuizRes(
+                        rs.getInt("quizIdx"),
+                        rs.getInt("quizType"),
+                        rs.getString("question"),
+                        rs.getInt("boardIdx")
+                ));
     }
 }
