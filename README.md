@@ -1,73 +1,11 @@
-<img width="200" alt="스크린샷 2022-11-23 오후 3 30 16" src="https://user-images.githubusercontent.com/97823928/203484758-128c85c6-8367-444c-9897-7a417c70fa0e.png">
-<br></br>
-
-<p align="center"><img width="700" alt="스크린샷 2022-11-23 오후 3 33 39" src="https://user-images.githubusercontent.com/97823928/203485168-7b49ba2b-0634-4d80-a226-760b17623bd9.png">
-
-## Project
+# MOGE
 #### 앱테크 기능을 통해 밀레니얼 세대의 문해력을 향상시키는 서비스, MOGE
-> 🏆 Make Us CMC CX 2기 최우수상 수상  </br>
+> 🏆 Make Us CMC & CMC CX 2기 최우수상 수상  </br>
 > 🕓 프로젝트 기간: 2022.10.4 ~ 2022.11.20 </br>
 
-
 ## Record
-🐾 [개발일지 및 이슈 보러가기](https://www.notion.so/MOGE-2f90d6e321bb4afc8fed50a6ffc055b1)    
+🐾 [개발일지](https://www.notion.so/MOGE-2f90d6e321bb4afc8fed50a6ffc055b1)    
 💭 [API 명세서](https://www.notion.so/API-6e702cab8b5340e7b0eb9783f7ca1f6a)  
-
-## Architecture
-
-
-
-## ERD 
-
-<p align="center"><img width="870" alt="스크린샷 2022-11-23 오후 3 46 38" src="https://user-images.githubusercontent.com/97823928/203486709-af899c44-8ecc-414c-9d8e-6bfc13eb0bb4.png">
-
-## Git Convention
-
-```
-- feat     : 새로운 기능, 특징
-- fix      : 버그를 고침
-- refactor : 리팩토링
-- chore    : 프러덕션 코드가 바뀌지 않는 기타 변경 사항
-- style    : 코드 형식, 세미코론 추가 등 비즈니스 로직에 변경 없는 사항
-- docs     : 문서화 업데이트
-- test     : 테스트 코드
-- deps     : dependency 관련
-```
-
-## Foldering
-
-```
-main
-├─  📦 domain
-│   ├─ board 
-│   │  ├─ controller
-│   │  ├─ dao
-│   │  ├─ service
-│   │  └─ model
-│   ├─ fcm 
-│   ├─ mail
-│   ├─ s3
-│   ├─ user
-│   └─ quiz
-│
-├─  📦 global
-│   ├─ common
-│   ├─ config
-│   │  ├─ Awsconfig.java
-│   │  ├─ MailConfig.java
-│   │  ├─ secret
-│   │  │  ├─ Secret.java
-│   │  ├─ security
-│   │  │  ├─ JwtService.java
-│   │  │  ├─ SHA256.java
-│   │  │  └─ WebSecurityConfig.java
-│   ├─ exception
-│   │  ├─ BaseException.java
-│   │  └─ BaseResonseStatus.java
-│   └─ util
-└─     └─ ValidationRegex.java
-
-```
 
 ## App Description
 
