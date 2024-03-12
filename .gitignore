@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 application.yml
 
+MailConfig.java
 moge-b4d30-firebase-adminsdk-ottmp-dda305f614.json
 google-services.json
 gradlew
