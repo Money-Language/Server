@@ -4,8 +4,11 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+
 application.yml
 
+
+src/main/java/com/moge/moge/global/config/MailConfig.java
 MailConfig.java
 moge-b4d30-firebase-adminsdk-ottmp-dda305f614.json
 google-services.json
