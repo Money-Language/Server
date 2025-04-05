@@ -3,10 +3,6 @@
 > 🏆 Make Us CMC & CMC CX 2기 최우수상 수상  </br>
 > 🕓 프로젝트 기간: 2022.10.4 ~ 2022.11.20 </br>
 
-## Record
-🐾 [개발일지](https://www.notion.so/MOGE-2f90d6e321bb4afc8fed50a6ffc055b1)    
-💭 [API 명세서](https://www.notion.so/API-6e702cab8b5340e7b0eb9783f7ca1f6a)  
-
 ## App Description
 
 ![badge](https://img.shields.io/badge/Part-Back--end-brightgreen) 
